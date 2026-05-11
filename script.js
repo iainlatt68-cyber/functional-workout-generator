@@ -154,3 +154,19 @@ let workout = availableExercises.slice(0, 3);
 
     document.getElementById("workout").innerHTML = workoutHTML;
 }
+const output = document.getElementById("workoutOutput");
+output.innerHTML = "";
+
+workout.forEach(exercise => {
+  const card = document.createElement("div");
+  card.className = "exercise-card";
+
+  card.innerHTML = `
+    <h3>${exercise}</h3>
+    <p>${reps}</p>
+    <button>Mark complete ✅</button>
+  `;
+
+  output.appendChild(card);
+});
+``
