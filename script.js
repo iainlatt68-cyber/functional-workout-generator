@@ -170,3 +170,11 @@ workout.forEach(exercise => {
   output.appendChild(card);
 });
 ``
+.exercise-card {
+  border: 1px solid #ddd;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+}
+``
+
