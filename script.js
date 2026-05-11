@@ -178,3 +178,22 @@ workout.forEach(exercise => {
 }
 ``
 
+let timeLeft = 30;
+let timerInterval;
+
+function startTimer() {
+  clearInterval(timerInterval);
+  timeLeft = 30;
+
+  timerInterval = setInterval(() => {
+    document.getElementById("timer").textContent =
+      timeLeft + " seconds";
+
+    timeLeft--;
+
+    if (timeLeft < 0) {
+      clearInterval(timerInterval);
+      document.getElementById("timer").textContent = "Rest!";
+    }
+  }, 1000);
+}
