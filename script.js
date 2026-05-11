@@ -135,6 +135,11 @@ console.log(level, duration, equipment);
 
        let category = equipment === "none" ? "bodyweight" : "dumbbells"
 let availableExercises = exercises[category][level];
+      let reps;
+
+if (level === "beginner") reps = "8–10 reps";
+if (level === "intermediate") reps = "10–12 reps";
+if (level === "advanced") reps = "12–15 reps";
 
 let workout = availableExercises.slice(0, 3);
 
