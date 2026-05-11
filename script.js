@@ -112,7 +112,12 @@ function createWorkoutCard(category, exercise, prescription) {
 }
 
 function generateWorkout() {
+  const level = document.getElementById("level").value;
+const duration = document.getElementById("duration").value;
+const equipment = document.getElementById("equipment").value;
 
+console.log(level, duration, equipment);
+    }
     let workoutHTML = "";
 
     for (const category in exercises) {
@@ -125,12 +130,7 @@ function generateWorkout() {
             exercise,
             prescription
         );
-        const level = document.getElementById("level").value;
-const duration = document.getElementById("duration").value;
-const equipment = document.getElementById("equipment").value;
-
-console.log(level, duration, equipment);
-    }
+      
 
     document.getElementById("workout").innerHTML = workoutHTML;
 }
