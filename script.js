@@ -125,6 +125,11 @@ function generateWorkout() {
             exercise,
             prescription
         );
+        const level = document.getElementById("level").value;
+const duration = document.getElementById("duration").value;
+const equipment = document.getElementById("equipment").value;
+
+console.log(level, duration, equipment);
     }
 
     document.getElementById("workout").innerHTML = workoutHTML;
