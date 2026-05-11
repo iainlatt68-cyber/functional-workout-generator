@@ -133,7 +133,11 @@ console.log(level, duration, equipment);
 
     for (const category in exercises) {
 
-        const exercise = randomItem(exercises[category]);
+       let category = equipment === "none" ? "bodyweight" : "dumbbells"
+let availableExercises = exercises[category][level];
+
+let workout = availableExercises.slice(0, 3);
+
         const prescription = generateSetsReps(category);
 
         workoutHTML += createWorkoutCard(
