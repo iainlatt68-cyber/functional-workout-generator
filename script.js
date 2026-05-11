@@ -1,4 +1,15 @@
-
+const exercises = {
+  bodyweight: {
+    beginner: ["Squats", "Wall push-ups", "Glute bridges"],
+    intermediate: ["Push-ups", "Lunges", "Plank"],
+    advanced: ["Pistol squats", "Decline push-ups", "Hollow hold"]
+  },
+  dumbbells: {
+    beginner: ["Goblet squat", "DB row", "DB press"],
+    intermediate: ["Split squat", "Renegade row", "DB thruster"],
+    advanced: ["Man makers", "DB snatch", "Devil press"]
+  }
+};
 const exercises = {
 
     power: [
