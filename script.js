@@ -215,7 +215,26 @@ function generateWorkout() {
 
   updateProgress(output);
 }
+// Theme toggle
+var themeToggle = document.getElementById("themeToggle");
 
+if (themeToggle) {
+  var savedTheme = localStorage.getItem("theme");
+  if (savedTheme) {
+    document.documentElement.setAttribute("data-theme", savedTheme);
+    themeToggle.textContent =
+      savedTheme === "light" ? "🌙 Dark mode" : "☀️ Light mode";
+  }
+
+  themeToggle.addEventListener("click", function () {
+    var current = document.documentElement.getAttribute("data-theme");
+    var next = current === "light" ? "dark" : "light";
+    document.documentElement.setAttribute("data-theme", next);
+    localStorage.setItem("theme", next);
+    themeToggle.textContent =
+      next === "light" ? "🌙 Dark mode" : "☀️ Light mode";
+  });
+}
 /* ===============================
    EVENT WIRING
 ================================ */
