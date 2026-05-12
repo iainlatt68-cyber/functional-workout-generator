@@ -5,58 +5,20 @@ console.log("✅ script.js loaded");
 ================================ */
 const EXERCISES = {
   bodyweight: {
-    beginner: [
-      "Squats",
-      "Wall Push-Ups",
-      "Glute Bridges",
-      "Marching in Place"
-    ],
-    intermediate: [
-      "Push-Ups",
-      "Lunges",
-      "Plank",
-      "Mountain Climbers"
-    ],
-    advanced: [
-      "Pistol Squats",
-      "Burpees",
-      "Jump Lunges"
-    ]
+    beginner: ["Squats", "Wall Push-Ups", "Glute Bridges", "Marching in Place"],
+    intermediate: ["Push-Ups", "Lunges", "Plank", "Mountain Climbers"],
+    advanced: ["Pistol Squats", "Burpees", "Jump Lunges"]
   },
-
   dumbbells: {
-    beginner: [
-      "Goblet Squat",
-      "Dumbbell Row",
-      "Farmer Carry"
-    ],
-    intermediate: [
-      "Split Squat",
-      "Renegade Row",
-      "Dumbbell Press"
-    ],
-    advanced: [
-      "Man Makers",
-      "Devil Press",
-      "Dumbbell Snatch"
-    ]
+    beginner: ["Goblet Squat", "Dumbbell Row", "Farmer Carry"],
+    intermediate: ["Split Squat", "Renegade Row", "Dumbbell Press"],
+    advanced: ["Man Makers", "Devil Press", "Dumbbell Snatch"]
   },
-
   bands: {
-    beginner: [
-      "Band Squats",
-      "Band Row",
-      "Band Chest Press"
-    ],
-    intermediate: [
-      "Band Deadlift",
-      "Band Overhead Press"
-    ],
-    advanced: [
-      "Explosive Band Squats"
-    ]
+    beginner: ["Band Squats", "Band Row", "Band Chest Press"],
+    intermediate: ["Band Deadlift", "Band Overhead Press"],
+    advanced: ["Explosive Band Squats"]
   },
-
   gym: {
     beginner: [
       "Leg Press",
@@ -66,18 +28,18 @@ const EXERCISES = {
       "Treadmill Walk"
     ],
     intermediate: [
-      "Barbell Back Squat",
+      "Back Squat",
       "Bench Press",
       "Seated Row",
       "Romanian Deadlift",
-      "Assault Bike"
+      "Row Erg"
     ],
     advanced: [
-      "Barbell Front Squat",
+      "Front Squat",
       "Deadlift",
       "Pull-Ups",
       "Push Press",
-      "Row Erg Intervals"
+      "Bike Erg Intervals"
     ]
   }
 };
@@ -102,7 +64,7 @@ function exerciseCount(duration) {
 }
 
 /* ===============================
-   WORKOUT GENERATOR
+   WORKOUT GENERATION
 ================================ */
 function generateWorkout() {
   const level = document.getElementById("level").value;
@@ -153,7 +115,7 @@ function generateWorkout() {
    TIMER
 ================================ */
 let timerInterval;
-let timeLeft;
+let timeLeft = 0;
 
 function startTimer() {
   clearInterval(timerInterval);
@@ -176,7 +138,14 @@ function startTimer() {
 }
 
 /* ===============================
-   EVENTS
+   EVENT BINDINGS
 ================================ */
 document.addEventListener("DOMContentLoaded", () => {
   document
+    .getElementById("generateWorkoutBtn")
+    .addEventListener("click", generateWorkout);
+
+  document
+    .getElementById("startTimerBtn")
+    .addEventListener("click", startTimer);
+});
