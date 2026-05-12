@@ -74,6 +74,13 @@ function restForStyle(style) {
   return "";
 }
 
+  function sessionOverrides(session, style) {
+  if (session === "strength") return "strength";
+  if (session === "hypertrophy") return "conditioning";
+  if (session === "conditioning") return "amrap";
+  if (session === "recovery") return "recovery";
+  return style;
+}
 function timeForExercise(level, style, duration) {
   var min, max;
 
@@ -147,7 +154,9 @@ function generateWorkout() {
   var style = document.getElementById("style").value;
   var duration = document.getElementById("duration").value;
   var level = document.getElementById("level").value;
-
+  var session = document.getElementById("session").value;
+var effectiveStyle = sessionOverrides(session, style);
+  
   var roundsEl = document.getElementById("rounds");
   var rounds = roundsEl ? Number(roundsEl.value) : 1;
 
