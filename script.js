@@ -1,199 +1,131 @@
-const exercises = {
+// =====================
+// Exercise Data
+// =====================
+const EXERCISES = {
   bodyweight: {
-    beginner: ["Squats", "Wall push-ups", "Glute bridges"],
-    intermediate: ["Push-ups", "Lunges", "Plank"],
-    advanced: ["Pistol squats", "Decline push-ups", "Hollow hold"]
+    beginner: [
+      "Squats",
+      "Wall Push-Ups",
+      "Glute Bridges",
+      "Marching in Place",
+      "Plank (knees)"
+    ],
+    intermediate: [
+      "Push-Ups",
+      "Lunges",
+      "Plank",
+      "Mountain Climbers",
+      "Jump Squats"
+    ],
+    advanced: [
+      "Pistol Squats",
+      "Decline Push-Ups",
+      "Burpees",
+      "Hollow Hold",
+      "Jump Lunges"
+    ]
   },
   dumbbells: {
-    beginner: ["Goblet squat", "DB row", "DB press"],
-    intermediate: ["Split squat", "Renegade row", "DB thruster"],
-    advanced: ["Man makers", "DB snatch", "Devil press"]
+    beginner: [
+      "Goblet Squats",
+      "Dumbbell Rows",
+      "Dumbbell Floor Press",
+      "Farmer Carry"
+    ],
+    intermediate: [
+      "Split Squats",
+      "Renegade Rows",
+      "Dumbbell Thrusters",
+      "Single-Arm Press"
+    ],
+    advanced: [
+      "Man Makers",
+      "Dumbbell Snatch",
+      "Devil Press",
+      "Overhead Lunges"
+    ]
+  },
+  bands: {
+    beginner: [
+      "Band Squats",
+      "Band Chest Press",
+      "Band Rows",
+      "Band Pull-Aparts"
+    ],
+    intermediate: [
+      "Band Deadlifts",
+      "Band Overhead Press",
+      "Band Face Pulls"
+    ],
+    advanced: [
+      "Explosive Band Squats",
+      "Tempo Band Press",
+      "Single-Leg Band Deadlift"
+    ]
   }
 };
-const exercises = {
 
-    power: [
-        "Broad Jump",
-        "Push Press",
-        "Sprint"
-    ],
-
-    squat: [
-        "Front Squat",
-        "Goblet Squat",
-        "Bulgarian Split Squat",
-        "Step-Up"
-    ],
-
-    hinge: [
-        "Romanian Deadlift",
-        "Deadlift",
-        "Kettlebell Swing",
-      
-    ],
-
-    push: [
-        "Push-Up",
-        "Bench Press",
-        "Overhead Press",
-        "Dumbbell Press"
-    ],
-
-    pull: [
-        "Bent-Over Row",
-        "Lat Pulldown"
-    ],
-
-    carry: [
-        "Farmer Carry",
-        "Suitcase Carry",
-        "Front Rack Carry"
-    ],
-
-    core: [
-        "Pallof Press",
-        "Dead Bug",
-        "Hanging Knee Raise",
-        "Plank"
-    ],
-
-    conditioning: [
-        "Zone 2 Run",
-        "Rowing",
-        "Bike Intervals",
-        "Circuit Training"
-    ],
-
-    mobility: [
-        "90/90 Hip Switch",
-        "World's Greatest Stretch",
-        "Thoracic Rotation",
-        "Couch Stretch"
-    ]
-};
-
+// =====================
+// Utility Functions
+// =====================
 function randomItem(array) {
-    return array[Math.floor(Math.random() * array.length)];
+  return array[Math.floor(Math.random() * array.length)];
 }
 
-function generateSetsReps(category) {
-
-    if (category === "power") {
-        return `${Math.floor(Math.random() * 3) + 3} sets x ${Math.floor(Math.random() * 3) + 3} reps`;
-    }
-
-    if (["squat", "hinge", "push", "pull"].includes(category)) {
-        const reps = [5, 6, 8, 10];
-        return `${Math.floor(Math.random() * 3) + 3} sets x ${randomItem(reps)} reps`;
-    }
-
-    if (category === "carry") {
-        return `${Math.floor(Math.random() * 3) + 3} rounds x ${Math.floor(Math.random() * 40) + 20} sec`;
-    }
-
-    if (category === "core") {
-        return `${Math.floor(Math.random() * 2) + 3} sets x ${Math.floor(Math.random() * 10) + 10} reps`;
-    }
-
-    if (category === "conditioning") {
-        return randomItem([
-            "20 min Zone 2",
-            "10 x 1 min hard / 1 min easy",
-            "15 min continuous",
-            "5 rounds x 2 min work"
-        ]);
-    }
-
-    if (category === "mobility") {
-        return `${Math.floor(Math.random() * 2) + 2} sets x ${Math.floor(Math.random() * 30) + 30} sec`;
-    }
-
-    return "3 x 10";
+function shuffle(array) {
+  return array.sort(() => Math.random() - 0.5);
 }
 
-function createWorkoutCard(category, exercise, prescription) {
-
-    return `
-        <div class="workout-card">
-            <div class="category">${category.toUpperCase()}</div>
-            <div class="exercise">${exercise}</div>
-            <div class="prescription">${prescription}</div>
-        </div>
-    `;
+function getRepScheme(level) {
+  if (level === "beginner") return "8–10 reps";
+  if (level === "intermediate") return "10–12 reps";
+  return "12–15 reps";
 }
 
+function getExerciseCount(duration) {
+  if (duration === "10") return 3;
+  if (duration === "20") return 4;
+  return 5;
+}
+
+// =====================
+// Workout Generation
+// =====================
 function generateWorkout() {
   const level = document.getElementById("level").value;
-const duration = document.getElementById("duration").value;
-const equipment = document.getElementById("equipment").value;
+  const duration = document.getElementById("duration").value;
+  const equipment = document.getElementById("equipment").value;
 
-console.log(level, duration, equipment);
-    }
-    let workoutHTML = "";
+  const output = document.getElementById("workoutOutput");
+  output.innerHTML = "";
 
-    for (const category in exercises) {
+  const exercisePool = EXERCISES[equipment][level];
+  const numberOfExercises = getExerciseCount(duration);
+  const reps = getRepScheme(level);
 
-       let category = equipment === "none" ? "bodyweight" : "dumbbells"
-let availableExercises = exercises[category][level];
-      let reps;
+  const workout = shuffle([...exercisePool]).slice(0, numberOfExercises);
 
-if (level === "beginner") reps = "8–10 reps";
-if (level === "intermediate") reps = "10–12 reps";
-if (level === "advanced") reps = "12–15 reps";
+  workout.forEach(exercise => {
+    const card = document.createElement("div");
+    card.className = "exercise-card";
 
-let workout = availableExercises.slice(0, 3);
+    card.innerHTML = `
+      <h3>${exercise}</h3>
+      <p>${reps}</p>
+      <button type="button">Mark complete ✅</button>
+    `;
 
-        const prescription = generateSetsReps(category);
-
-        workoutHTML += createWorkoutCard(
-            category,
-            exercise,
-            prescription
-        );
-      
-
-    document.getElementById("workout").innerHTML = workoutHTML;
+    output.appendChild(card);
+  });
 }
-const output = document.getElementById("workoutOutput");
-output.innerHTML = "";
 
-workout.forEach(exercise => {
-  const card = document.createElement("div");
-  card.className = "exercise-card";
-
-  card.innerHTML = `
-    <h3>${exercise}</h3>
-    <p>${reps}</p>
-    <button>Mark complete ✅</button>
-  `;
-
-  output.appendChild(card);
-});
-``
-.exercise-card {
-  border: 1px solid #ddd;
-  padding: 1rem;
-  margin-bottom: 1rem;
-  border-radius: 8px;
-}
-``
-
+// =====================
+// Timer Logic
+// =====================
 let timeLeft = 30;
 let timerInterval;
 
 function startTimer() {
   clearInterval(timerInterval);
-  timeLeft = 30;
 
-  timerInterval = setInterval(() => {
-    document.getElementById("timer").textContent =
-      timeLeft + " seconds";
-
-    timeLeft--;
-
-    if (timeLeft < 0) {
-      clearInterval(timerInterval);
-      document.getElementById("timer").textContent = "Rest!";
-    }
-  }, 1000);
-}
+  const
