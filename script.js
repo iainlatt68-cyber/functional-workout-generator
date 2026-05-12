@@ -191,7 +191,7 @@ function timeForExercise(level, style, duration) {
 
   return min + "–" + max + " seconds";
 }
-      }
+      
 
       var card = document.createElement("div");
       card.className = "exercise-card";
