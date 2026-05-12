@@ -232,3 +232,27 @@ button:hover {
   background: linear-gradient(90deg, var(--accent), #2fcf89);
   transition: width 0.3s ease;
 }
+.exercise-card.completed {
+  position: relative;
+}
+
+.exercise-card.completed::after {
+  content: "✔";
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-size: 1.3rem;
+  color: var(--accent);
+  animation: popIn 0.25s ease;
+}
+
+@keyframes popIn {
+  from {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
