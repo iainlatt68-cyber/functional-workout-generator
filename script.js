@@ -130,9 +130,36 @@ var useTimeFor = function (exercise) {
     output.appendChild(rh);
 
     shuffle(patterns).forEach(function (pattern) {
-      var list = EXERCISES[equipment][pattern];
-      var prescription;
+  var list = EXERCISES[equipment][pattern];
+  var exercise = shuffle(list)[0];
 
+  var prescription;
+  if (useTimeFor(exercise)) {
+    prescription = timeForExercise(level, style, duration);
+  } else {
+    prescription = reps;
+  }
+
+  var card = document.createElement("div");
+  card.className = "exercise-card";
+
+  var btn = document.createElement("button");
+  btn.textContent = "Mark complete ✅";
+  btn.onclick = function () {
+    this.parentNode.classList.toggle("completed");
+    this.textContent =
+      this.parentNode.classList.contains("completed")
+        ? "Completed ✅"
+        : "Mark complete ✅";
+  };
+
+  card.innerHTML =
+    "<strong>" + exercise + "</strong>" +
+    "<p>" + prescription + "</p>";
+
+  card.appendChild(btn);
+  output.appendChild(card);
+});
 if (useTimeFor(exercise)) {
   prescription = timeForExercise(level, style, duration);
 } else {
