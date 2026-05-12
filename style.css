@@ -85,12 +85,19 @@ select {
   width: 100%;
   padding: 12px 14px;
   border-radius: 10px;
-  border: none;
+  border: 1px solid #d0d7de;
   margin-bottom: 14px;
-  background: #0d1117;
-  color: var(--text);
+  background: #ffffff;
+  color: #24292f;
   font-size: 0.95rem;
   outline: none;
+  appearance: none;
+}
+
+/* Subtle focus state */
+select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
 }
 
 select:focus {
