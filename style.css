@@ -217,4 +217,18 @@ button:hover {
     opacity: 1;
     transform: translateY(0);
   }
+   
+.progress-wrapper {
+  background: #21262d;
+  border-radius: 999px;
+  height: 10px;
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+
+.progress-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--accent), #2fcf89);
+  transition: width 0.3s ease;
 }
