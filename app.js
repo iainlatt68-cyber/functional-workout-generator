@@ -103,11 +103,29 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }, 1000);
   }
-
+const DIFFICULTY_RULES = {
+  beginner: {
+    volumeMultiplier: 0.8,
+    note: "Focus on learning the movements and keeping rests relaxed."
+  },
+  intermediate: {
+    volumeMultiplier: 1,
+    note: "Maintain consistent effort across the session."
+  },
+  advanced: {
+    volumeMultiplier: 1.2,
+    note: "Push the pace. Expect meaningful fatigue."
+  },
+  athlete: {
+    volumeMultiplier: 1.4,
+    note: "Treat this like competition. Quality under fatigue matters."
+  }
+};
   /* ===============================
      GENERATE WORKOUT
   =============================== */
-
+const difficulty = document.getElementById("difficulty").value;
+const difficultyRule = DIFFICULTY_RULES[difficulty];
   function generateWorkout() {
     const goalEl = document.getElementById("goal");
     const equipmentEl = document.getElementById("equipment");
@@ -117,7 +135,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let goal = goalEl.value;
     let equipment = equipmentEl.value;
-    let rounds = Number(roundsEl.value);
+    let baseRounds = Number(roundsEl.value);
+    let rounds = Math.max(
+  1,
+  Math.round(baseRounds * difficultyRule.volumeMultiplier)
+);
+
     const template = templateEl.value;
 
     // Apply template overrides
