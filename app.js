@@ -1,7 +1,7 @@
 console.log("✅ app.js loaded");
 
 /* ===============================
-   DATA
+   WORKOUT DATA
 ================================ */
 
 var EXERCISES = {
@@ -21,10 +21,7 @@ function generateWorkout() {
   var roundsEl = document.getElementById("rounds");
   var output = document.getElementById("workoutOutput");
 
-  if (!levelEl || !output) {
-    console.error("❌ Missing elements");
-    return;
-  }
+  if (!levelEl || !output) return;
 
   var level = levelEl.value;
   var rounds = roundsEl ? Number(roundsEl.value) : 1;
@@ -36,23 +33,25 @@ function generateWorkout() {
   output.appendChild(heading);
 
   for (var r = 1; r <= rounds; r++) {
-    var rh = document.createElement("h4");
-    rh.textContent = "Round " + r;
-    output.appendChild(rh);
+    var roundHeader = document.createElement("h4");
+    roundHeader.textContent = "Round " + r;
+    output.appendChild(roundHeader);
 
     for (var i = 0; i < EXERCISES[level].length; i++) {
-      var nameText = EXERCISES[level][i];
+      var exerciseName = EXERCISES[level][i];
 
       var card = document.createElement("div");
       card.className = "exercise-card";
 
       var name = document.createElement("strong");
-      name.textContent = nameText;
+      name.textContent = exerciseName;
       card.appendChild(name);
 
       var p = document.createElement("p");
       p.textContent =
-        nameText === "Plank" ? "30–45 seconds" : "8–12 reps";
+        exerciseName === "Plank"
+          ? "30–45 seconds"
+          : "8–12 reps";
       card.appendChild(p);
 
       var btn = document.createElement("button");
@@ -69,7 +68,7 @@ function generateWorkout() {
 }
 
 /* ===============================
-   START WORKOUT TIMER
+   START WORKOUT (TIMER)
 ================================ */
 
 var workoutInterval = null;
@@ -80,7 +79,9 @@ function startWorkout() {
   var output = document.getElementById("workoutOutput");
   if (!output) return;
 
-  if (workoutInterval) clearInterval(workoutInterval);
+  if (workoutInterval) {
+    clearInterval(workoutInterval);
+  }
 
   var timer = document.getElementById("workoutTimer");
   if (!timer) {
@@ -106,7 +107,7 @@ function startWorkout() {
 }
 
 /* ===============================
-   EVENT WIRING
+   EVENTS
 ================================ */
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -117,13 +118,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
   if (generateBtn) {
     generateBtn.addEventListener("click", generateWorkout);
-  } else {
-    console.error("❌ generateWorkoutBtn not found");
   }
 
   if (startBtn) {
     startBtn.addEventListener("click", startWorkout);
-  } else {
-    console.error("❌ startWorkoutBtn not found");
   }
 });
