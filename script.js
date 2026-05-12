@@ -108,10 +108,11 @@ function generateWorkout() {
   const level = document.getElementById("level").value;
   const duration = document.getElementById("duration").value;
   const equipment = document.getElementById("equipment").value;
-const roundsSelect = document.getElementById("rounds");
-const rounds = roundsSelect ? Number(roundsSelect.value) : 1;
-  const output = document.getElementById("workoutOutput");
 
+  const roundsSelect = document.getElementById("rounds");
+  const rounds = roundsSelect ? Number(roundsSelect.value) : 1;
+
+  const output = document.getElementById("workoutOutput");
   output.innerHTML = "";
 
   const pool = EXERCISES[equipment][level];
@@ -119,11 +120,11 @@ const rounds = roundsSelect ? Number(roundsSelect.value) : 1;
   const reps = repsFor(level);
 
   for (let round = 1; round <= rounds; round++) {
-    const roundHeader = document.createElement("h3");
-    roundHeader.textContent =
-      rounds === 1 ? "Workout" : `Circuit – Round ${round}`;
-    roundHeader.style.marginBottom = "12px";
-    output.appendChild(roundHeader);
+    const header = document.createElement("h3");
+    header.textContent = rounds === 1
+      ? "Workout"
+      : `Circuit – Round ${round}`;
+    output.appendChild(header);
 
     exercises.forEach(exercise => {
       const card = document.createElement("div");
