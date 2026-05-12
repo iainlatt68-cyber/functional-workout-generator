@@ -108,7 +108,8 @@ function generateWorkout() {
   const level = document.getElementById("level").value;
   const duration = document.getElementById("duration").value;
   const equipment = document.getElementById("equipment").value;
-  const rounds = Number(document.getElementById("rounds").value);
+const roundsSelect = document.getElementById("rounds");
+const rounds = roundsSelect ? Number(roundsSelect.value) : 1;
   const output = document.getElementById("workoutOutput");
 
   output.innerHTML = "";
