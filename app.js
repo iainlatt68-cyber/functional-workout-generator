@@ -1,5 +1,11 @@
 alert("JS LOADED");
+function saveLog(key, data) {
+  localStorage.setItem(key, JSON.stringify(data));
+}
 
+function loadLog(key) {
+  return JSON.parse(localStorage.getItem(key) || "{}");
+}
 document.addEventListener("DOMContentLoaded", function () {
   alert("DOM READY");
 
