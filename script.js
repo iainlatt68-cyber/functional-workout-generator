@@ -231,18 +231,7 @@ output.appendChild(progressWrapper);
 
   updateProgress(output);
 }
-// Theme toggle
-var themeToggle = document.getElementById("themeToggle");
 
-if (themeToggle) {
-  var savedTheme = localStorage.getItem("theme");
-  if (savedTheme) {
-    document.documentElement.setAttribute("data-theme", savedTheme);
-    themeToggle.textContent =
-      savedTheme === "light" ? "🌙 Dark mode" : "☀️ Light mode";
-  }
-
-}
 /* ===============================
    EVENT WIRING
 ================================ */
