@@ -1,8 +1,11 @@
-console.log("app.js loaded and running");
+/* =================================================
+   Functional Fitness Generator - Clean Production JS
+   NO alerts, NO debug popups
+================================================= */
 
-/* =========================
-   DATA
-========================= */
+console.log("✅ app.js loaded");
+
+/* ---------- DATA ---------- */
 
 var EXERCISES = {
   bodyweight: ["Air Squat", "Push-Ups", "Plank"],
@@ -11,54 +14,64 @@ var EXERCISES = {
 };
 
 var GOALS = {
-  strength: "3-6 reps",
-  hypertrophy: "8-12 reps",
-  conditioning: "12-20 reps",
+  strength: "3–6 reps",
+  hypertrophy: "8–12 reps",
+  conditioning: "12–20 reps",
   recovery: "Easy pace"
 };
 
 var workoutTimer = null;
 var workoutStartTime = null;
 
-/* =========================
-   GENERATE WORKOUT
-========================= */
+/* ---------- GENERATE WORKOUT ---------- */
 
 function generateWorkout() {
-  var goal = document.getElementById("goal").value;
-  var equipment = document.getElementById("equipment").value;
-  var rounds = Number(document.getElementById("rounds").value);
+  console.log("▶ Generating workout");
+
+  var goalSelect = document.getElementById("goal");
+  var equipmentSelect = document.getElementById("equipment");
+  var roundsSelect = document.getElementById("rounds");
   var output = document.getElementById("workoutOutput");
+
+  // Guard clause – stops silent failure
+  if (!goalSelect || !equipmentSelect || !roundsSelect || !output) {
+    console.error("❌ Required elements missing");
+    return;
+  }
+
+  var goal = goalSelect.value;
+  var equipment = equipmentSelect.value;
+  var rounds = Number(roundsSelect.value);
 
   output.innerHTML = "";
 
-  var heading = document.createElement("h3");
-  heading.textContent = "Workout (" + goal.toUpperCase() + ")";
-  output.appendChild(heading);
+  var title = document.createElement("h3");
+  title.textContent = "Workout (" + goal.toUpperCase() + ")";
+  output.appendChild(title);
 
-  var exerciseList = EXERCISES[equipment];
+  var list = EXERCISES[equipment];
 
   for (var r = 1; r <= rounds; r++) {
     var roundHeader = document.createElement("h4");
     roundHeader.textContent = "Round " + r;
     output.appendChild(roundHeader);
 
-    for (var i = 0; i < exerciseList.length; i++) {
-      var exerciseName = exerciseList[i];
+    for (var i = 0; i < list.length; i++) {
+      var exercise = list[i];
 
       var card = document.createElement("div");
       card.className = "exercise-card";
 
       var name = document.createElement("strong");
-      name.textContent = exerciseName;
+      name.textContent = exercise;
       card.appendChild(name);
 
       var prescription = document.createElement("p");
-      if (exerciseName === "Plank" || exerciseName === "Farmer Carry") {
-        prescription.textContent = "30-45 seconds";
-      } else {
-        prescription.textContent = GOALS[goal];
-      }
+      prescription.textContent =
+        exercise === "Plank" || exercise === "Farmer Carry"
+          ? "30–45 seconds"
+          : GOALS[goal];
+
       card.appendChild(prescription);
 
       var btn = document.createElement("button");
@@ -68,7 +81,6 @@ function generateWorkout() {
       btn.addEventListener("click", function () {
         var parent = this.parentNode;
         parent.classList.toggle("completed");
-
         this.textContent = parent.classList.contains("completed")
           ? "Completed"
           : "Mark complete";
@@ -80,21 +92,21 @@ function generateWorkout() {
   }
 }
 
-/* =========================
-   START WORKOUT TIMER
-========================= */
+/* ---------- START WORKOUT ---------- */
 
 function startWorkout() {
-  if (workoutTimer) {
-    clearInterval(workoutTimer);
-  }
+  console.log("▶ Starting workout");
+
+  if (workoutTimer) clearInterval(workoutTimer);
 
   var output = document.getElementById("workoutOutput");
+  if (!output) return;
 
   var timer = document.createElement("div");
   timer.id = "workoutTimer";
   timer.style.fontWeight = "600";
   timer.style.margin = "12px 0";
+
   output.prepend(timer);
 
   workoutStartTime = Date.now();
@@ -111,16 +123,14 @@ function startWorkout() {
   }, 1000);
 }
 
-/* =========================
-   EVENT WIRING
-========================= */
+/* ---------- EVENTS ---------- */
 
 document.addEventListener("DOMContentLoaded", function () {
-  document
-    .getElementById("generateWorkoutBtn")
-    .addEventListener("click", generateWorkout);
+  console.log("✅ DOM ready");
 
-  document
-    .getElementById("startWorkoutBtn")
-    .addEventListener("click", startWorkout);
+  var genBtn = document.getElementById("generateWorkoutBtn");
+  var startBtn = document.getElementById("startWorkoutBtn");
+
+  if (genBtn) genBtn.addEventListener("click", generateWorkout);
+  if (startBtn) startBtn.addEventListener("click", startWorkout);
 });
