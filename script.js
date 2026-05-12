@@ -89,24 +89,35 @@ function pickExercises(level) {
 function generateWorkout() {
   console.log("✅ generateWorkout running");
 
-  var level = document.getElementById("level").value;
-  var goal = document.getElementById("session").value;
-  var rounds = GOALS[goal].rounds;
+  var levelEl = document.getElementById("level");
+  var sessionEl = document.getElementById("session");
   var output = document.getElementById("workoutOutput");
+
+  if (!levelEl || !output) {
+    console.error("❌ Required DOM elements missing");
+    return;
+  }
+
+  var level = levelEl.value;
+  var goal = sessionEl ? sessionEl.value : "strength";
+
+  if (!GOALS[goal]) {
+    goal = "strength";
+  }
+
+  var rounds = GOALS[goal].rounds;
 
   output.innerHTML = "";
 
-  // Intent label
+  /* Intent label */
   var intent = document.createElement("p");
   intent.style.fontWeight = "600";
   intent.style.marginBottom = "12px";
   intent.textContent = "Training goal: " + goal.toUpperCase();
   output.appendChild(intent);
 
-  // Pick exercises
   var workout = pickExercises(level);
 
-  // Generate rounds
   for (var r = 1; r <= rounds; r++) {
     var roundHeader = document.createElement("h3");
     roundHeader.textContent = "Round " + r;
@@ -114,6 +125,8 @@ function generateWorkout() {
 
     for (var i = 0; i < workout.length; i++) {
       var exercise = workout[i];
+
+      if (!exercise) continue;
 
       var card = document.createElement("div");
       card.className = "exercise-card";
