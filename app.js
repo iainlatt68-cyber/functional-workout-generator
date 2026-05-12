@@ -1,4 +1,4 @@
-alert("APP.JS IS DEFINITELY RUNNING");
+alert("JS IS RUNNING");
 /* ===============================================
    Functional Fitness Generator
    Stable build
