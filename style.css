@@ -188,10 +188,47 @@ button:hover {
   font-size: 0.8rem;
 }
 
+/* Mark complete buttons – light style */
+.exercise-card button {
+  width: auto;
+  padding: 8px 14px;
+  margin-top: 8px;
+
+  background: #ffffff;
+  color: #24292f;
+
+  border: 1px solid #d0d7de;
+  border-radius: 8px;
+
+  font-size: 0.85rem;
+  font-weight: 500;
+
+  box-shadow: none;
+  cursor: pointer;
+
+  transition: background-color 0.15s ease,
+              color 0.15s ease,
+              border-color 0.15s ease;
+}
+
+/* Hover state */
+.exercise-card button:hover {
+  background: #f3f4f6;
+}
+
+/* Completed state */
 .exercise-card.completed button {
   background: var(--accent);
-  color: #0b0f14;
+  color: #ffffff;
+  border-color: var(--accent);
 }
+
+/* Remove global button effects inside cards */
+.exercise-card button:hover {
+  transform: none;
+  box-shadow: none;
+}
+``
 
 /* ================================
    DIVIDERS
