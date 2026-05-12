@@ -76,6 +76,25 @@ function repsByStyle(style) {
   return "10 reps";
 }
 
+function timeForExercise(level, style, duration) {
+  var base;
+
+  // Base by fitness level
+  if (level === "beginner") base = 20;
+  else if (level === "intermediate") base = 30;
+  else base = 40;
+
+  // Adjust by workout style
+  if (style === "conditioning") base += 10;
+  if (style === "emom") base = 40;
+  if (style === "amrap") base = 45;
+
+  // Adjust by workout length
+  if (duration === "20") base += 5;
+  if (duration === "40") base += 10;
+
+  return base + " seconds";
+}
 /* ===============================
    WORKOUT GENERATOR
 ================================ */
