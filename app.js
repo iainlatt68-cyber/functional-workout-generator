@@ -1,7 +1,3 @@
-document.body.insertAdjacentHTML(
-  "afterbegin",
-  "<div style='background:#ffeb3b;padding:8px;font-weight:bold'>NEW APP.JS LOADED</div>"
-);
 /* =================================================
    Functional Fitness Generator – Stable + Logged
    Features:
