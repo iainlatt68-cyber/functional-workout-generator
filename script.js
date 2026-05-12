@@ -1,54 +1,29 @@
 console.log("✅ script.js loaded");
 
-/* ===============================
-   EXERCISE DATABASE
-================================ */
-const EXERCISES = {
+/* ===== EXERCISES ===== */
+var EXERCISES = {
   bodyweight: {
-    beginner: ["Squats", "Wall Push-Ups", "Glute Bridges", "Marching in Place"],
-    intermediate: ["Push-Ups", "Lunges", "Plank", "Mountain Climbers"],
-    advanced: ["Pistol Squats", "Burpees", "Jump Lunges"]
+    beginner: ["Squats", "Wall Push-Ups", "Glute Bridges"],
+    intermediate: ["Push-Ups", "Lunges", "Plank"],
+    advanced: ["Pistol Squats", "Burpees"]
   },
   dumbbells: {
-    beginner: ["Goblet Squat", "Dumbbell Row", "Farmer Carry"],
-    intermediate: ["Split Squat", "Renegade Row", "Dumbbell Press"],
-    advanced: ["Man Makers", "Devil Press", "Dumbbell Snatch"]
-  },
-  bands: {
-    beginner: ["Band Squats", "Band Row", "Band Chest Press"],
-    intermediate: ["Band Deadlift", "Band Overhead Press"],
-    advanced: ["Explosive Band Squats"]
+    beginner: ["Goblet Squat", "DB Row"],
+    intermediate: ["Split Squat", "DB Press"],
+    advanced: ["Man Makers", "Devil Press"]
   },
   gym: {
-    beginner: [
-      "Leg Press",
-      "Lat Pulldown",
-      "Seated Chest Press",
-      "Hamstring Curl",
-      "Treadmill Walk"
-    ],
-    intermediate: [
-      "Back Squat",
-      "Bench Press",
-      "Seated Row",
-      "Romanian Deadlift",
-      "Row Erg"
-    ],
-    advanced: [
-      "Front Squat",
-      "Deadlift",
-      "Pull-Ups",
-      "Push Press",
-      "Bike Erg Intervals"
-    ]
+    beginner: ["Leg Press", "Lat Pulldown", "Bike"],
+    intermediate: ["Back Squat", "Bench Press", "Row"],
+    advanced: ["Deadlift", "Pull-Ups", "Push Press"]
   }
 };
 
-/* ===============================
-   HELPERS
-================================ */
-function shuffle(array) {
-  return array.sort(() => Math.random() - 0.5);
+/* ===== HELPERS ===== */
+function shuffle(arr) {
+  return arr.sort(function () {
+    return Math.random() - 0.5;
+  });
 }
 
 function repsFor(level) {
@@ -57,90 +32,75 @@ function repsFor(level) {
   return "12–15 reps";
 }
 
-function exerciseCount(duration) {
-  if (duration === "10") return 3;
-  if (duration === "20") return 4;
-  return 5;
-}
-
-/* ===============================
-   WORKOUT GENERATION
-================================ */
+/* ===== WORKOUT ===== */
 function generateWorkout() {
-  const level = document.getElementById("level").value;
-  const duration = document.getElementById("duration").value;
-  const equipment = document.getElementById("equipment").value;
+  var level = document.getElementById("level").value;
+  var duration = document.getElementById("duration").value;
+  var equipment = document.getElementById("equipment").value;
+  var roundsEl = document.getElementById("rounds");
+  var rounds = roundsEl ? Number(roundsEl.value) : 1;
+  var output = document.getElementById("workoutOutput");
 
-  const roundsSelect = document.getElementById("rounds");
-  const rounds = roundsSelect ? Number(roundsSelect.value) : 1;
-
-  const output = document.getElementById("workoutOutput");
   output.innerHTML = "";
 
-  const pool = EXERCISES[equipment][level];
-  const exercises = shuffle([...pool]).slice(0, exerciseCount(duration));
-  const reps = repsFor(level);
+  var pool = EXERCISES[equipment][level];
+  var count = duration === "10" ? 3 : duration === "20" ? 4 : 5;
+  var exercises = shuffle(pool.slice(0, count));
+  var reps = repsFor(level);
 
-  for (let round = 1; round <= rounds; round++) {
-    const header = document.createElement("h3");
-    header.textContent = rounds === 1
-      ? "Workout"
-      : `Circuit – Round ${round}`;
-    output.appendChild(header);
+  for (var r = 1; r <= rounds; r++) {
+    var h = document.createElement("h3");
+    h.textContent = rounds > 1 ? "Circuit – Round " + r : "Workout";
+    output.appendChild(h);
 
-    exercises.forEach(exercise => {
-      const card = document.createElement("div");
+    for (var i = 0; i < exercises.length; i++) {
+      var card = document.createElement("div");
       card.className = "exercise-card";
 
-      card.innerHTML = `
-        <strong>${exercise}</strong>
-        <p>${reps}</p>
-        <button type="button">Mark complete ✅</button>
-      `;
+      var btn = document.createElement("button");
+      btn.textContent = "Mark complete ✅";
+      btn.onclick = function () {
+        this.parentNode.classList.toggle("completed");
+        this.textContent =
+          this.parentNode.classList.contains("completed")
+            ? "Completed ✅"
+            : "Mark complete ✅";
+      };
 
-      const btn = card.querySelector("button");
-      btn.addEventListener("click", () => {
-        card.classList.toggle("completed");
-        btn.textContent = card.classList.contains("completed")
-          ? "Completed ✅"
-          : "Mark complete ✅";
-      });
+      card.innerHTML =
+        "<strong>" + exercises[i] + "</strong><p>" + reps + "</p>";
 
+      card.appendChild(btn);
       output.appendChild(card);
-    });
+    }
   }
 }
 
-/* ===============================
-   TIMER
-================================ */
-let timerInterval;
-let timeLeft = 0;
+/* ===== TIMER ===== */
+var timerId;
+var timeLeft = 30;
 
 function startTimer() {
-  clearInterval(timerInterval);
-
-  const duration = document.getElementById("duration").value;
-  const timer = document.getElementById("timer");
+  clearInterval(timerId);
+  var duration = document.getElementById("duration").value;
+  var timer = document.getElementById("timer");
 
   timeLeft = duration === "10" ? 30 : duration === "20" ? 45 : 60;
-  timer.textContent = `${timeLeft} seconds rest`;
+  timer.textContent = timeLeft + " seconds";
 
-  timerInterval = setInterval(() => {
+  timerId = setInterval(function () {
     timeLeft--;
-    timer.textContent = `${timeLeft} seconds rest`;
+    timer.textContent = timeLeft + " seconds";
 
     if (timeLeft <= 0) {
-      clearInterval(timerInterval);
+      clearInterval(timerId);
       timer.textContent = "Rest complete ✅";
     }
   }, 1000);
 }
 
-/* ===============================
-   EVENT BINDINGS
-================================ */
-document.addEventListener("DOMContentLoaded", () => {
+/* ===== EVENTS ===== */
+document.addEventListener("DOMContentLoaded", function () {
   document
     .getElementById("generateWorkoutBtn")
     .addEventListener("click", generateWorkout);
