@@ -94,7 +94,14 @@ button.secondary {
   font-size: 0.9rem;
   color: #6b7280;
 }
+.exercise-card.completed {
+  background: #ecfdf5;
+  border-left: 4px solid #22c55e;
+}
 
+.exercise-card.completed strong {
+  text-decoration: line-through;
+}
 /* Completed styling */
 .exercise-card.completed {
   opacity: 0.6;
