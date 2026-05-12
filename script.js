@@ -114,6 +114,21 @@ function timeForExercise(level, style, duration) {
   }
 
   return min + "–" + max + " seconds";
+  
+function applyFatigue(prescription, round) {
+  if (round === 1) return prescription;
+
+  var factor = round === 2 ? 0.9 : 0.8;
+
+  if (prescription.indexOf("seconds") !== -1) {
+    var parts = prescription.split("–");
+    var min = Math.round(parseInt(parts[0], 10) * factor);
+    var max = Math.round(parseInt(parts[1], 10) * factor);
+    return min + "–" + max + " seconds";
+  }
+
+  // Rep based
+  return prescription + " (reduce load/effort)";
 }
 
 /* ========= WORKOUT ========= */
