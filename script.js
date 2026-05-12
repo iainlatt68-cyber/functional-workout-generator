@@ -221,10 +221,16 @@ function generateWorkout() {
 ================================ */
 
 document.addEventListener("DOMContentLoaded", function () {
-  console.log("✅ DOM ready and button clicks");
+  console.log("✅ DOM ready");
 
   var btn = document.getElementById("generateWorkoutBtn");
-  if (!btn) return;
+  if (!btn) {
+    console.error("❌ generateWorkoutBtn not found");
+    return;
+  }
 
-  btn.addEventListener("click", generateWorkout);
+  btn.addEventListener("click", function () {
+    console.log("✅ generateWorkout() called");
+    generateWorkout();
+  });
 });
