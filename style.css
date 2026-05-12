@@ -230,6 +230,25 @@ button:hover {
 }
 ``
 
+/* Hover state */
+.exercise-card button:hover {
+  background: #f3f4f6;
+}
+
+/* Completed state */
+.exercise-card.completed button {
+  background: var(--accent);
+  color: #ffffff;
+  border-color: var(--accent);
+}
+
+/* Remove global button effects inside cards */
+.exercise-card button:hover {
+  transform: none;
+  box-shadow: none;
+}
+``
+
 /* ================================
    DIVIDERS
 ================================ */
