@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Functional Fitness Generator</title>
 
-  <link rel="stylesheet" href="style.css" />
+  <!-- Correct CSS -->
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -13,10 +14,11 @@
 
     <h1>Functional Fitness Generator</h1>
 
-    <div class="setup-card">
+    <section class="setup-card">
 
       <h2>Build Your Workout</h2>
 
+      <!-- FITNESS LEVEL -->
       <label for="level">Fitness level</label>
       <select id="level">
         <option value="beginner">Beginner</option>
@@ -24,6 +26,7 @@
         <option value="advanced">Advanced</option>
       </select>
 
+      <!-- TRAINING GOAL -->
       <label for="goal">Training goal</label>
       <select id="goal">
         <option value="strength">Strength</option>
@@ -32,6 +35,7 @@
         <option value="recovery">Recovery</option>
       </select>
 
+      <!-- AVAILABLE EQUIPMENT -->
       <label for="equipment">Available equipment</label>
       <select id="equipment">
         <option value="bodyweight">Bodyweight only</option>
@@ -39,11 +43,12 @@
         <option value="gym">Full gym</option>
       </select>
 
+      <!-- ROUNDS -->
       <label for="rounds">Rounds</label>
       <select id="rounds">
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
+        <option value="1">1 Round</option>
+        <option value="2">2 Rounds</option>
+        <option value="3">3 Rounds</option>
       </select>
 
       <button id="generateWorkoutBtn" type="button">
@@ -54,12 +59,14 @@
         Start Workout
       </button>
 
-    </div>
+    </section>
 
     <div id="workoutOutput"></div>
 
   </main>
 
+  <!-- Correct JS -->
   <script src="app.js"></script>
+
 </body>
 </html>
