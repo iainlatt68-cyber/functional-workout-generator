@@ -186,12 +186,16 @@ output.appendChild(progress);
       var list = EXERCISES[equipment][pattern];
       var exercise = shuffle(list)[0];
 
-      var prescription;
-      if (TIME_BASED.indexOf(exercise) !== -1) {
-        prescription = timeForExercise(level, style, duration);
-      } else {
-        prescription = repsByStyle(style);
-      }
+     var base;
+
+if (TIME_BASED.indexOf(exercise) !== -1) {
+  base = timeForExercise(level, style, duration);
+} else {
+  base = repsByStyle(style);
+}
+
+var prescription = applyFatigue(base, r);
+
 
       var card = document.createElement("div");
       card.className = "exercise-card";
