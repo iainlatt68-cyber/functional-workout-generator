@@ -2,7 +2,7 @@
    DESIGN TOKENS
 ================================ */
 :root {
-  --bg: #f6f8fa;
+  --bg: #f9fafb;
   --card: #ffffff;
   --accent: #2ea043;
   --accent-soft: rgba(46, 160, 67, 0.15);
@@ -13,7 +13,7 @@
 }
 
 [data-theme="light"] {
-  --bg: #f6f8fa;
+--bg: #f9fafb;
   --card: #ffffff;
   --accent: #2ea043;
   --accent-soft: rgba(46, 160, 67, 0.15);
@@ -150,20 +150,23 @@ button:hover {
 /* ================================
    EXERCISE CARD
 ================================ */
-.exercise-card {
-  background: var(--card);
-  padding: 16px 18px;
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  margin-bottom: 14px;
-  position: relative;
-  animation: fadeIn 0.25s ease;
+.exercise-card button {
+  margin-top: 6px;
+  background: #f6f8fa;
+  color: var(--text);
+  border: 1px solid #d0d7de;
+  box-shadow: none;
+  font-size: 0.85rem;
 }
 
-/* completed state */
-.exercise-card.completed {
-  opacity: 0.6;
-  background: #0b0f14;
+.exercise-card button:hover {
+  background: #eef1f4;
+}
+
+.exercise-card.completed button {
+  background: var(--accent);
+  color: #ffffff;
+  border-color: var(--accent);
 }
 
 .exercise-card strong {
