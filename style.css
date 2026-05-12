@@ -265,4 +265,11 @@ button:hover {
     transform: scale(1);
     opacity: 1;
   }
+
+/* Sticky setup panel */
+.setup-card {
+  position: sticky;
+  top: 16px;
+  z-index: 10;
 }
+
