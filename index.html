@@ -4,47 +4,45 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Functional Fitness Generator</title>
- <link rel="stylesheet" href="Style.css">
-<script src="Script.js"></script>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- JavaScript (deferred so DOM loads first) -->
+  <script src="script.js" defer></script>
 </head>
+
 <body>
-
-  <div class="container">
-
+  <main class="container">
     <h1>Functional Fitness Generator</h1>
 
-    <button onclick="generateWorkout()">
+    <!-- Controls -->
+    <section class="controls">
+      <label for="level">Fitness level</label>
+      <select id="level">
+        <option value="beginner">Beginner</option>
+        <option value="intermediate">Intermediate</option>
+        <option value="advanced">Advanced</option>
+      </select>
+
+      <label for="duration">Workout length</label>
+      <select id="duration">
+        <option value="10">10–15 minutes</option>
+        <option value="20">20–30 minutes</option>
+        <option value="40">40+ minutes</option>
+      </select>
+
+      <label for="equipment">Equipment</label>
+      <select id="equipment">
+        <option value="none">Bodyweight only</option>
+        <option value="dumbbells">Dumbbells</option>
+        <option value="bands">Resistance bands</option>
+      </select>
+    </section>
+
+    <!-- Workout generation -->
+    <button id="generateWorkoutBtn" type="button">
       Generate Workout
     </button>
 
-    <div id="workout"></div>
-
-  </div>
-
-  <script src="script.js"></script>
-
-</body>
-</html>
-<label for="level">Fitness level</label>
-<select id="level">
-  <option value="beginner">Beginner</option>
-  <option value="intermediate">Intermediate</option>
-  <option value="advanced">Advanced</option>
-</select>
-
-<label for="duration">Workout length</label>
-<select id="duration">
-  <option value="10">10–15 minutes</option>
-  <option value="20">20–30 minutes</option>
-  <option value="40">40+ minutes</option>
-</select>
-
-<label for="equipment">Equipment</label>
-<select id="equipment">
-  <option value="none">Bodyweight only</option>
-  <option value="dumbbells">Dumbbells</option>
-  <option value="bands">Resistance bands</option>
-<div id="workoutOutput"></div>
-</select>
-<div id="timer">Ready</div>
-<button onclick="startTimer()">Start Workout</button>
+    <section id="workoutOutput" aria-live="polite">
