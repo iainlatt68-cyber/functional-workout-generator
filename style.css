@@ -2,12 +2,14 @@
    DESIGN TOKENS
 ================================ */
 :root {
-  --bg: #0e1117;
-  --card: #161b22;
-  --accent: #3ddc97;
-  --accent-soft: rgba(61, 220, 151, 0.15);
-  --text: #e6edf3;
-  --muted: #9da7b3;
+  --bg: #f6f8fa;
+  --card: #ffffff;
+  --accent: #2ea043;
+  --accent-soft: rgba(46, 160, 67, 0.15);
+  --text: #24292f;
+  --muted: #57606a;
+  --radius: 14px;
+  --shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 }
 
 [data-theme="light"] {
