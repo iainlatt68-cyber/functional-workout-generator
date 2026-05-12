@@ -1,57 +1,49 @@
+/* =====================
+   Global Styles
+===================== */
 
-body {
-    background-color: #121212;
-    color: white;
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 20px;
+* {
+  box-sizing: border-box;
 }
 
+body {
+  background-color: #121212;
+  color: #ffffff;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 20px;
+  line-height: 1.5;
+}
+
+/* =====================
+   Layout
+===================== */
+
 .container {
-    max-width: 600px;
-    margin: auto;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
 h1 {
-    text-align: center;
-    margin-bottom: 30px;
+  text-align: center;
+  margin-bottom: 30px;
 }
 
-button {
-    width: 100%;
-    padding: 16px;
-    font-size: 18px;
-    border: none;
-    border-radius: 12px;
-    background-color: #00b894;
-    color: white;
-    cursor: pointer;
-    margin-bottom: 20px;
+/* =====================
+   Form Controls
+===================== */
+
+.controls {
+  margin-bottom: 20px;
 }
 
-button:hover {
-    opacity: 0.9;
+label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 14px;
+  color: #b2bec3;
 }
 
-.workout-card {
-    background-color: #1e1e1e;
-    padding: 16px;
-    margin-bottom: 16px;
-    border-radius: 12px;
-}
-
-.category {
-    color: #00cec9;
-    font-size: 14px;
-    margin-bottom: 6px;
-}
-
-.exercise {
-    font-size: 22px;
-    font-weight: bold;
-}
-
-.prescription {
-    margin-top: 8px;
-    color: #dfe6e9;
-}
+select {
+  width: 100%;
+  padding: 12px;
