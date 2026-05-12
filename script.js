@@ -25,3 +25,11 @@ document.addEventListener("DOMContentLoaded", function () {
     console.log("✅ Generate Workout clicked");
   });
 });
+function generateWorkout() {
+  var output = document.getElementById("workoutOutput");
+  output.innerHTML = "";
+
+  var p = document.createElement("p");
+  p.textContent = "Workout generation works ✅";
+  output.appendChild(p);
+}
