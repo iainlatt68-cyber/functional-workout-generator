@@ -5,58 +5,46 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Functional Fitness Generator</title>
 
-  <!-- Styles -->
-  <link rel="stylesheet" href="style.css">
-
-  <!-- Script (loaded once, after DOM) -->
-  <script src="script.js" defer></script>
+  <link rel
+  script.js</script>
 </head>
 
 <body>
   <main class="container">
     <h1>Functional Fitness Generator</h1>
 
-    <!-- Controls -->
-    <section class="controls">
-      <label for="level">Fitness level</label>
-      <select id="level">
-        <option value="beginner">Beginner</option>
-        <option value="intermediate">Intermediate</option>
-        <option value="advanced">Advanced</option>
-      </select>
+    <label for="level">Fitness level</label>
+    <select id="level">
+      <option value="beginner">Beginner</option>
+      <option value="intermediate">Intermediate</option>
+      <option value="advanced">Advanced</option>
+    </select>
 
-      <label for="duration">Workout length</label>
-      <select id="duration">
-        <option value="10">10–15 minutes</option>
-        <option value="20">20–30 minutes</option>
-        <option value="40">40+ minutes</option>
-      </select>
+    <label for="duration">Workout length</label>
+    <select id="duration">
+      <option value="10">10–15 minutes</option>
+      <option value="20">20–30 minutes</option>
+      <option value="40">40+ minutes</option>
+    </select>
 
-      <label for="equipment">Equipment</label>
-      <select id="equipment">
-        <option value="bodyweight">Bodyweight only</option>
-        <option value="dumbbells">Dumbbells</option>
-        <option value="bands">Resistance bands</option>
-      </select>
-    </section>
+    <label for="equipment">Equipment</label>
+    <select id="equipment">
+      <option value="bodyweight">Bodyweight</option>
+      <option value="dumbbells">Dumbbells</option>
+      <option value="bands">Resistance bands</option>
+    </select>
 
-    <!-- Generate Workout -->
     <button id="generateWorkoutBtn" type="button">
       Generate Workout
     </button>
 
-    <!-- Workout Output -->
-    <section id="workoutOutput" aria-live="polite">
-      <p>Your workout will appear here.</p>
-    </section>
+    <div id="workoutOutput"></div>
 
-    <!-- Timer -->
-    <section class="timer">
+    <div class="timer">
       <div id="timer">Ready</div>
-      <button id="startTimerBtn" type="button">
-        Start Workout
-      </button>
-    </section>
+      <button id="startTimerBtn" type="button">Start Workout</button>
+    </div>
   </main>
 </body>
 </html>
+``
