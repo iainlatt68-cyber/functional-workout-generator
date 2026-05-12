@@ -165,7 +165,7 @@ button:hover {
 
 .exercise-card.completed button {
   background: var(--accent);
-  color: #ffffff;
+  color:  #eef1f4;
   border-color: var(--accent);
 }
 
