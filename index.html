@@ -1,18 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Functional Fitness Generator</title>
 
-  <!-- ✅ THIS LINE MUST EXIST EXACTLY -->
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+
   <main class="container">
 
     <h1>Functional Fitness Generator</h1>
-    <h2>Build your session</h2>
 
     <section class="setup-card">
 
@@ -20,47 +19,21 @@
       <select id="goal">
         <option value="conditioning">Conditioning</option>
         <option value="strength">Strength</option>
-        <option value="hypertrophy">Hypertrophy</option>
-        <option value="recovery">Recovery</option>
-      </select>
-
-      <label for="mode">Workout Mode</label>
-      <select id="mode">
-        <option value="normal">Standard</option>
-        <option value="emom">EMOM</option>
-        <option value="amrap">AMRAP</option>
       </select>
 
       <label for="equipment">Equipment</label>
       <select id="equipment">
         <option value="bodyweight">Bodyweight</option>
-        <option value="dumbbells">Dumbbells</option>
         <option value="kettlebell">Kettlebell</option>
-        <option value="sandbag">Sandbag</option>
-        <option value="gym">Gym</option>
       </select>
 
       <label for="rounds">Rounds</label>
       <select id="rounds">
         <option value="1">1</option>
         <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-      </select>
-
-      <label for="template">Workout Template</label>
-      <select id="template">
-        <option value="">Custom</option>
-        <option value="burner">Conditioning Burner</option>
-        <option value="strength">Strength Block</option>
-        <option value="grinder">Sandbag Grinder</option>
-        <option value="kettle">Kettlebell Flow</option>
-        <option value="recovery">Recovery Reset</option>
       </select>
 
       <button id="generateWorkoutBtn">Generate Workout</button>
-      <button id="startWorkoutBtn">Start Workout</button>
 
     </section>
 
@@ -68,8 +41,6 @@
 
   </main>
 
-  <!-- ✅ MUST be a proper script tag -->
- app.js</script>
+  <script src="app.js" defer></script>
 </body>
 </html>
-``
