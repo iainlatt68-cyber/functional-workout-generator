@@ -1,220 +1,34 @@
-/* =========================
-   RESET & BASE
-========================= */
+/* ===== RESET ===== */
 * {
   box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  padding: 20px;
+  padding: 16px;
   background: #f7f8fa;
-  color: #1f2937;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  line-height: 1.5;
+  color: #1f2937;
 }
 
+/* ===== LAYOUT ===== */
 .container {
   max-width: 720px;
   margin: 0 auto;
 }
 
-/* =========================
-   HEADINGS
-========================= */
+/* ===== HEADINGS ===== */
 h1 {
-  font-size: 1.9rem;
-  font-weight: 700;
-  margin-bottom: 6px;
+  font-size: 1.7rem;
+  margin-bottom: 12px;
 }
 
 h2 {
   font-size: 1.1rem;
-  font-weight: 600;
-  margin: 0 0 12px;
-}
-
-.section-heading {
-  margin-top: 32px;
-  margin-bottom: 10px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: #6b7280;
-}
-
-/* =========================
-   SETUP PANEL
-========================= */
-.setup-card {
-  background: #ffffff;
-  padding: 20px;
-  border-radius: 14px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.06);
-  margin-bottom: 20px;
-}
-
-/* =========================
-   FORM CONTROLS
-========================= */
-label {
-  display: block;
-  font-size: 0.8rem;
-  font-weight: 500;
-  margin-bottom: 4px;
-  color: #6b7280;
-}
-
-select {
-  width: 100%;
-  padding: 12px 14px;
-  margin-bottom: 14px;
-  border-radius: 10px;
-  border: 1px solid #d1d5db;
-  background: #ffffff;
-  font-size: 0.95rem;
-}
-
-select:focus {
-  outline: none;
-  border-color: #22c55e;
-  box-shadow: 0 0 0 3px rgba(34,197,94,0.15);
-}
-
-/* =========================
-   PRIMARY ACTION
-========================= */
-#generateWorkoutBtn {
-  width: 100%;
-  padding: 16px;
-  border-radius: 14px;
-  border: none;
-  background: #22c55e;
-  color: white;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  margin-top: 8px;
-}
-
-#generateWorkoutBtn:hover {
-  background: #16a34a;
-}
-
-/* =========================
-   WORKOUT OUTPUT
-========================= */
-#workoutOutput {
-  margin-top: 24px;
-}
-
-/* =========================
-   INTENT LABEL
-========================= */
-.workout-intent {
-  font-size: 0.9rem;
-  font-weight: 600;
-  margin-bottom: 14px;
-  color: #16a34a;
-}
-
-/* =========================
-   EXERCISE CARD
-========================= */
-.exercise-card {
-  background: #ffffff;
-  padding: 16px 18px;
-  border-radius: 14px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.05);
   margin-bottom: 12px;
 }
 
-.exercise-card strong {
-  display: block;
-  font-size: 1rem;
-  margin-bottom: 4px;
-}
-
-.exercise-card p {
-  font-size: 0.85rem;
-  color: #6b7280;
-  margin-bottom: 8px;
-}
-
-/* =========================
-   MARK COMPLETE BUTTON
-========================= */
-.exercise-card button {
-  all: unset;
-  padding: 6px 12px;
-  border-radius: 8px;
-  border: 1px solid #d1d5db;
-  font-size: 0.8rem;
-  font-weight: 500;
-  cursor: pointer;
-  color: #374151;
-  background: #ffffff;
-}
-
-.exercise-card button:hover {
-  background: #f3f4f6;
-}
-
-/* Completed state */
-.exercise-card.completed {
-  opacity: 0.65;
-}
-
-.exercise-card.completed::after {
-  content: "✓";
-  position: absolute;
-  right: 14px;
-  top: 14px;
-  font-size: 1.2rem;
-  color: #22c55e;
-}
-
-/* =========================
-   MOBILE TWEAKS
-========================= */
-@media (max-width: 600px) {
-  body {
-    padding: 16px;
-  }
-
-  h1 {
-    font-size: 1.6rem;
-  }
-
-  .setup-card {
-    padding: 16px;
-  }
-
-  .exercise-card {
-    padding: 14px;
-  }
-/* =========================
-   MOBILE-FIRST POLISH
-========================= */
-
-/* Layout spacing */
-.container {
-  max-width: 720px;
-  margin: 0 auto;
-  padding: 16px;
-}
-
-/* Buttons – thumb friendly */
-button {
-  width: 100%;
-  padding: 14px;
-  font-size: 1rem;
-  border-radius: 12px;
-  border: none;
-}
-
-/* Setup card */
+/* ===== SETUP CARD ===== */
 .setup-card {
   background: #ffffff;
   padding: 18px;
@@ -223,22 +37,44 @@ button {
   margin-bottom: 20px;
 }
 
-/* Inputs */
-select {
-  width: 100%;
-  padding: 12px 14px;
-  font-size: 1rem;
-  border-radius: 10px;
-  border: 1px solid #d1d5db;
-  margin-bottom: 12px;
+/* ===== FORM CONTROLS ===== */
+label {
+  font-size: 0.85rem;
+  display: block;
+  margin-bottom: 4px;
 }
 
-/* Workout output */
+select {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 14px;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+}
+
+button {
+  width: 100%;
+  padding: 14px;
+  font-size: 1rem;
+  border-radius: 12px;
+  border: none;
+  background: #22c55e;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+button.secondary {
+  background: #e5e7eb;
+  color: #111827;
+  margin-top: 8px;
+}
+
+/* ===== WORKOUT OUTPUT ===== */
 #workoutOutput {
   margin-top: 20px;
 }
 
-/* Exercise cards */
 .exercise-card {
   background: #ffffff;
   padding: 16px;
@@ -259,7 +95,7 @@ select {
   color: #6b7280;
 }
 
-/* Completed state */
+/* Completed styling */
 .exercise-card.completed {
   opacity: 0.6;
 }
@@ -273,21 +109,9 @@ select {
   color: #22c55e;
 }
 
-/* Workout timer */
+/* Timer */
 #workoutTimer {
-  font-size: 1rem;
   font-weight: 600;
   margin: 12px 0;
   color: #16a34a;
-}
-
-/* Desktop enhancement */
-@media (min-width: 768px) {
-  .container {
-    padding: 32px;
-  }
-
-  button {
-    width: auto;
-  }
 }
