@@ -100,11 +100,18 @@ function generateWorkout() {
     const card = document.createElement("div");
     card.className = "exercise-card";
 
-    card.innerHTML = `
-      <h3>${exercise}</h3>
-      <p>${reps}</p>
-      <button type="button">Mark complete ✅</button>
-    `;
+    card.innerHTML =
+  "<h3>" + exercise + "</h3>" +
+  "<p>" + reps + "</p>" +
+  "<button type='button'>Mark complete ✅</button>";
+
+const completeBtn = card.querySelector("button");
+completeBtn.addEventListener("click", () => {
+  card.classList.toggle("completed");
+  completeBtn.textContent = card.classList.contains("completed")
+    ? "Completed ✅"
+    : "Mark complete ✅";
+});
 
     output.appendChild(card);
   });
