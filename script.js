@@ -197,16 +197,27 @@ function generateWorkout() {
   });
 
   // Summary
-  var summary = document.createElement("div");
-  summary.className = "exercise-card";
+// Summary
+var summary = document.createElement("div");
+summary.className = "exercise-card";
 
-  summary.innerHTML =
-    "<strong>Workout Summary</strong>" +
-    "<p>Style: " + style.toUpperCase() + "</p>" +
-    "<p>Rounds: " + rounds + "</p>" +
-    "<p>Equipment: " + equipment + "</p>";
+var title = document.createElement("strong");
+title.textContent = "Workout Summary";
+summary.appendChild(title);
 
-  output.appendChild(summary);
+var p1 = document.createElement("p");
+p1.textContent = "Style: " + style.toUpperCase();
+summary.appendChild(p1);
+
+var p2 = document.createElement("p");
+p2.textContent = "Rounds: " + rounds;
+summary.appendChild(p2);
+
+var p3 = document.createElement("p");
+p3.textContent = "Equipment: " + equipment;
+summary.appendChild(p3);
+
+output.appendChild(summary);
 }
 
 /* ========= EVENTS ========= */
