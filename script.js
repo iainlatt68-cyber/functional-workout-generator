@@ -109,7 +109,7 @@ function generateWorkout() {
   var output = document.getElementById("workoutOutput");
   output.innerHTML = "";
 
-  // Warm‑up
+  /* Warm-up */
   var wh = document.createElement("h3");
   wh.textContent = "Warm‑up";
   output.appendChild(wh);
@@ -159,7 +159,7 @@ function generateWorkout() {
     });
   }
 
-  // Cool‑down
+  /* Cool-down */
   var ch = document.createElement("h3");
   ch.textContent = "Cool‑down";
   output.appendChild(ch);
@@ -170,7 +170,6 @@ function generateWorkout() {
     output.appendChild(p2);
   });
 }
-
 /* ===============================
    TIMER
 ================================ */
