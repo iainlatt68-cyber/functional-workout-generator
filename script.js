@@ -268,9 +268,19 @@ output.appendChild(summary);
 /* ========= EVENTS ========= */
 
 document.addEventListener("DOMContentLoaded", function () {
-  document
-    .getElementById("generateWorkoutBtn")
-    .addEventListener("click", generateWorkout);
-});
+  console.log("✅ DOM fully loaded");
+
+  var btn = document.getElementById("generateWorkoutBtn");
+
+  if (!btn) {
+    console.error("❌ generateWorkoutBtn not found in DOM");
+    return;
   }
+
+  btn.addEventListener("click", function () {
+    console.log("✅ Generate button clicked");
+    generateWorkout();
+  });
+});
+
 
