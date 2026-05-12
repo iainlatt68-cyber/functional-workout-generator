@@ -131,11 +131,51 @@ function generateWorkout() {
       var list = EXERCISES[equipment][pattern];
       var exercise = shuffle(list)[0];
 
-      var prescription;
-      if (TIME_BASED.indexOf(exercise) !== -1) {
-        prescription = timeForExercise("intermediate", style, duration);
-      } else {
-        prescription = repsByStyle(style);
+function timeForExercise(level, style, duration) {
+  var min;
+  var max;
+
+  // Base by level
+  if (level === "beginner") {
+    min = 20;
+    max = 30;
+  } else if (level === "intermediate") {
+    min = 30;
+    max = 45;
+  } else {
+    min = 45;
+    max = 60;
+  }
+
+  // Adjust by workout style
+  if (style === "conditioning") {
+    min += 5;
+    max += 10;
+  }
+
+  if (style === "emom") {
+    min = 40;
+    max = 40;
+  }
+
+  if (style === "amrap") {
+    min = 45;
+    max = 60;
+  }
+
+  // Adjust by workout length
+  if (duration === "20") {
+    min += 5;
+    max += 5;
+  }
+
+  if (duration === "40") {
+    min += 10;
+    max += 10;
+  }
+
+  return min + "–" + max + " seconds";
+}
       }
 
       var card = document.createElement("div");
