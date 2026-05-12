@@ -272,3 +272,5 @@ document.addEventListener("DOMContentLoaded", function () {
     .getElementById("generateWorkoutBtn")
     .addEventListener("click", generateWorkout);
 });
+  }
+
