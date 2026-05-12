@@ -114,11 +114,27 @@ function generateWorkout() {
 
   var output = document.getElementById("workoutOutput");
   output.innerHTML = "";
+   
+var progressWrapper = document.createElement("div");
+progressWrapper.className = "progress-wrapper";
 
-  var progress = document.createElement("p");
-  progress.className = "progress-counter";
-  progress.textContent = "Progress: 0 / 0";
-  output.appendChild(progress);
+var progressBar = document.createElement("div");
+progressBar.className = "progress-bar";
+
+progressWrapper.appendChild(progressBar);
+output.appendChild(progressWrapper);
+   
+ function updateProgress(output) {
+  var cards = output.querySelectorAll(".exercise-card");
+  var done = output.querySelectorAll(".exercise-card.completed").length;
+  var bar = output.querySelector(".progress-bar");
+
+  if (!bar || cards.length === 0) return;
+
+  var percent = Math.round((done / cards.length) * 100);
+  bar.style.width = percent + "%";
+}
+``
 
   /* Warm‑up */
   var wh = document.createElement("h3");
