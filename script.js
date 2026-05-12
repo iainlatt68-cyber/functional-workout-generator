@@ -101,16 +101,18 @@ function timeForExercise(level, style, duration) {
 function generateWorkout() {
   var equipment = document.getElementById("equipment").value;
   var style = document.getElementById("style").value;
+  var duration = document.getElementById("duration").value;
+
   var roundsEl = document.getElementById("rounds");
   var rounds = roundsEl ? Number(roundsEl.value) : 1;
-  var output = document.getElementById("workoutOutput");
 
+  var output = document.getElementById("workoutOutput");
   output.innerHTML = "";
 
-  /* Warm‑up */
-  var h = document.createElement("h3");
-  h.textContent = "Warm‑up";
-  output.appendChild(h);
+  // Warm‑up
+  var wh = document.createElement("h3");
+  wh.textContent = "Warm‑up";
+  output.appendChild(wh);
 
   shuffle(WARMUP).slice(0, 3).forEach(function (item) {
     var p = document.createElement("p");
@@ -119,10 +121,6 @@ function generateWorkout() {
   });
 
   var patterns = ["squat", "hinge", "push", "pull", "core"];
-  var reps = repsByStyle(style);
-var useTimeFor = function (exercise) {
-  return TIME_BASED.indexOf(exercise) !== -1;
-};
 
   for (var r = 1; r <= rounds; r++) {
     var rh = document.createElement("h3");
@@ -130,41 +128,15 @@ var useTimeFor = function (exercise) {
     output.appendChild(rh);
 
     shuffle(patterns).forEach(function (pattern) {
-  var list = EXERCISES[equipment][pattern];
-  var exercise = shuffle(list)[0];
+      var list = EXERCISES[equipment][pattern];
+      var exercise = shuffle(list)[0];
 
-  var prescription;
-  if (useTimeFor(exercise)) {
-    prescription = timeForExercise(level, style, duration);
-  } else {
-    prescription = reps;
-  }
-
-  var card = document.createElement("div");
-  card.className = "exercise-card";
-
-  var btn = document.createElement("button");
-  btn.textContent = "Mark complete ✅";
-  btn.onclick = function () {
-    this.parentNode.classList.toggle("completed");
-    this.textContent =
-      this.parentNode.classList.contains("completed")
-        ? "Completed ✅"
-        : "Mark complete ✅";
-  };
-
-  card.innerHTML =
-    "<strong>" + exercise + "</strong>" +
-    "<p>" + prescription + "</p>";
-
-  card.appendChild(btn);
-  output.appendChild(card);
-});
-if (useTimeFor(exercise)) {
-  prescription = timeForExercise(level, style, duration);
-} else {
-  prescription = reps;
-}
+      var prescription;
+      if (TIME_BASED.indexOf(exercise) !== -1) {
+        prescription = timeForExercise("intermediate", style, duration);
+      } else {
+        prescription = repsByStyle(style);
+      }
 
       var card = document.createElement("div");
       card.className = "exercise-card";
@@ -172,25 +144,22 @@ if (useTimeFor(exercise)) {
       var btn = document.createElement("button");
       btn.textContent = "Mark complete ✅";
       btn.onclick = function () {
-        this.parentNode.classList.toggle("completed");
-        this.textContent =
-          this.parentNode.classList.contains("completed")
-            ? "Completed ✅"
-            : "Mark complete ✅";
+        card.classList.toggle("completed");
+        btn.textContent = card.classList.contains("completed")
+          ? "Completed ✅"
+          : "Mark complete ✅";
       };
 
-   
-card.innerHTML =
-  "<strong>" + exercise + "</strong>" +
-  "<p>" + prescription + "</p>";
-
+      card.innerHTML =
+        "<strong>" + exercise + "</strong>" +
+        "<p>" + prescription + "</p>";
 
       card.appendChild(btn);
       output.appendChild(card);
     });
   }
 
-  /* Cool‑down */
+  // Cool‑down
   var ch = document.createElement("h3");
   ch.textContent = "Cool‑down";
   output.appendChild(ch);
