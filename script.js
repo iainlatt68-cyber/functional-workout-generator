@@ -153,7 +153,47 @@ function generateWorkout() {
     }
   }
 }
+function startWorkout() {
+  console.log("✅ Workout started");
+var setup = document.querySelector(".setup-card");
+if (setup) {
+  setup.style.opacity = "0.6";
+  setup.style.pointerEvents = "none";
+}
+  var timerEl = document.getElementById("workoutTimer");
 
+  // If timer element doesn't exist yet, create it
+  if (!timerEl) {
+    timerEl = document.createElement("div");
+    timerEl.id = "workoutTimer";
+    timerEl.style.fontWeight = "600";
+    timerEl.style.marginTop = "16px";
+    timerEl.style.color = "#16a34a";
+    timerEl.textContent = "Workout in progress: 00:00";
+
+    var output = document.getElementById("workoutOutput");
+    output.prepend(timerEl);
+  }
+
+  var startTime = Date.now();
+
+  // Avoid multiple timers
+  if (window.workoutInterval) {
+    clearInterval(window.workoutInterval);
+  }
+
+  window.workoutInterval = setInterval(function () {
+    var elapsed = Math.floor((Date.now() - startTime) / 1000);
+    var mins = Math.floor(elapsed / 60);
+    var secs = elapsed % 60;
+
+    timerEl.textContent =
+      "Workout in progress: " +
+      (mins < 10 ? "0" + mins : mins) +
+      ":" +
+      (secs < 10 ? "0" + secs : secs);
+  }, 1000);
+}
 /* ===============================
    EVENT WIRING
 ================================ */
@@ -161,15 +201,18 @@ function generateWorkout() {
 document.addEventListener("DOMContentLoaded", function () {
   console.log("✅ DOM ready");
 
-  var btn = document.getElementById("generateWorkoutBtn");
+ var generateBtn = document.getElementById("generateWorkoutBtn");
+var startBtn = document.getElementById("startWorkoutBtn");
 
-  if (!btn) {
-    console.error("❌ generateWorkoutBtn not found");
-    return;
-  }
-
-  btn.addEventListener("click", function () {
+if (generateBtn) {
+  generateBtn.addEventListener("click", function () {
     console.log("✅ Generate Workout clicked");
     generateWorkout();
   });
-});
+}
+
+if (startBtn) {
+  startBtn.addEventListener("click", function () {
+    startWorkout();
+  });
+}
