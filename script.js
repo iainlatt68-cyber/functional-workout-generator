@@ -46,6 +46,35 @@ var EXERCISES = {
     pull: ["Pull-Ups"],
     core: ["Cable Chop"]
   }
+   var EXERCISE_LIBRARY = [
+  {
+    name: "Back Squat",
+    pattern: "squat",
+    equipment: "gym",
+    skill: "intermediate",
+    jointStress: "high",
+    fatigueCost: 3,
+    energy: "mechanical"
+  },
+  {
+    name: "Goblet Squat",
+    pattern: "squat",
+    equipment: "dumbbells",
+    skill: "beginner",
+    jointStress: "low",
+    fatigueCost: 1,
+    energy: "mechanical"
+  },
+  {
+    name: "Plank",
+    pattern: "core",
+    equipment: "bodyweight",
+    skill: "beginner",
+    jointStress: "low",
+    fatigueCost: 1,
+    energy: "isometric",
+    timeBased: true
+  }
 };
 
 /* ===============================
