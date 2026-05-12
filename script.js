@@ -1,262 +1,176 @@
-console.log("✅ script.js is executing");
+console.log("✅ Smart workout engine loaded");
 
 /* ===============================
-   CONFIGURATION DATA
+   EXERCISE KNOWLEDGE BASE
 ================================ */
 
-var TIME_BASED = [
-  "Plank",
-  "Dead Bug",
-  "Farmer Carry",
-  "Bike",
-  "Row Erg"
+const EXERCISE_LIBRARY = [
+  // --- Lower body ---
+  { name: "Back Squat", pattern: "squat", equipment: "gym", skill: "intermediate", fatigue: 3, jointStress: "high", energy: "mechanical" },
+  { name: "Goblet Squat", pattern: "squat", equipment: "dumbbells", skill: "beginner", fatigue: 2, jointStress: "low", energy: "mechanical" },
+
+  { name: "Deadlift", pattern: "hinge", equipment: "gym", skill: "intermediate", fatigue: 3, jointStress: "high", energy: "mechanical" },
+  { name: "Glute Bridge", pattern: "hinge", equipment: "bodyweight", skill: "beginner", fatigue: 1, jointStress: "low", energy: "mechanical" },
+
+  // --- Upper body ---
+  { name: "Bench Press", pattern: "push", equipment: "gym", skill: "intermediate", fatigue: 3, jointStress: "moderate", energy: "mechanical" },
+  { name: "Push‑Ups", pattern: "push", equipment: "bodyweight", skill: "beginner", fatigue: 1, jointStress: "low", energy: "mechanical" },
+
+  { name: "Pull‑Ups", pattern: "pull", equipment: "gym", skill: "advanced", fatigue: 3, jointStress: "moderate", energy: "mechanical" },
+  { name: "Dumbbell Row", pattern: "pull", equipment: "dumbbells", skill: "beginner", fatigue: 2, jointStress: "low", energy: "mechanical" },
+
+  // --- Core / conditioning ---
+  { name: "Plank", pattern: "core", equipment: "bodyweight", skill: "beginner", fatigue: 1, jointStress: "low", energy: "isometric", timeBased: true },
+  { name: "Farmer Carry", pattern: "core", equipment: "dumbbells", skill: "intermediate", fatigue: 2, jointStress: "moderate", energy: "isometric", timeBased: true }
 ];
 
-var WARMUP = [
-  "5 min easy cardio",
-  "World’s Greatest Stretch",
-  "Glute activation"
-];
+/* ===============================
+   TRAINING RULES
+================================ */
 
-var COOLDOWN = [
-  "Hamstring stretch",
-  "Hip flexor stretch",
-  "Breathing – 2 min"
-];
-
-var EXERCISES = {
-  bodyweight: {
-    squat: ["Air Squat", "Split Squat"],
-    hinge: ["Glute Bridge"],
-    push: ["Push-Ups"],
-    pull: ["Inverted Row"],
-    core: ["Plank", "Dead Bug"]
-  },
-  dumbbells: {
-    squat: ["Goblet Squat"],
-    hinge: ["DB Romanian Deadlift"],
-    push: ["DB Press"],
-    pull: ["DB Row"],
-    core: ["Farmer Carry"]
-  },
-  gym: {
-    squat: ["Back Squat", "Leg Press"],
-    hinge: ["Deadlift"],
-    push: ["Bench Press"],
-    pull: ["Pull-Ups"],
-    core: ["Cable Chop"]
-  }
-   var EXERCISE_LIBRARY = [
-  {
-    name: "Back Squat",
-    pattern: "squat",
-    equipment: "gym",
-    skill: "intermediate",
-    jointStress: "high",
-    fatigueCost: 3,
-    energy: "mechanical"
-  },
-  {
-    name: "Goblet Squat",
-    pattern: "squat",
-    equipment: "dumbbells",
-    skill: "beginner",
-    jointStress: "low",
-    fatigueCost: 1,
-    energy: "mechanical"
-  },
-  {
-    name: "Plank",
-    pattern: "core",
-    equipment: "bodyweight",
-    skill: "beginner",
-    jointStress: "low",
-    fatigueCost: 1,
-    energy: "isometric",
-    timeBased: true
-  }
+const GOALS = {
+  strength:    { reps: "3–6 reps", rest: "2–3 min", fatigueBias: "mechanical" },
+  hypertrophy:{ reps: "8–15 reps", rest: "60–90 sec", fatigueBias: "mixed" },
+  conditioning:{ reps: null, rest: "30–45 sec", fatigueBias: "metabolic" },
+  recovery:   { reps: null, rest: "Easy pace", fatigueBias: "low" }
 };
 
-/* ===============================
-   HELPER FUNCTIONS
-================================ */
-
-function shuffle(arr) {
-  return arr.sort(function () {
-    return Math.random() - 0.5;
-  });
-}
-
-function repsByStyle(style) {
-  if (style === "strength") return "5–8 reps";
-  if (style === "conditioning") return "12–15 reps";
-  if (style === "emom") return "EMOM";
-  if (style === "amrap") return "AMRAP";
-  return "10 reps";
-}
-
-function timeForExercise(level) {
+function timePrescription(level) {
   if (level === "beginner") return "20–30 sec";
   if (level === "intermediate") return "30–45 sec";
   return "45–60 sec";
 }
 
-function restForStyle(style) {
-  if (style === "strength") return "Rest 90–120 sec";
-  if (style === "conditioning") return "Rest 30–45 sec";
-  if (style === "emom") return "Start every minute";
-  if (style === "amrap") return "Rest as needed";
-  return "";
+/* ===============================
+   HELPERS
+================================ */
+
+function shuffle(arr) {
+  return arr
+    .map(v => ({ v, s: Math.random() }))
+    .sort((a,b) => a.s - b.s)
+    .map(o => o.v);
 }
 
-function applyFatigue(text, round) {
-  if (round === 1) return text;
-  if (round === 2) return text + " (slightly reduce effort)";
-  return text + " (reduce effort)";
+function loadHistory() {
+  return JSON.parse(localStorage.getItem("trainingHistory") || "[]");
+}
+
+function saveSession(session) {
+  const history = loadHistory();
+  history.push(session);
+  localStorage.setItem("trainingHistory", JSON.stringify(history));
+}
+
+function allowedForLevel(ex, level) {
+  if (ex.skill === "advanced" && level === "beginner") return false;
+  return true;
 }
 
 /* ===============================
-   PROGRESS TRACKING
+   SMART SELECTION ENGINE
+================================ */
+
+function selectExercises({ equipment, level, goal }) {
+  return shuffle(
+    EXERCISE_LIBRARY.filter(e =>
+      e.equipment === equipment &&
+      allowedForLevel(e, level)
+    )
+  )
+  .sort((a,b) => a.fatigue - b.fatigue)
+  .slice(0, 5);
+}
+
+/* ===============================
+   UI PROGRESS
 ================================ */
 
 function updateProgress(output) {
-  var total = output.querySelectorAll(".exercise-card").length;
-  var done = output.querySelectorAll(".exercise-card.completed").length;
-  var counter = output.querySelector(".progress-counter");
+  const cards = output.querySelectorAll(".exercise-card");
+  const done = output.querySelectorAll(".exercise-card.completed").length;
+  const bar = output.querySelector(".progress-bar");
 
-  if (counter) {
-    counter.textContent = "Progress: " + done + " / " + total;
+  if (bar && cards.length) {
+    bar.style.width = Math.round((done / cards.length) * 100) + "%";
   }
 }
 
 /* ===============================
-   WORKOUT GENERATION
+   MAIN GENERATOR
 ================================ */
 
 function generateWorkout() {
-  var level = document.getElementById("level").value;
-  var style = document.getElementById("style").value;
-  var equipment = document.getElementById("equipment").value;
-  var session = document.getElementById("session").value;
-  var roundsEl = document.getElementById("rounds");
-  var rounds = roundsEl ? Number(roundsEl.value) : 1;
+  const level = document.getElementById("level").value;
+  const goal  = document.getElementById("session").value;
+  const equipment = document.getElementById("equipment").value;
+  const rounds = Number(document.getElementById("rounds").value || 1);
+  const output = document.getElementById("workoutOutput");
 
-  var output = document.getElementById("workoutOutput");
   output.innerHTML = "";
-   
-var progressWrapper = document.createElement("div");
-progressWrapper.className = "progress-wrapper";
 
-var progressBar = document.createElement("div");
-progressBar.className = "progress-bar";
+  // Progress bar
+  const wrap = document.createElement("div");
+  wrap.className = "progress-wrapper";
+  const bar = document.createElement("div");
+  bar.className = "progress-bar";
+  wrap.appendChild(bar);
+  output.appendChild(wrap);
 
-progressWrapper.appendChild(progressBar);
-output.appendChild(progressWrapper);
-   
- function updateProgress(output) {
-  var cards = output.querySelectorAll(".exercise-card");
-  var done = output.querySelectorAll(".exercise-card.completed").length;
-  var bar = output.querySelector(".progress-bar");
+  const exercises = selectExercises({ equipment, level, goal });
 
-  if (!bar || cards.length === 0) return;
+  for (let r = 1; r <= rounds; r++) {
+    const title = document.createElement("h3");
+    title.textContent = `Round ${r}`;
+    title.className = "section-heading";
+    output.appendChild(title);
 
-  var percent = Math.round((done / cards.length) * 100);
-  bar.style.width = percent + "%";
-}
-``
-
-  /* Warm‑up */
-  var wh = document.createElement("h3");
-  wh.textContent = "Warm‑up";
-  output.appendChild(wh);
-
-  shuffle(WARMUP).slice(0, 3).forEach(function (w) {
-    var p = document.createElement("p");
-    p.textContent = "• " + w;
-    output.appendChild(p);
-  });
-
-  var patterns = ["squat", "hinge", "push", "pull", "core"];
-
-  for (var r = 1; r <= rounds; r++) {
-    var rh = document.createElement("h3");
-    rh.textContent = rounds > 1 ? "Circuit – Round " + r : "Workout";
-    output.appendChild(rh);
-
-    var rest = document.createElement("p");
-    rest.textContent = restForStyle(style);
-    rest.style.opacity = "0.7";
-    output.appendChild(rest);
-
-    shuffle(patterns).forEach(function (pattern) {
-      var list = EXERCISES[equipment][pattern];
-      var exercise = shuffle(list)[0];
-
-      var base;
-      if (TIME_BASED.indexOf(exercise) !== -1) {
-        base = timeForExercise(level);
+    exercises.forEach(ex => {
+      let prescription;
+      if (ex.timeBased || GOALS[goal].reps === null) {
+        prescription = timePrescription(level);
       } else {
-        base = repsByStyle(style);
+        prescription = GOALS[goal].reps;
       }
 
-      var prescription = applyFatigue(base, r);
+      // Fatigue scaling
+      if (r > 1) prescription += " (reduce effort)";
 
-      var card = document.createElement("div");
+      const card = document.createElement("div");
       card.className = "exercise-card";
 
-      var name = document.createElement("strong");
-      name.textContent = exercise;
+      const name = document.createElement("strong");
+      name.textContent = ex.name;
       card.appendChild(name);
 
-      var p2 = document.createElement("p");
-      p2.textContent = prescription;
-      card.appendChild(p2);
+      const p = document.createElement("p");
+      p.textContent = prescription;
+      card.appendChild(p);
 
-      var btn = document.createElement("button");
-      btn.textContent = "Mark complete ✅";
+      const btn = document.createElement("button");
       btn.type = "button";
-      btn.onclick = function () {
+      btn.textContent = "Mark complete ✅";
+      btn.onclick = () => {
         card.classList.toggle("completed");
         updateProgress(output);
       };
-
       card.appendChild(btn);
+
       output.appendChild(card);
     });
   }
 
-  /* Cool‑down */
-  var ch = document.createElement("h3");
-  ch.textContent = "Cool‑down";
-  output.appendChild(ch);
+  // Explainability
+  const explain = document.createElement("div");
+  explain.className = "exercise-card";
+  explain.innerHTML = `
+    <strong>Why this workout?</strong>
+    <p>This session emphasises <b>${goal}</b> principles with ${GOALS[goal].rest} rests,
+    respecting your experience level and minimising unnecessary fatigue.</p>
+  `;
+  output.appendChild(explain);
 
-  shuffle(COOLDOWN).slice(0, 2).forEach(function (c) {
-    var p3 = document.createElement("p");
-    p3.textContent = "• " + c;
-    output.appendChild(p3);
-  });
-
-  /* Summary */
-  var summary = document.createElement("div");
-  summary.className = "exercise-card";
-
-  var t = document.createElement("strong");
-  t.textContent = "Workout Summary";
-  summary.appendChild(t);
-
-  [
-    "Level: " + level,
-    "Style: " + style,
-    "Rounds: " + rounds,
-    "Equipment: " + equipment,
-    "Session: " + session
-  ].forEach(function (lineText) {
-    var line = document.createElement("p");
-    line.textContent = lineText;
-    summary.appendChild(line);
-  });
-
-  output.appendChild(summary);
+  saveSession({ date: new Date().toISOString(), level, goal, equipment });
 
   updateProgress(output);
 }
@@ -265,17 +179,7 @@ output.appendChild(progressWrapper);
    EVENT WIRING
 ================================ */
 
-document.addEventListener("DOMContentLoaded", function () {
-  console.log("✅ DOM ready");
-
-  var btn = document.getElementById("generateWorkoutBtn");
-  if (!btn) {
-    console.error("❌ generateWorkoutBtn not found");
-    return;
-  }
-
-  btn.addEventListener("click", function () {
-    console.log("✅ generateWorkout() called");
-    generateWorkout();
-  });
+document.addEventListener("DOMContentLoaded", () => {
+  const btn = document.getElementById("generateWorkoutBtn");
+  if (btn) btn.addEventListener("click", generateWorkout);
 });
