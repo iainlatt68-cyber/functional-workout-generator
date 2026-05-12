@@ -9,43 +9,38 @@ document.addEventListener("DOMContentLoaded", function () {
       "Air Squat",
       "Push-Ups",
       "Plank",
-      "Reverse Lunge",
-      "Mountain Climbers"
+      "Reverse Lunge"
     ],
     dumbbells: [
       "DB Goblet Squat",
       "DB Row",
       "DB Push Press",
-      "DB RDL",
       "Farmer Carry"
     ],
     kettlebell: [
       "KB Swing",
       "KB Goblet Squat",
       "KB Clean",
-      "KB Press",
-      "KB Reverse Lunge"
+      "KB Press"
     ],
     sandbag: [
       "Sandbag Clean",
       "Sandbag Front Squat",
       "Sandbag Carry",
-      "Sandbag Shouldering",
-      "Sandbag Reverse Lunge"
+      "Sandbag Shouldering"
     ],
     gym: [
       "Back Squat",
       "Bench Press",
       "Deadlift",
-      "Pull-Ups",
-      "Barbell Row"
+      "Pull-Ups"
     ]
   };
 
   const GOALS = {
-    strength: "3-6 reps",
-    hypertrophy: "8-12 reps",
-    conditioning: "12-20 reps",
+    strength: "5 reps",
+    hypertrophy: "8–12 reps",
+    conditioning: "12–20 reps",
     recovery: "Easy controlled reps"
   };
 
@@ -63,11 +58,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
   let exerciseIndex = 0;
   let workoutStarted = false;
-  let workoutTimer = null;
-  let workoutStartTime = null;
 
   /* ===============================
-     UTILITIES
+     ACTIVE EXERCISE HANDLING
   =============================== */
 
   function setActiveExercise() {
@@ -77,7 +70,6 @@ document.addEventListener("DOMContentLoaded", function () {
       card.classList.toggle("active", index === exerciseIndex);
     });
 
-    // Auto-scroll to active exercise
     if (cards[exerciseIndex]) {
       cards[exerciseIndex].scrollIntoView({
         behavior: "smooth",
@@ -86,14 +78,20 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  function clearActiveExercises() {
-    document
-      .querySelectorAll(".exercise-card")
-      .forEach(card => card.classList.remove("active"));
+  function advanceExercise() {
+    const cards = document.querySelectorAll(".exercise-card");
+
+    if (exerciseIndex < cards.length - 1) {
+      cards[exerciseIndex].classList.add("completed");
+      exerciseIndex++;
+      setActiveExercise();
+    } else {
+      showWorkoutComplete();
+    }
   }
 
   /* ===============================
-     WORKOUT GENERATION
+     GENERATE WORKOUT
   =============================== */
 
   function generateWorkout() {
@@ -108,7 +106,6 @@ document.addEventListener("DOMContentLoaded", function () {
     let rounds = Number(roundsEl.value);
     const template = templateEl.value;
 
-    // Apply template overrides
     if (template && TEMPLATES[template]) {
       const t = TEMPLATES[template];
       if (t.goal) goal = t.goal;
@@ -116,43 +113,38 @@ document.addEventListener("DOMContentLoaded", function () {
       if (t.equipment) equipment = t.equipment;
     }
 
-    // Reset state
-    workoutStarted = false;
-    exerciseIndex = 0;
-    clearActiveExercises();
-
     output.innerHTML = "";
+    exerciseIndex = 0;
+    workoutStarted = false;
 
     const title = document.createElement("h3");
     title.textContent =
-      `Workout (${goal.toUpperCase()} / ${equipment.toUpperCase()})`;
+      `Workout – ${equipment.toUpperCase()} (${rounds} sets each)`;
     output.appendChild(title);
 
-    const list = EXERCISES[equipment];
+    EXERCISES[equipment].forEach(exercise => {
+      const card = document.createElement("div");
+      card.className = "exercise-card";
 
-    for (let r = 1; r <= rounds; r++) {
-      const roundHeader = document.createElement("h4");
-      roundHeader.textContent = `Round ${r}`;
-      output.appendChild(roundHeader);
+      const name = document.createElement("strong");
+      name.textContent = exercise;
+      card.appendChild(name);
 
-      list.forEach(exercise => {
-        const card = document.createElement("div");
-        card.className = "exercise-card";
+      const prescription = document.createElement("p");
+      prescription.textContent =
+        exercise.toLowerCase().includes("carry") || exercise === "Plank"
+          ? `${rounds} rounds of 30–45 seconds`
+          : `${rounds} sets of ${GOALS[goal]}`;
+      card.appendChild(prescription);
 
-        const name = document.createElement("strong");
-        name.textContent = exercise;
-        card.appendChild(name);
-
-        const prescription = document.createElement("p");
-        prescription.textContent =
-          exercise.toLowerCase().includes("carry") || exercise === "Plank"
-            ? "30-45 seconds"
-            : GOALS[goal];
-        card.appendChild(prescription);
-
-        output.appendChild(card);
+      // CLICK TO ADVANCE
+      card.addEventListener("click", function () {
+        if (!workoutStarted) return;
+        advanceExercise();
       });
-    }
+
+      output.appendChild(card);
+    });
   }
 
   /* ===============================
@@ -167,32 +159,41 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    if (workoutStarted) return;
-
     workoutStarted = true;
     exerciseIndex = 0;
-
-    // Activate first exercise
     setActiveExercise();
+  }
 
-    // Start timer (simple)
-    workoutStartTime = Date.now();
-    workoutTimer = setInterval(() => {
-      const elapsed = Math.floor((Date.now() - workoutStartTime) / 1000);
-      console.log("Workout time:", elapsed, "seconds");
-    }, 1000);
+  /* ===============================
+     COMPLETE
+  =============================== */
+
+  function showWorkoutComplete() {
+    const output = document.getElementById("workoutOutput");
+    output.innerHTML = "";
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "exercise-card active";
+
+    const title = document.createElement("h3");
+    title.textContent = "Workout Complete";
+    wrapper.appendChild(title);
+
+    const msg = document.createElement("p");
+    msg.textContent = "Good work. Recover, refuel, and repeat.";
+    wrapper.appendChild(msg);
+
+    output.appendChild(wrapper);
   }
 
   /* ===============================
      EVENTS
   =============================== */
 
-  document
-    .getElementById("generateWorkoutBtn")
+  document.getElementById("generateWorkoutBtn")
     .addEventListener("click", generateWorkout);
 
-  document
-    .getElementById("startWorkoutBtn")
+  document.getElementById("startWorkoutBtn")
     .addEventListener("click", startWorkout);
 
 });
