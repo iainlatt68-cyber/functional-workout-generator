@@ -1,8 +1,7 @@
-
 console.log("✅ script.js loaded");
 
 // =====================
-// EXERCISE DATA
+// EXERCISE DATABASE
 // =====================
 const EXERCISES = {
   bodyweight: {
@@ -79,7 +78,7 @@ function getExerciseCount(duration) {
 }
 
 // =====================
-// WORKOUT GENERATION
+// WORKOUT GENERATOR
 // =====================
 function generateWorkout() {
   const level = document.getElementById("level").value;
@@ -89,15 +88,15 @@ function generateWorkout() {
 
   output.innerHTML = "";
 
-  const exercisePool = EXERCISES[equipment][level];
-  const exercises = shuffle([...exercisePool]).slice(
+  const pool = EXERCISES[equipment][level];
+  const workout = shuffle([...pool]).slice(
     0,
     getExerciseCount(duration)
   );
 
   const reps = getReps(level);
 
-  exercises.forEach(exercise => {
+  workout.forEach(exercise => {
     const card = document.createElement("div");
     card.className = "exercise-card";
 
@@ -121,24 +120,24 @@ function startTimer() {
   clearInterval(timerInterval);
 
   const duration = document.getElementById("duration").value;
-  const timerDisplay = document.getElementById("timer");
+  const timer = document.getElementById("timer");
 
   timeLeft = duration === "10" ? 30 : duration === "20" ? 45 : 60;
-  timerDisplay.textContent = `${timeLeft} seconds`;
+  timer.textContent = `${timeLeft} seconds`;
 
   timerInterval = setInterval(() => {
     timeLeft--;
-    timerDisplay.textContent = `${timeLeft} seconds`;
+    timer.textContent = `${timeLeft} seconds`;
 
     if (timeLeft <= 0) {
       clearInterval(timerInterval);
-      timerDisplay.textContent = "Rest complete ✅";
+      timer.textContent = "Rest complete ✅";
     }
   }, 1000);
 }
 
 // =====================
-// EVENT LISTENERS
+// EVENTS
 // =====================
 document.addEventListener("DOMContentLoaded", () => {
   document
