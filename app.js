@@ -52,10 +52,18 @@ function generateWorkout() {
       card.appendChild(p);
 
       var btn = document.createElement("button");
-      btn.textContent = "Mark complete";
-      btn.onclick = function () {
-        this.parentNode.classList.toggle("completed");
-      };
+btn.type = "button"; // prevents any form behaviour
+btn.textContent = "Mark complete";
+
+btn.addEventListener("click", function (e) {
+  e.preventDefault();
+  card.classList.toggle("completed");
+
+  // Visual feedback for the user
+  btn.textContent = card.classList.contains("completed")
+    ? "Completed ✓"
+    : "Mark complete";
+});
 
       card.appendChild(btn);
       output.appendChild(card);
