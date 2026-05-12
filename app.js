@@ -1,4 +1,4 @@
-console.log("✅ app.js loaded");
+console.log("app.js loaded");
 
 /* ===== DATA ===== */
 
@@ -9,9 +9,9 @@ var EXERCISES = {
 };
 
 var GOALS = {
-  strength: "3–6 reps",
-  hypertrophy: "8–12 reps",
-  conditioning: "12–20 reps",
+  strength: "3-6 reps",
+  hypertrophy: "8-12 reps",
+  conditioning: "12-20 reps",
   recovery: "Easy pace"
 };
 
@@ -21,7 +21,6 @@ var workoutTimer = null;
 /* ===== GENERATE WORKOUT ===== */
 
 function generateWorkout() {
-  var level = document.getElementById("level").value;
   var goal = document.getElementById("goal").value;
   var equipment = document.getElementById("equipment").value;
   var rounds = Number(document.getElementById("rounds").value);
@@ -43,7 +42,9 @@ function generateWorkout() {
     header.textContent = "Round " + r;
     output.appendChild(header);
 
-    list.forEach(function (exercise) {
+    for (var i = 0; i < list.length; i++) {
+      var exercise = list[i];
+
       var card = document.createElement("div");
       card.className = "exercise-card";
 
@@ -52,14 +53,16 @@ function generateWorkout() {
       card.appendChild(title);
 
       var p = document.createElement("p");
-      p.textContent =
-        exercise === "Plank" || exercise === "Farmer Carry"
-          ? "30–45 seconds"
-          : GOALS[goal];
+      if (exercise === "Plank" || exercise === "Farmer Carry") {
+        p.textContent = "30-45 seconds";
+      } else {
+        p.textContent = GOALS[goal];
+      }
       card.appendChild(p);
 
       var btn = document.createElement("button");
-      btn.textContent = "Mark complete ✅";
+      btn.type = "button";
+      btn.textContent = "Mark complete";
       btn.onclick = function () {
         if (!card.classList.contains("completed")) {
           card.classList.add("completed");
@@ -73,21 +76,22 @@ function generateWorkout() {
 
       card.appendChild(btn);
       output.appendChild(card);
-    });
+    }
   }
 }
 
 /* ===== START WORKOUT ===== */
 
 function startWorkout() {
-  var output = document.getElementById("workoutOutput");
-
   if (workoutTimer) {
     clearInterval(workoutTimer);
   }
 
+  var output = document.getElementById("workoutOutput");
   var timer = document.createElement("div");
   timer.id = "workoutTimer";
+  timer.style.fontWeight = "600";
+  timer.style.margin = "12px 0";
   output.prepend(timer);
 
   workoutStartTime = Date.now();
@@ -104,28 +108,29 @@ function startWorkout() {
   }, 1000);
 }
 
-/* ===== END WORKOUT SUMMARY ===== */
+/* ===== END WORKOUT ===== */
 
 function finishWorkout(goal, done, total) {
   clearInterval(workoutTimer);
 
   var elapsed = Math.floor((Date.now() - workoutStartTime) / 1000);
   var output = document.getElementById("workoutOutput");
-
   output.innerHTML = "";
 
   var card = document.createElement("div");
   card.className = "exercise-card";
 
-  card.innerHTML =
-    "<strong>Workout Complete ✅</strong>" +
-    "<p>Goal: " + goal.toUpperCase() + "</p>" +
-    "<p>Exercises completed: " + done + " / " + total + "</p>" +
-    "<p>Total time: " +
+  var summary =
+    "Workout complete\n" +
+    "Goal: " + goal.toUpperCase() + "\n" +
+    "Completed: " + done + " of " + total + "\n" +
+    "Time: " +
     Math.floor(elapsed / 60) + ":" +
-    ("0" + (elapsed % 60)).slice(-2) +
-    "</p>" +
-    "<p>Great work — consistency wins 💪</p>";
+    ("0" + (elapsed % 60)).slice(-2);
+
+  var pre = document.createElement("pre");
+  pre.textContent = summary;
+  card.appendChild(pre);
 
   output.appendChild(card);
 }
@@ -133,11 +138,6 @@ function finishWorkout(goal, done, total) {
 /* ===== EVENTS ===== */
 
 document.addEventListener("DOMContentLoaded", function () {
-  document
-    .getElementById("generateWorkoutBtn")
-    .addEventListener("click", generateWorkout);
-
-  document
-    .getElementById("startWorkoutBtn")
-    .addEventListener("click", startWorkout);
+  document.getElementById("generateWorkoutBtn").onclick = generateWorkout;
+  document.getElementById("startWorkoutBtn").onclick = startWorkout;
 });
