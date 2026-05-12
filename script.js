@@ -14,3 +14,14 @@ document.addEventListener("DOMContentLoaded", function () {
     alert("✅ Button click confirmed");
   });
 });
+document.addEventListener("DOMContentLoaded", function () {
+  var btn = document.getElementById("generateWorkoutBtn");
+  if (!btn) {
+    console.error("❌ generateWorkoutBtn not found");
+    return;
+  }
+
+  btn.addEventListener("click", function () {
+    console.log("✅ Generate Workout clicked");
+  });
+});
