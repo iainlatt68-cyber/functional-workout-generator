@@ -12,9 +12,12 @@
   <main class="container">
 
     <h1>Functional Fitness Generator</h1>
+    <h2>Build your session</h2>
 
     <section class="setup-card">
-      <label for="goal">Goal</label>
+
+      <!-- GOAL -->
+      <label for="goal">Training Goal</label>
       <select id="goal">
         <option value="conditioning">Conditioning</option>
         <option value="strength">Strength</option>
@@ -22,6 +25,15 @@
         <option value="recovery">Recovery</option>
       </select>
 
+      <!-- MODE -->
+      <label for="mode">Workout Mode</label>
+      <select id="mode">
+        <option value="normal">Standard</option>
+        <option value="emom">EMOM</option>
+        <option value="amrap">AMRAP</option>
+      </select>
+
+      <!-- EQUIPMENT -->
       <label for="equipment">Equipment</label>
       <select id="equipment">
         <option value="bodyweight">Bodyweight</option>
@@ -29,24 +41,35 @@
         <option value="gym">Gym</option>
       </select>
 
+      <!-- ROUNDS -->
       <label for="rounds">Rounds</label>
       <select id="rounds">
         <option value="2">2</option>
         <option value="3">3</option>
         <option value="4">4</option>
+        <option value="5">5</option>
       </select>
 
+      <!-- TEMPLATES -->
+      <label for="template">Workout Template</label>
+      <select id="template">
+        <option value="">Custom</option>
+        <option value="burner">Conditioning Burner</option>
+        <option value="strength">Strength Block</option>
+        <option value="recovery">Recovery Day</option>
+      </select>
+
+      <!-- ACTIONS -->
       <button id="generateWorkoutBtn">Generate Workout</button>
       <button id="startWorkoutBtn">Start Workout</button>
+
     </section>
 
     <div id="workoutOutput"></div>
 
   </main>
 
-  <!-- ✅ THIS LINE IS CRITICAL -->
   <script src="app.js"></script>
 
 </body>
 </html>
-``
