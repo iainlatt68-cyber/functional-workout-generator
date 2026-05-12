@@ -120,6 +120,9 @@ function generateWorkout() {
 
   var patterns = ["squat", "hinge", "push", "pull", "core"];
   var reps = repsByStyle(style);
+var useTimeFor = function (exercise) {
+  return TIME_BASED.indexOf(exercise) !== -1;
+};
 
   for (var r = 1; r <= rounds; r++) {
     var rh = document.createElement("h3");
@@ -128,7 +131,13 @@ function generateWorkout() {
 
     shuffle(patterns).forEach(function (pattern) {
       var list = EXERCISES[equipment][pattern];
-      var exercise = shuffle(list)[0];
+      var prescription;
+
+if (useTimeFor(exercise)) {
+  prescription = timeForExercise(level, style, duration);
+} else {
+  prescription = reps;
+}
 
       var card = document.createElement("div");
       card.className = "exercise-card";
