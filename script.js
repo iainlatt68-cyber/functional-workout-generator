@@ -1,59 +1,103 @@
 console.log("✅ script.js loaded");
 
-/* ===== EXERCISES ===== */
+/* ===============================
+   EXERCISES BY MOVEMENT PATTERN
+================================ */
 var EXERCISES = {
   bodyweight: {
-    beginner: ["Squats", "Wall Push-Ups", "Glute Bridges"],
-    intermediate: ["Push-Ups", "Lunges", "Plank"],
-    advanced: ["Pistol Squats", "Burpees"]
+    squat: ["Air Squat", "Split Squat"],
+    hinge: ["Glute Bridge"],
+    push: ["Push-Ups"],
+    pull: ["Inverted Row"],
+    core: ["Plank", "Dead Bug"]
   },
+
   dumbbells: {
-    beginner: ["Goblet Squat", "DB Row"],
-    intermediate: ["Split Squat", "DB Press"],
-    advanced: ["Man Makers", "Devil Press"]
+    squat: ["Goblet Squat"],
+    hinge: ["DB Romanian Deadlift"],
+    push: ["DB Press"],
+    pull: ["DB Row"],
+    core: ["Farmer Carry"]
   },
+
   gym: {
-    beginner: ["Leg Press", "Lat Pulldown", "Bike"],
-    intermediate: ["Back Squat", "Bench Press", "Row"],
-    advanced: ["Deadlift", "Pull-Ups", "Push Press"]
+    squat: ["Back Squat", "Leg Press"],
+    hinge: ["Deadlift", "RDL"],
+    push: ["Bench Press", "Push Press"],
+    pull: ["Pull-Ups", "Seated Row"],
+    core: ["Cable Chop", "Hanging Knee Raise"]
   }
 };
 
-/* ===== HELPERS ===== */
+/* ===============================
+   WARM‑UP & COOL‑DOWN
+================================ */
+var WARMUP = [
+  "5 min easy cardio",
+  "World’s Greatest Stretch",
+  "Glute Activation",
+  "Shoulder Mobility"
+];
+
+var COOLDOWN = [
+  "Hamstring Stretch",
+  "Hip Flexor Stretch",
+  "Thoracic Rotation",
+  "Breathing – 2 min"
+];
+
+/* ===============================
+   HELPERS
+================================ */
 function shuffle(arr) {
   return arr.sort(function () {
     return Math.random() - 0.5;
   });
 }
 
-function repsFor(level) {
-  if (level === "beginner") return "8–10 reps";
-  if (level === "intermediate") return "10–12 reps";
-  return "12–15 reps";
+function repsByStyle(style) {
+  if (style === "strength") return "5–8 reps";
+  if (style === "conditioning") return "12–15 reps";
+  if (style === "emom") return "EMOM × 10 min";
+  if (style === "amrap") return "AMRAP × 15 min";
+  return "10 reps";
 }
 
-/* ===== WORKOUT ===== */
+/* ===============================
+   WORKOUT GENERATOR
+================================ */
 function generateWorkout() {
-  var level = document.getElementById("level").value;
-  var duration = document.getElementById("duration").value;
   var equipment = document.getElementById("equipment").value;
+  var style = document.getElementById("style").value;
   var roundsEl = document.getElementById("rounds");
   var rounds = roundsEl ? Number(roundsEl.value) : 1;
   var output = document.getElementById("workoutOutput");
 
   output.innerHTML = "";
 
-  var pool = EXERCISES[equipment][level];
-  var count = duration === "10" ? 3 : duration === "20" ? 4 : 5;
-  var exercises = shuffle(pool.slice(0, count));
-  var reps = repsFor(level);
+  /* Warm‑up */
+  var h = document.createElement("h3");
+  h.textContent = "Warm‑up";
+  output.appendChild(h);
+
+  shuffle(WARMUP).slice(0, 3).forEach(function (item) {
+    var p = document.createElement("p");
+    p.textContent = "• " + item;
+    output.appendChild(p);
+  });
+
+  var patterns = ["squat", "hinge", "push", "pull", "core"];
+  var reps = repsByStyle(style);
 
   for (var r = 1; r <= rounds; r++) {
-    var h = document.createElement("h3");
-    h.textContent = rounds > 1 ? "Circuit – Round " + r : "Workout";
-    output.appendChild(h);
+    var rh = document.createElement("h3");
+    rh.textContent = rounds > 1 ? "Circuit – Round " + r : "Workout";
+    output.appendChild(rh);
 
-    for (var i = 0; i < exercises.length; i++) {
+    shuffle(patterns).forEach(function (pattern) {
+      var list = EXERCISES[equipment][pattern];
+      var exercise = shuffle(list)[0];
+
       var card = document.createElement("div");
       card.className = "exercise-card";
 
@@ -68,30 +112,41 @@ function generateWorkout() {
       };
 
       card.innerHTML =
-        "<strong>" + exercises[i] + "</strong><p>" + reps + "</p>";
+        "<strong>" + exercise + "</strong>" +
+        "<p>" + reps + "</p>";
 
       card.appendChild(btn);
       output.appendChild(card);
-    }
+    });
   }
+
+  /* Cool‑down */
+  var ch = document.createElement("h3");
+  ch.textContent = "Cool‑down";
+  output.appendChild(ch);
+
+  shuffle(COOLDOWN).slice(0, 2).forEach(function (item) {
+    var p2 = document.createElement("p");
+    p2.textContent = "• " + item;
+    output.appendChild(p2);
+  });
 }
 
-/* ===== TIMER ===== */
+/* ===============================
+   TIMER
+================================ */
 var timerId;
-var timeLeft = 30;
+var timeLeft = 0;
 
 function startTimer() {
   clearInterval(timerId);
-  var duration = document.getElementById("duration").value;
   var timer = document.getElementById("timer");
-
-  timeLeft = duration === "10" ? 30 : duration === "20" ? 45 : 60;
-  timer.textContent = timeLeft + " seconds";
+  timeLeft = 45;
+  timer.textContent = timeLeft + " sec rest";
 
   timerId = setInterval(function () {
     timeLeft--;
-    timer.textContent = timeLeft + " seconds";
-
+    timer.textContent = timeLeft + " sec rest";
     if (timeLeft <= 0) {
       clearInterval(timerId);
       timer.textContent = "Rest complete ✅";
@@ -99,7 +154,9 @@ function startTimer() {
   }, 1000);
 }
 
-/* ===== EVENTS ===== */
+/* ===============================
+   EVENTS
+================================ */
 document.addEventListener("DOMContentLoaded", function () {
   document
     .getElementById("generateWorkoutBtn")
