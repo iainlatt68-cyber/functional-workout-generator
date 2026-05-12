@@ -1,7 +1,7 @@
 console.log("app.js loaded");
 
 var workoutTimer = null;
-var workoutStart = null;
+var workoutStartTime = null;
 
 var EXERCISES = {
   bodyweight: ["Air Squat", "Push-Ups", "Plank"],
@@ -10,14 +10,13 @@ var EXERCISES = {
 };
 
 var GOALS = {
-  strength: "3-6 reps",
-  hypertrophy: "8-12 reps",
-  conditioning: "12-20 reps",
+  strength: "3–6 reps",
+  hypertrophy: "8–12 reps",
+  conditioning: "12–20 reps",
   recovery: "Easy pace"
 };
 
 function generateWorkout() {
-  var level = document.getElementById("level").value;
   var goal = document.getElementById("goal").value;
   var equipment = document.getElementById("equipment").value;
   var rounds = Number(document.getElementById("rounds").value);
@@ -25,9 +24,9 @@ function generateWorkout() {
 
   output.innerHTML = "";
 
-  var title = document.createElement("h3");
-  title.textContent = "Workout (" + goal.toUpperCase() + ")";
-  output.appendChild(title);
+  var heading = document.createElement("h3");
+  heading.textContent = "Workout (" + goal.toUpperCase() + ")";
+  output.appendChild(heading);
 
   var list = EXERCISES[equipment];
 
@@ -47,23 +46,16 @@ function generateWorkout() {
       var p = document.createElement("p");
       p.textContent =
         list[i] === "Plank" || list[i] === "Farmer Carry"
-          ? "30-45 seconds"
+          ? "30–45 seconds"
           : GOALS[goal];
       card.appendChild(p);
 
       var btn = document.createElement("button");
-btn.type = "button"; // prevents any form behaviour
-btn.textContent = "Mark complete";
-
-btn.addEventListener("click", function (e) {
-  e.preventDefault();
-  card.classList.toggle("completed");
-
-  // Visual feedback for the user
-  btn.textContent = card.classList.contains("completed")
-    ? "Completed ✓"
-    : "Mark complete";
-});
+      btn.type = "button";
+      btn.textContent = "Mark complete";
+      btn.onclick = function () {
+        card.classList.toggle("completed");
+      };
 
       card.appendChild(btn);
       output.appendChild(card);
@@ -75,16 +67,15 @@ function startWorkout() {
   if (workoutTimer) clearInterval(workoutTimer);
 
   var output = document.getElementById("workoutOutput");
+
   var timer = document.createElement("div");
   timer.id = "workoutTimer";
-  timer.style.fontWeight = "600";
-  timer.style.margin = "12px 0";
   output.prepend(timer);
 
-  workoutStart = Date.now();
+  workoutStartTime = Date.now();
 
   workoutTimer = setInterval(function () {
-    var seconds = Math.floor((Date.now() - workoutStart) / 1000);
+    var seconds = Math.floor((Date.now() - workoutStartTime) / 1000);
     var mins = Math.floor(seconds / 60);
     var secs = seconds % 60;
 
@@ -96,11 +87,6 @@ function startWorkout() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-  document
-    .getElementById("generateWorkoutBtn")
-    .addEventListener("click", generateWorkout);
-
-  document
-    .getElementById("startWorkoutBtn")
-    .addEventListener("click", startWorkout);
+  document.getElementById("generateWorkoutBtn").onclick = generateWorkout;
+  document.getElementById("startWorkoutBtn").onclick = startWorkout;
 });
