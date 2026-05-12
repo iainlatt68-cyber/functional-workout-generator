@@ -1,405 +1,197 @@
-/* ================================
-   DESIGN TOKENS
-================================ */
-:root {
-  --bg: #f9fafb;
-  --card: #ffffff;
-  --accent: #2ea043;
-  --accent-soft: rgba(46, 160, 67, 0.15);
-  --text: #24292f;
-  --muted: #57606a;
-  --radius: 14px;
-  --shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-}
-
-[data-theme="light"] {
---bg: #f9fafb;
-  --card: #ffffff;
-  --accent: #2ea043;
-  --accent-soft: rgba(46, 160, 67, 0.15);
-  --text: #24292f;
-  --muted: #57606a;
-}
-``
-/* ================================
-   BASE
-================================ */
+/* =========================
+   RESET & BASE
+========================= */
 * {
   box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  padding: 24px;
-  background: var(--bg);
-  color: var(--text);
+  padding: 20px;
+  background: #f7f8fa;
+  color: #1f2937;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  line-height: 1.4;
+  line-height: 1.5;
 }
 
 .container {
-  max-width: 760px;
+  max-width: 720px;
   margin: 0 auto;
 }
 
-/* ================================
+/* =========================
    HEADINGS
-================================ */
+========================= */
 h1 {
-  text-align: center;
-  margin-bottom: 8px;
+  font-size: 1.9rem;
   font-weight: 700;
+  margin-bottom: 6px;
 }
 
 h2 {
-  margin: 0 0 12px;
-  color: var(--accent);
   font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 12px;
 }
 
-h3 {
-  margin: 24px 0 8px;
-  padding-bottom: 6px;
-  border-bottom: 1px solid rgba(255,255,255,0.06);
+.section-heading {
+  margin-top: 32px;
+  margin-bottom: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #6b7280;
 }
 
-/* ================================
-   SETUP CARD
-================================ */
+/* =========================
+   SETUP PANEL
+========================= */
 .setup-card {
-  background: var(--card);
+  background: #ffffff;
   padding: 20px;
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.06);
   margin-bottom: 20px;
 }
 
+/* =========================
+   FORM CONTROLS
+========================= */
 label {
   display: block;
-  font-size: 0.85rem;
-  margin-bottom: 6px;
-  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 500;
+  margin-bottom: 4px;
+  color: #6b7280;
 }
 
 select {
   width: 100%;
   padding: 12px 14px;
-  border-radius: 10px;
-  border: 1px solid #d0d7de;
   margin-bottom: 14px;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
   background: #ffffff;
-  color: #24292f;
   font-size: 0.95rem;
+}
+
+select:focus {
   outline: none;
-  appearance: none;
+  border-color: #22c55e;
+  box-shadow: 0 0 0 3px rgba(34,197,94,0.15);
 }
 
-/* Subtle focus state */
-select:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--accent-soft);
-}
-
-select:focus {
-  outline: 2px solid var(--accent-soft);
-}
-
-/* ================================
-   PRIMARY BUTTON
-================================ */
-button {
+/* =========================
+   PRIMARY ACTION
+========================= */
+#generateWorkoutBtn {
   width: 100%;
   padding: 16px;
-  border-radius: var(--radius);
+  border-radius: 14px;
   border: none;
+  background: #22c55e;
+  color: white;
   font-size: 1rem;
   font-weight: 600;
-  background: linear-gradient(135deg, var(--accent), #2fcf89);
-  color: #0b0f14;
   cursor: pointer;
-  box-shadow: 0 6px 20px rgba(61,220,151,0.35);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  margin-top: 8px;
 }
 
-button:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 10px 30px rgba(61,220,151,0.45);
+#generateWorkoutBtn:hover {
+  background: #16a34a;
 }
 
-/* ================================
+/* =========================
    WORKOUT OUTPUT
-================================ */
+========================= */
 #workoutOutput {
   margin-top: 24px;
 }
 
-/* ================================
-   PROGRESS
-================================ */
-.progress-counter {
-  background: var(--accent-soft);
-  color: var(--accent);
-  padding: 10px 14px;
-  border-radius: 999px;
+/* =========================
+   INTENT LABEL
+========================= */
+.workout-intent {
+  font-size: 0.9rem;
   font-weight: 600;
-  font-size: 0.85rem;
-  width: fit-content;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
+  color: #16a34a;
 }
 
-/* ================================
+/* =========================
    EXERCISE CARD
-================================ */
-.exercise-card button {
-  margin-top: 6px;
-  background: #f6f8fa;
-  color: var(--text);
-  border: 1px solid #d0d7de;
-  box-shadow: none;
-  font-size: 0.85rem;
-}
-
-.exercise-card button:hover {
-  background: #eef1f4;
-}
-
-.exercise-card.completed button {
-  background: var(--accent);
-  color:  #eef1f4;
-  border-color: var(--accent);
+========================= */
+.exercise-card {
+  background: #ffffff;
+  padding: 16px 18px;
+  border-radius: 14px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+  margin-bottom: 12px;
 }
 
 .exercise-card strong {
-  font-size: 1.05rem;
+  display: block;
+  font-size: 1rem;
+  margin-bottom: 4px;
 }
 
 .exercise-card p {
-  margin: 6px 0 10px;
-  color: var(--muted);
-  font-size: 0.9rem;
-}
-
-/* embedded button */
-.exercise-card button {
-  margin-top: 6px;
-  background: #21262d;
-  color: var(--text);
-  box-shadow: none;
-  font-size: 0.8rem;
-}
-
-/* Mark complete buttons – light style */
-.exercise-card button {
-  width: auto;
-  padding: 8px 14px;
-  margin-top: 8px;
-
-  background: #ffffff;
-  color: #24292f;
-
-  border: 1px solid #d0d7de;
-  border-radius: 8px;
-
   font-size: 0.85rem;
+  color: #6b7280;
+  margin-bottom: 8px;
+}
+
+/* =========================
+   MARK COMPLETE BUTTON
+========================= */
+.exercise-card button {
+  all: unset;
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  font-size: 0.8rem;
   font-weight: 500;
-
-  box-shadow: none;
   cursor: pointer;
-
-  transition: background-color 0.15s ease,
-              color 0.15s ease,
-              border-color 0.15s ease;
-   .exercise-card.completed {
-  border-color: var(--accent-soft);
+  color: #374151;
+  background: #ffffff;
 }
 
-/* Hover state */
 .exercise-card button:hover {
   background: #f3f4f6;
 }
 
 /* Completed state */
-.exercise-card.completed button {
-  background: var(--accent);
-  color: #ffffff;
-  border-color: var(--accent);
-}
-
-/* Remove global button effects inside cards */
-.exercise-card button:hover {
-  transform: none;
-  box-shadow: none;
-}
-``
-
-/* Hover state */
-.exercise-card button:hover {
-  background: #f3f4f6;
-}
-
-/* Completed state */
-.exercise-card.completed button {
-  background: var(--accent);
-  color: #ffffff;
-  border-color: var(--accent);
-}
-
-/* Remove global button effects inside cards */
-.exercise-card button:hover {
-  transform: none;
-  box-shadow: none;
-}
-``
-
-/* ================================
-   DIVIDERS
-================================ */
-.exercise-card + h3 {
-  margin-top: 30px;
-}
-
-/* ================================
-   TIMER
-================================ */
-.timer {
-  margin-top: 30px;
-  text-align: center;
-}
-
-#timer {
-  font-size: 1.6rem;
-  font-weight: 700;
-  color: var(--accent);
-  margin-bottom: 12px;
-}
-
-/* ================================
-   ANIMATIONS
-================================ */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-   
-.progress-wrapper {
-  background: #21262d;
-  border-radius: 999px;
-  height: 10px;
-  overflow: hidden;
-  margin-bottom: 14px;
-}
-
-.progress-bar {
-  height: 100%;
-  width: 0%;
-  background: linear-gradient(90deg, var(--accent), #2fcf89);
-  transition: width 0.3s ease;
-}
 .exercise-card.completed {
-  position: relative;
+  opacity: 0.65;
 }
 
 .exercise-card.completed::after {
-  content: "✔";
+  content: "✓";
   position: absolute;
-  top: 12px;
-  right: 12px;
-  font-size: 1.3rem;
-  color: var(--accent);
-  animation: popIn 0.25s ease;
+  right: 14px;
+  top: 14px;
+  font-size: 1.2rem;
+  color: #22c55e;
 }
 
-@keyframes popIn {
-  from {
-    transform: scale(0.5);
-    opacity: 0;
-  }
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
-
-/* Sticky setup panel */
-.setup-card {
-  position: sticky;
-  top: 16px;
-  z-index: 10;
-}
-/* -------------------------------------------------
-   FORCE light "Mark complete" buttons
-   (Overrides ALL previous button styles)
--------------------------------------------------- */
-
-/* -------------------------------------------------
-   FORCE light "Mark complete" buttons
-   (Overrides ALL previous button styles)
--------------------------------------------------- */
-
-.exercise-card button {
-  all: unset; /* nukes inherited button styles */
-
-  display: inline-block;
-  padding: 8px 14px;
-  margin-top: 8px;
-
-  background-color: #ffffff;
-  color: #24292f;
-
-  border: 1px solid #d0d7de;
-  border-radius: 8px;
-
-  font-size: 0.85rem;
-  font-weight: 500;
-  font-family: inherit;
-
-  cursor: pointer;
-  text-align: center;
-
-  transition:
-    background-color 0.15s ease,
-    color 0.15s ease,
-    border-color 0.15s ease;
-}
-
-.exercise-card button:hover {
-  background-color: #f3f4f6;
-}
-
-.exercise-card.completed button {
-  background-color: var(--accent);
-  color: #ffffff;
-  border-color: var(--accent);
-}
-``
+/* =========================
+   MOBILE TWEAKS
+========================= */
 @media (max-width: 600px) {
   body {
     padding: 16px;
+  }
+
+  h1 {
+    font-size: 1.6rem;
   }
 
   .setup-card {
     padding: 16px;
   }
 
-  select {
-    padding: 14px;
-    font-size: 1rem;
-  }
-
-  button {
-    padding: 18px;
-    font-size: 1.05rem;
-  }
-
   .exercise-card {
-    padding: 16px;
-  }
-
-  h1 {
-    font-size: 1.4rem;
+    padding: 14px;
   }
 }
