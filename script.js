@@ -1,23 +1,90 @@
 console.log("✅ script.js loaded");
 
+/* ===============================
+   EXERCISE DATABASE
+================================ */
 const EXERCISES = {
   bodyweight: {
-    beginner: ["Squats", "Wall Push-Ups", "Glute Bridges", "Marching in Place"],
-    intermediate: ["Push-Ups", "Lunges", "Plank", "Mountain Climbers"],
-    advanced: ["Pistol Squats", "Burpees", "Jump Lunges"]
+    beginner: [
+      "Squats",
+      "Wall Push-Ups",
+      "Glute Bridges",
+      "Marching in Place"
+    ],
+    intermediate: [
+      "Push-Ups",
+      "Lunges",
+      "Plank",
+      "Mountain Climbers"
+    ],
+    advanced: [
+      "Pistol Squats",
+      "Burpees",
+      "Jump Lunges"
+    ]
   },
+
   dumbbells: {
-    beginner: ["Goblet Squat", "Dumbbell Row", "Farmer Carry"],
-    intermediate: ["Split Squat", "Renegade Row", "Dumbbell Press"],
-    advanced: ["Man Makers", "Devil Press", "Dumbbell Snatch"]
+    beginner: [
+      "Goblet Squat",
+      "Dumbbell Row",
+      "Farmer Carry"
+    ],
+    intermediate: [
+      "Split Squat",
+      "Renegade Row",
+      "Dumbbell Press"
+    ],
+    advanced: [
+      "Man Makers",
+      "Devil Press",
+      "Dumbbell Snatch"
+    ]
   },
+
   bands: {
-    beginner: ["Band Squats", "Band Row", "Band Chest Press"],
-    intermediate: ["Band Deadlift", "Band Overhead Press"],
-    advanced: ["Explosive Band Squats"]
+    beginner: [
+      "Band Squats",
+      "Band Row",
+      "Band Chest Press"
+    ],
+    intermediate: [
+      "Band Deadlift",
+      "Band Overhead Press"
+    ],
+    advanced: [
+      "Explosive Band Squats"
+    ]
+  },
+
+  gym: {
+    beginner: [
+      "Leg Press",
+      "Lat Pulldown",
+      "Seated Chest Press",
+      "Hamstring Curl",
+      "Treadmill Walk"
+    ],
+    intermediate: [
+      "Barbell Back Squat",
+      "Bench Press",
+      "Seated Row",
+      "Romanian Deadlift",
+      "Assault Bike"
+    ],
+    advanced: [
+      "Barbell Front Squat",
+      "Deadlift",
+      "Pull-Ups",
+      "Push Press",
+      "Row Erg Intervals"
+    ]
   }
 };
 
+/* ===============================
+   HELPERS
+================================ */
 function shuffle(array) {
   return array.sort(() => Math.random() - 0.5);
 }
@@ -34,40 +101,55 @@ function exerciseCount(duration) {
   return 5;
 }
 
+/* ===============================
+   WORKOUT GENERATOR
+================================ */
 function generateWorkout() {
   const level = document.getElementById("level").value;
   const duration = document.getElementById("duration").value;
   const equipment = document.getElementById("equipment").value;
+  const rounds = Number(document.getElementById("rounds").value);
   const output = document.getElementById("workoutOutput");
 
   output.innerHTML = "";
 
   const pool = EXERCISES[equipment][level];
-  const workout = shuffle([...pool]).slice(0, exerciseCount(duration));
+  const exercises = shuffle([...pool]).slice(0, exerciseCount(duration));
   const reps = repsFor(level);
 
-  workout.forEach(exercise => {
-    const card = document.createElement("div");
-    card.className = "exercise-card";
+  for (let round = 1; round <= rounds; round++) {
+    const roundHeader = document.createElement("h3");
+    roundHeader.textContent =
+      rounds === 1 ? "Workout" : `Circuit – Round ${round}`;
+    roundHeader.style.marginBottom = "12px";
+    output.appendChild(roundHeader);
 
-    card.innerHTML = `
-      <h3>${exercise}</h3>
-      <p>${reps}</p>
-      <button type="button">Mark complete ✅</button>
-    `;
+    exercises.forEach(exercise => {
+      const card = document.createElement("div");
+      card.className = "exercise-card";
 
-    const btn = card.querySelector("button");
-    btn.addEventListener("click", () => {
-      card.classList.toggle("completed");
-      btn.textContent = card.classList.contains("completed")
-        ? "Completed ✅"
-        : "Mark complete ✅";
+      card.innerHTML = `
+        <strong>${exercise}</strong>
+        <p>${reps}</p>
+        <button type="button">Mark complete ✅</button>
+      `;
+
+      const btn = card.querySelector("button");
+      btn.addEventListener("click", () => {
+        card.classList.toggle("completed");
+        btn.textContent = card.classList.contains("completed")
+          ? "Completed ✅"
+          : "Mark complete ✅";
+      });
+
+      output.appendChild(card);
     });
-
-    output.appendChild(card);
-  });
+  }
 }
 
+/* ===============================
+   TIMER
+================================ */
 let timerInterval;
 let timeLeft;
 
@@ -78,11 +160,11 @@ function startTimer() {
   const timer = document.getElementById("timer");
 
   timeLeft = duration === "10" ? 30 : duration === "20" ? 45 : 60;
-  timer.textContent = `${timeLeft} seconds`;
+  timer.textContent = `${timeLeft} seconds rest`;
 
   timerInterval = setInterval(() => {
     timeLeft--;
-    timer.textContent = `${timeLeft} seconds`;
+    timer.textContent = `${timeLeft} seconds rest`;
 
     if (timeLeft <= 0) {
       clearInterval(timerInterval);
@@ -91,10 +173,8 @@ function startTimer() {
   }, 1000);
 }
 
+/* ===============================
+   EVENTS
+================================ */
 document.addEventListener("DOMContentLoaded", () => {
-  document.getElementById("generateWorkoutBtn")
-    .addEventListener("click", generateWorkout);
-
-  document.getElementById("startTimerBtn")
-    .addEventListener("click", startTimer);
-});
+  document
