@@ -1,176 +1,182 @@
-/* ==============================
-   DESIGN TOKENS
-============================== */
+/* =========================
+   MODERN MINIMAL THEME
+========================= */
+
 :root {
-  --bg: #f6f7f9;
-  --card: #ffffff;
-  --primary: #16a34a;      /* green */
-  --primary-soft: #dcfce7;
-  --text: #111827;
-  --muted: #6b7280;
-  --radius-lg: 16px;
+  --bg: #f9fafb;
+  --panel: #ffffff;
+  --text: #0f172a;
+  --muted: #64748b;
+  --line: #e5e7eb;
+
+  --accent: #14b8a6; /* teal */
+  --accent-soft: #ecfeff;
+
+  --radius: 14px;
   --radius-sm: 10px;
-  --shadow: 0 10px 25px rgba(0,0,0,0.08);
 }
 
-/* ==============================
-   BASE
-============================== */
+/* Reset */
 * {
   box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  padding: 16px;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  padding: 24px;
   background: var(--bg);
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, sans-serif;
   color: var(--text);
 }
 
+/* Layout */
 .container {
-  max-width: 720px;
+  max-width: 760px;
   margin: 0 auto;
 }
 
-/* ==============================
-   HEADINGS
-============================== */
+/* Headings */
 h1 {
-  font-size: 1.7rem;
-  margin-bottom: 12px;
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 6px;
 }
 
 h2 {
   font-size: 1.1rem;
-  margin-bottom: 12px;
+  font-weight: 600;
+  margin-bottom: 16px;
 }
 
 h3 {
-  margin-top: 20px;
-  margin-bottom: 8px;
+  margin-top: 28px;
+  margin-bottom: 10px;
+  font-size: 1rem;
 }
 
 h4 {
-  margin-top: 16px;
+  margin-top: 20px;
   margin-bottom: 6px;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
   color: var(--muted);
 }
 
-/* ==============================
-   SETUP CARD
-============================== */
+/* Setup panel */
 .setup-card {
-  background: var(--card);
-  padding: 20px;
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow);
-  margin-bottom: 24px;
+  background: var(--panel);
+  padding: 22px;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  margin-bottom: 28px;
 }
 
-/* ==============================
-   FORM CONTROLS
-============================== */
+/* Labels & selects */
 label {
-  font-size: 0.8rem;
-  color: var(--muted);
   display: block;
-  margin-top: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--muted);
+  margin-top: 14px;
 }
 
 select {
   width: 100%;
+  appearance: none;
   padding: 12px 14px;
-  margin-top: 4px;
+  margin-top: 6px;
   border-radius: var(--radius-sm);
-  border: 1px solid #d1d5db;
-  font-size: 0.95rem;
+  border: 1px solid var(--line);
+  background: #fff;
+  font-size: 0.9rem;
 }
 
-/* ==============================
-   BUTTONS
-============================== */
+/* Buttons */
 button {
-  width: 100%;
+  appearance: none;
+  border: none;
+  border-radius: var(--radius);
   padding: 14px;
-  border-radius: var(--radius-lg);
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
-  border: none;
-  margin-top: 14px;
 }
 
 #generateWorkoutBtn {
-  background: var(--primary);
-  color: white;
-}
-
-#startWorkoutBtn {
-  background: #e5e7eb;
-  color: var(--text);
-}
-
-/* ==============================
-   WORKOUT OUTPUT
-============================== */
-#workoutOutput {
+  background: var(--accent);
+  color: #022c22;
   margin-top: 20px;
 }
 
-/* ==============================
-   EXERCISE CARD
-============================== */
+#startWorkoutBtn {
+  background: transparent;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  margin-top: 8px;
+}
+
+/* Output */
+#workoutOutput {
+  margin-top: 24px;
+}
+
+/* Exercise rows (not heavy cards) */
 .exercise-card {
-  background: var(--card);
-  padding: 16px;
-  border-radius: var(--radius-lg);
-  box-shadow: 0 6px 16px rgba(0,0,0,0.05);
-  margin-bottom: 12px;
-  position: relative;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.exercise-card:last-child {
+  border-bottom: none;
 }
 
 .exercise-card strong {
   display: block;
-  font-size: 1rem;
-  margin-bottom: 4px;
+  font-size: 0.95rem;
+  font-weight: 600;
 }
 
 .exercise-card p {
-  font-size: 0.9rem;
-  color: var(--muted);
-  margin-bottom: 8px;
-}
-
-/* Complete state */
-.exercise-card.completed {
-  background: var(--primary-soft);
-  border-left: 4px solid var(--primary);
-}
-
-/* Mark complete button inside card */
-.exercise-card button {
-  background: transparent;
-  border: 1px solid #d1d5db;
   font-size: 0.85rem;
-  padding: 8px;
-  margin-top: 6px;
+  color: var(--muted);
+  margin: 4px 0 10px;
 }
 
-/* ==============================
-   TIMER
-============================== */
+/* Complete button inside rows */
+.exercise-card button {
+  padding: 8px 12px;
+  font-size: 0.75rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: transparent;
+}
+
+/* Completed state */
+.exercise-card.completed {
+  background: var(--accent-soft);
+  padding: 14px;
+  border-radius: var(--radius-sm);
+}
+
+.exercise-card.completed strong {
+  text-decoration: line-through;
+}
+
+/* Timer */
 #workoutTimer {
+  font-size: 0.85rem;
   font-weight: 600;
-  color: var(--primary);
+  color: var(--accent);
   margin-bottom: 12px;
 }
 
-/* ==============================
-   MOBILE TWEAKS
-============================== */
-@media (min-width: 768px) {
+/* Mobile spacing */
+@media (max-width: 640px) {
   body {
-    padding: 32px;
+    padding: 16px;
   }
 }
+``
