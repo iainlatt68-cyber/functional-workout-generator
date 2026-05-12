@@ -15,27 +15,30 @@ var EXERCISES = {
 ================================ */
 
 function generateWorkout() {
-  console.log("✅ generateWorkout()");
+  console.log("✅ generateWorkout running");
 
   var levelEl = document.getElementById("level");
   var roundsEl = document.getElementById("rounds");
   var output = document.getElementById("workoutOutput");
 
-  if (!levelEl || !output) return;
+  if (!levelEl || !output) {
+    console.error("❌ Required elements missing");
+    return;
+  }
 
   var level = levelEl.value;
   var rounds = roundsEl ? Number(roundsEl.value) : 1;
 
   output.innerHTML = "";
 
-  var heading = document.createElement("h3");
-  heading.textContent = "Your Workout";
-  output.appendChild(heading);
+  var title = document.createElement("h3");
+  title.textContent = "Your Workout";
+  output.appendChild(title);
 
   for (var r = 1; r <= rounds; r++) {
-    var roundHeader = document.createElement("h4");
-    roundHeader.textContent = "Round " + r;
-    output.appendChild(roundHeader);
+    var rh = document.createElement("h4");
+    rh.textContent = "Round " + r;
+    output.appendChild(rh);
 
     for (var i = 0; i < EXERCISES[level].length; i++) {
       var exerciseName = EXERCISES[level][i];
@@ -74,14 +77,12 @@ function generateWorkout() {
 var workoutInterval = null;
 
 function startWorkout() {
-  console.log("✅ startWorkout()");
+  console.log("✅ startWorkout running");
 
   var output = document.getElementById("workoutOutput");
   if (!output) return;
 
-  if (workoutInterval) {
-    clearInterval(workoutInterval);
-  }
+  if (workoutInterval) clearInterval(workoutInterval);
 
   var timer = document.getElementById("workoutTimer");
   if (!timer) {
@@ -107,7 +108,7 @@ function startWorkout() {
 }
 
 /* ===============================
-   EVENTS
+   EVENT WIRING
 ================================ */
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -118,9 +119,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
   if (generateBtn) {
     generateBtn.addEventListener("click", generateWorkout);
+  } else {
+    console.error("❌ generateWorkoutBtn not found");
   }
 
   if (startBtn) {
     startBtn.addEventListener("click", startWorkout);
+  } else {
+    console.error("❌ startWorkoutBtn not found");
   }
 });
