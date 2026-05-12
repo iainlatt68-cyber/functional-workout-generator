@@ -5,13 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Functional Fitness Generator</title>
 
-  <!-- ✅ Correct CSS link -->
-  <link rel="stylesheet" href <main class="container">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <main class="container">
 
     <h1>Functional Fitness Generator</h1>
 
-    <div class="setup-card">
-
+    <section class="setup-card">
       <h2>Build Your Workout</h2>
 
       <label for="level">Experience level</label>
@@ -33,7 +35,7 @@
       <select id="equipment">
         <option value="bodyweight">Bodyweight</option>
         <option value="dumbbells">Dumbbells</option>
-        <option value="gym">Full Gym</option>
+        <option value="gym">Full gym</option>
       </select>
 
       <label for="rounds">Rounds</label>
@@ -43,22 +45,14 @@
         <option value="3">3</option>
       </select>
 
-      <button id="generateWorkoutBtn" type="button">
-        Generate Workout
-      </button>
-
-      <button id="startWorkoutBtn" type="button">
-        Start Workout
-      </button>
-
-    </div>
+      <button id="generateWorkoutBtn" type="button">Generate Workout</button>
+      <button id="startWorkoutBtn" type="button">Start Workout</button>
+    </section>
 
     <div id="workoutOutput"></div>
 
   </main>
 
-  <!-- ✅ Correct JS link -->
-  app.js</script>
-
+  <script src="app.js"></script>
 </body>
 </html>
