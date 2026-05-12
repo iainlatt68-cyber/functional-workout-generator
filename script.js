@@ -95,6 +95,14 @@ function timeForExercise(level, style, duration) {
 
   return base + " seconds";
 }
+
+function restForStyle(style) {
+  if (style === "strength") return "Rest 90–120 seconds";
+  if (style === "conditioning") return "Rest 30–45 seconds";
+  if (style === "emom") return "Start each set on the minute";
+  if (style === "amrap") return "Rest as needed";
+  return "";
+}
 /* ===============================
    WORKOUT GENERATOR
 ================================ */
@@ -123,9 +131,16 @@ function generateWorkout() {
   var patterns = ["squat", "hinge", "push", "pull", "core"];
 
   for (var r = 1; r <= rounds; r++) {
-    var rh = document.createElement("h3");
-    rh.textContent = rounds > 1 ? "Circuit – Round " + r : "Workout";
-    output.appendChild(rh);
+ var rh = document.createElement("h3");
+rh.textContent = rounds > 1 ? "Circuit – Round " + r : "Workout";
+output.appendChild(rh);
+
+var restNote = document.createElement("p");
+restNote.style.fontSize = "14px";
+restNote.style.opacity = "0.8";
+restNote.textContent = restForStyle(style);
+output.appendChild(restNote);
+``
 
     shuffle(patterns).forEach(function (pattern) {
       var list = EXERCISES[equipment][pattern];
