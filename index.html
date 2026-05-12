@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Functional Fitness Generator</title>
 
-  <link rel="stylesheet" href="style.css
+  <!-- Styles -->
+  <link rel="stylesheet" href="style.css">
 
-
-
+  <!-- Script (loaded once, after DOM) -->
   <script src="script.js" defer></script>
 </head>
 
@@ -35,15 +34,29 @@
 
       <label for="equipment">Equipment</label>
       <select id="equipment">
-        <option value="none">Bodyweight only</option>
+        <option value="bodyweight">Bodyweight only</option>
         <option value="dumbbells">Dumbbells</option>
         <option value="bands">Resistance bands</option>
       </select>
     </section>
 
-    <!-- Workout generation -->
+    <!-- Generate Workout -->
     <button id="generateWorkoutBtn" type="button">
       Generate Workout
     </button>
 
+    <!-- Workout Output -->
     <section id="workoutOutput" aria-live="polite">
+      <p>Your workout will appear here.</p>
+    </section>
+
+    <!-- Timer -->
+    <section class="timer">
+      <div id="timer">Ready</div>
+      <button id="startTimerBtn" type="button">
+        Start Workout
+      </button>
+    </section>
+  </main>
+</body>
+</html>
