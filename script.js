@@ -152,9 +152,11 @@ if (useTimeFor(exercise)) {
             : "Mark complete ✅";
       };
 
-      card.innerHTML =
-        "<strong>" + exercise + "</strong>" +
-        "<p>" + reps + "</p>";
+   
+card.innerHTML =
+  "<strong>" + exercise + "</strong>" +
+  "<p>" + prescription + "</p>";
+
 
       card.appendChild(btn);
       output.appendChild(card);
