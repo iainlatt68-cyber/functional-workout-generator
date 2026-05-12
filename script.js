@@ -4,27 +4,48 @@ console.log("✅ script.js loaded and executing");
    BASIC EXERCISE DATA (SAFE)
 ================================ */
 
-var EXERCISES = {
-  beginner: [
-    "Squats",
-    "Push‑Ups",
-    "Glute Bridges",
-    "Plank"
-  ],
-  intermediate: [
-    "Goblet Squat",
-    "Dumbbell Row",
-    "Lunges",
-    "Plank"
-  ],
-  advanced: [
-    "Back Squat",
-    "Bench Press",
-    "Deadlift",
-    "Pull‑Ups"
-  ]
-};
+/* ===============================
+   EXERCISE METADATA (SAFE)
+================================ */
 
+var EXERCISE_LIBRARY = [
+  // Squat pattern
+  { name: "Air Squat", pattern: "squat", level: "beginner", timeBased: false },
+  { name: "Goblet Squat", pattern: "squat", level: "intermediate", timeBased: false },
+  { name: "Back Squat", pattern: "squat", level: "advanced", timeBased: false },
+
+  // Push pattern
+  { name: "Push-Ups", pattern: "push", level: "beginner", timeBased: false },
+  { name: "Bench Press", pattern: "push", level: "advanced", timeBased: false },
+
+  // Hinge
+  { name: "Glute Bridge", pattern: "hinge", level: "beginner", timeBased: false },
+  { name: "Deadlift", pattern: "hinge", level: "advanced", timeBased: false },
+
+  // Pull
+  { name: "Dumbbell Row", pattern: "pull", level: "intermediate", timeBased: false },
+  { name: "Pull-Ups", pattern: "pull", level: "advanced", timeBased: false },
+
+  // Core (time‑based)
+  { name: "Plank", pattern: "core", level: "beginner", timeBased: true }
+];
+function pickExercises(level) {
+  var patterns = ["squat", "hinge", "push", "pull", "core"];
+  var chosen = [];
+
+  for (var i = 0; i < patterns.length; i++) {
+    var options = EXERCISE_LIBRARY.filter(function (ex) {
+      return ex.pattern === patterns[i] &&
+             (ex.level === level || level === "advanced");
+    });
+
+    if (options.length > 0) {
+      chosen.push(options[Math.floor(Math.random() * options.length)]);
+    }
+  }
+
+  return chosen;
+}
 /* ===============================
    WORKOUT GENERATOR (SAFE)
 ================================ */
@@ -48,7 +69,14 @@ function generateWorkout() {
     rh.textContent = "Round " + r;
     output.appendChild(rh);
 
-    for (var i = 0; i < EXERCISES[level].length; i++) {
+  var workout = pickExercises(level);
+
+for (var i = 0; i < workout.length; i++) {
+  var exercise = workout[i];
+   p.textContent = exercise.timeBased
+  ? "30–45 seconds"
+  : "8–12 reps";
+
       var card = document.createElement("div");
       card.className = "exercise-card";
 
