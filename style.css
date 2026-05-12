@@ -1,12 +1,13 @@
 /* ===================================================
-   Athletic – Modern – Blue Accent
-   Background: Soft graphite (not white, not black)
+   Functional Fitness Generator
+   Athletic, modern UI
+   Soft graphite background + blue accent
 =================================================== */
 
-/* -------- Design Tokens -------- */
+/* ---------- Design Tokens ---------- */
 :root {
   /* Surfaces */
-  --bg: #eef1f5;           /* soft graphite */
+  --bg: #eef1f5;          /* soft graphite */
   --panel: #ffffff;
   --surface: #ffffff;
 
@@ -14,22 +15,22 @@
   --text: #0f172a;
   --muted: #64748b;
 
-  /* Lines */
+  /* Dividers */
   --line: #e2e8f0;
 
-  /* Accent (blue you like) */
-  --accent: #2563eb;
+  /* Accent */
+  --accent: #2563eb;      /* performance blue */
   --accent-soft: #dbeafe;
 
   --radius: 14px;
 }
 
-/* -------- Reset -------- */
+/* ---------- Reset ---------- */
 * {
   box-sizing: border-box;
 }
 
-/* -------- Base -------- */
+/* ---------- Base ---------- */
 body {
   margin: 0;
   padding: 16px;
@@ -39,12 +40,13 @@ body {
     "Segoe UI", Roboto, Arial, sans-serif;
 }
 
+/* ---------- Layout ---------- */
 .container {
   max-width: 760px;
   margin: 0 auto;
 }
 
-/* -------- Headings -------- */
+/* ---------- Headings ---------- */
 h1 {
   font-size: 1.9rem;
   font-weight: 700;
@@ -72,7 +74,7 @@ h4 {
   color: var(--muted);
 }
 
-/* -------- Setup Card -------- */
+/* ---------- Setup Card ---------- */
 .setup-card {
   background: var(--panel);
   padding: 18px;
@@ -81,19 +83,21 @@ h4 {
   margin-bottom: 24px;
 }
 
-/* -------- Labels & Inputs -------- */
-label {
+/* ---------- Form Structure (IMPORTANT) ---------- */
+.setup-card label {
   display: block;
   font-size: 0.7rem;
   text-transform: uppercase;
   color: var(--muted);
-  margin-top: 14px;
+  margin-top: 20px;
 }
 
-select {
+.setup-card select {
+  display: block;
   width: 100%;
   padding: 12px;
   margin-top: 6px;
+  margin-bottom: 14px;
   border-radius: 10px;
   border: 1px solid var(--line);
   background: var(--surface);
@@ -101,12 +105,12 @@ select {
   font-size: 0.95rem;
 }
 
-select:focus {
+.setup-card select:focus {
   outline: none;
   border-color: var(--accent);
 }
 
-/* -------- Buttons -------- */
+/* ---------- Buttons ---------- */
 button {
   width: 100%;
   padding: 14px;
@@ -117,14 +121,14 @@ button {
   cursor: pointer;
 }
 
-/* Primary */
+/* Primary action */
 #generateWorkoutBtn {
   background: var(--accent);
   color: #ffffff;
   margin-top: 18px;
 }
 
-/* Secondary */
+/* Secondary action */
 #startWorkoutBtn {
   background: transparent;
   color: var(--accent);
@@ -132,12 +136,12 @@ button {
   margin-top: 10px;
 }
 
-/* -------- Output -------- */
+/* ---------- Workout Output ---------- */
 #workoutOutput {
   margin-top: 24px;
 }
 
-/* -------- Exercise Rows -------- */
+/* ---------- Exercise Rows ---------- */
 .exercise-card {
   background: var(--surface);
   padding: 14px 16px;
@@ -166,6 +170,15 @@ button {
   background: #f8fafc;
 }
 
+/* Completed */
+.exercise-card.completed {
+  opacity: 0.55;
+}
+
+.exercise-card.completed strong {
+  text-decoration: line-through;
+}
+
 /* Complete button inside row */
 .exercise-card button {
   background: transparent;
@@ -176,23 +189,14 @@ button {
   border-radius: 999px;
 }
 
-/* Completed */
-.exercise-card.completed {
-  opacity: 0.55;
-}
-
-.exercise-card.completed strong {
-  text-decoration: line-through;
-}
-
-/* -------- Timer -------- */
+/* ---------- Timer ---------- */
 #workoutTimer {
   font-weight: 600;
   color: var(--accent);
   margin-bottom: 16px;
 }
 
-/* -------- Rest Overlay -------- */
+/* ---------- Rest Overlay ---------- */
 #restOverlay {
   position: fixed;
   inset: 0;
@@ -206,7 +210,7 @@ button {
   z-index: 9999;
 }
 
-/* -------- Session Complete -------- */
+/* ---------- Session Complete ---------- */
 #sessionComplete {
   position: fixed;
   inset: 0;
@@ -225,7 +229,7 @@ button {
   margin-bottom: 12px;
 }
 
-/* -------- Mobile Tweaks -------- */
+/* ---------- Mobile Tweaks ---------- */
 @media (max-width: 640px) {
   body {
     padding: 14px;
