@@ -1,21 +1,15 @@
-/* =====================
-   Global
-===================== */
 * {
   box-sizing: border-box;
 }
 
 body {
-  background: linear-gradient(180deg, #121212, #0e0e0e);
-  color: #ffffff;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   margin: 0;
   padding: 20px;
+  background: #121212;
+  color: #ffffff;
+  font-family: system-ui, sans-serif;
 }
 
-/* =====================
-   Layout
-===================== */
 .container {
   max-width: 600px;
   margin: auto;
@@ -23,33 +17,24 @@ body {
 
 h1 {
   text-align: center;
-  margin-bottom: 8px;
+  margin-bottom: 20px;
 }
 
 h2 {
-  margin-top: 0;
-  margin-bottom: 16px;
-  font-size: 18px;
   color: #00cec9;
+  margin-bottom: 16px;
 }
 
-/* =====================
-   Setup Card
-===================== */
 .setup-card {
   background: #1e1e1e;
   padding: 20px;
   border-radius: 16px;
   margin-bottom: 24px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
 }
 
-/* =====================
-   Controls
-===================== */
 label {
-  display: block;
   font-size: 14px;
+  display: block;
   margin-bottom: 6px;
   color: #b2bec3;
 }
@@ -57,99 +42,53 @@ label {
 select {
   width: 100%;
   padding: 14px;
-  margin-bottom: 16px;
-  border-radius: 12px;
+  border-radius: 10px;
   border: none;
+  margin-bottom: 16px;
   background: #2d3436;
-  color: #ffffff;
-  font-size: 16px;
+  color: white;
 }
 
-/* =====================
-   Primary Button
-===================== */
 button {
   width: 100%;
-  padding: 18px;
-  font-size: 18px;
-  border: none;
+  padding: 16px;
   border-radius: 14px;
+  border: none;
+  font-size: 18px;
   background: linear-gradient(135deg, #00b894, #00cec9);
   color: white;
   cursor: pointer;
   margin-bottom: 20px;
-  font-weight: 600;
-  transition: transform 0.1s ease, box-shadow 0.1s ease;
 }
 
 button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0, 206, 201, 0.35);
+  opacity: 0.9;
 }
 
-button:active {
-  transform: translateY(0);
-}
-
-/* =====================
-   Workout Cards
-===================== */
 .exercise-card {
   background: #1e1e1e;
   padding: 18px;
   border-radius: 16px;
   margin-bottom: 16px;
-  animation: fadeInUp 0.4s ease forwards;
 }
 
-.exercise-card h3 {
-  margin: 0 0 8px 0;
-  font-size: 22px;
-}
-
-.exercise-card p {
-  margin: 0 0 14px 0;
-  color: #dfe6e9;
-}
-
-.exercise-card button {
-  background: #0984e3;
-  font-size: 14px;
-  padding: 10px;
-  border-radius: 10px;
-}
-
-/* Completed state */
 .exercise-card.completed {
   opacity: 0.6;
   text-decoration: line-through;
 }
 
-/* =====================
-   Timer
-===================== */
+.exercise-card button {
+  background: #0984e3;
+  font-size: 14px;
+}
+
 .timer {
-  margin-top: 30px;
   text-align: center;
+  margin-top: 30px;
 }
 
 #timer {
-  font-size: 28px;
+  font-size: 26px;
   margin-bottom: 12px;
   color: #00cec9;
-  font-weight: bold;
-}
-
-/* =====================
-   Animations
-===================== */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
