@@ -1,5 +1,8 @@
+
+console.log("✅ script.js loaded");
+
 // =====================
-// Exercise Data
+// EXERCISE DATA
 // =====================
 const EXERCISES = {
   bodyweight: {
@@ -7,76 +10,63 @@ const EXERCISES = {
       "Squats",
       "Wall Push-Ups",
       "Glute Bridges",
-      "Marching in Place",
-      "Plank (knees)"
+      "Marching in Place"
     ],
     intermediate: [
       "Push-Ups",
       "Lunges",
       "Plank",
-      "Mountain Climbers",
-      "Jump Squats"
+      "Mountain Climbers"
     ],
     advanced: [
       "Pistol Squats",
       "Decline Push-Ups",
       "Burpees",
-      "Hollow Hold",
       "Jump Lunges"
     ]
   },
   dumbbells: {
     beginner: [
-      "Goblet Squats",
-      "Dumbbell Rows",
-      "Dumbbell Floor Press",
+      "Goblet Squat",
+      "Dumbbell Row",
       "Farmer Carry"
     ],
     intermediate: [
-      "Split Squats",
-      "Renegade Rows",
-      "Dumbbell Thrusters",
-      "Single-Arm Press"
+      "Split Squat",
+      "Renegade Row",
+      "Dumbbell Press"
     ],
     advanced: [
       "Man Makers",
-      "Dumbbell Snatch",
       "Devil Press",
-      "Overhead Lunges"
+      "Dumbbell Snatch"
     ]
   },
   bands: {
     beginner: [
       "Band Squats",
-      "Band Chest Press",
-      "Band Rows",
-      "Band Pull-Aparts"
+      "Band Row",
+      "Band Chest Press"
     ],
     intermediate: [
-      "Band Deadlifts",
-      "Band Overhead Press",
-      "Band Face Pulls"
+      "Band Deadlift",
+      "Band Overhead Press"
     ],
     advanced: [
       "Explosive Band Squats",
-      "Tempo Band Press",
-      "Single-Leg Band Deadlift"
+      "Tempo Band Press"
     ]
   }
 };
 
 // =====================
-// Utility Functions
+// HELPERS
 // =====================
-function randomItem(array) {
-  return array[Math.floor(Math.random() * array.length)];
-}
-
 function shuffle(array) {
   return array.sort(() => Math.random() - 0.5);
 }
 
-function getRepScheme(level) {
+function getReps(level) {
   if (level === "beginner") return "8–10 reps";
   if (level === "intermediate") return "10–12 reps";
   return "12–15 reps";
@@ -89,23 +79,25 @@ function getExerciseCount(duration) {
 }
 
 // =====================
-// Workout Generation
+// WORKOUT GENERATION
 // =====================
 function generateWorkout() {
   const level = document.getElementById("level").value;
   const duration = document.getElementById("duration").value;
   const equipment = document.getElementById("equipment").value;
-
   const output = document.getElementById("workoutOutput");
+
   output.innerHTML = "";
 
   const exercisePool = EXERCISES[equipment][level];
-  const numberOfExercises = getExerciseCount(duration);
-  const reps = getRepScheme(level);
+  const exercises = shuffle([...exercisePool]).slice(
+    0,
+    getExerciseCount(duration)
+  );
 
-  const workout = shuffle([...exercisePool]).slice(0, numberOfExercises);
+  const reps = getReps(level);
 
-  workout.forEach(exercise => {
+  exercises.forEach(exercise => {
     const card = document.createElement("div");
     card.className = "exercise-card";
 
@@ -120,12 +112,40 @@ function generateWorkout() {
 }
 
 // =====================
-// Timer Logic
+// TIMER
 // =====================
-let timeLeft = 30;
 let timerInterval;
+let timeLeft = 30;
 
 function startTimer() {
   clearInterval(timerInterval);
 
-  const
+  const duration = document.getElementById("duration").value;
+  const timerDisplay = document.getElementById("timer");
+
+  timeLeft = duration === "10" ? 30 : duration === "20" ? 45 : 60;
+  timerDisplay.textContent = `${timeLeft} seconds`;
+
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    timerDisplay.textContent = `${timeLeft} seconds`;
+
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      timerDisplay.textContent = "Rest complete ✅";
+    }
+  }, 1000);
+}
+
+// =====================
+// EVENT LISTENERS
+// =====================
+document.addEventListener("DOMContentLoaded", () => {
+  document
+    .getElementById("generateWorkoutBtn")
+    .addEventListener("click", generateWorkout);
+
+  document
+    .getElementById("startTimerBtn")
+    .addEventListener("click", startTimer);
+});
