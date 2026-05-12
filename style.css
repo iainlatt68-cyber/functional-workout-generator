@@ -1,19 +1,14 @@
-/* =========================
-   MODERN MINIMAL THEME
-========================= */
+/* =====================================
+   YouVersion-Inspired Calm UI
+===================================== */
 
 :root {
-  --bg: #f9fafb;
-  --panel: #ffffff;
-  --text: #0f172a;
-  --muted: #64748b;
-  --line: #e5e7eb;
-
-  --accent: #14b8a6; /* teal */
-  --accent-soft: #ecfeff;
-
-  --radius: 14px;
-  --radius-sm: 10px;
+  --bg: #f7f7f5;
+  --surface: #ffffff;
+  --text: #1c1c1c;
+  --muted: #7a7a7a;
+  --divider: #e3e3e3;
+  --accent: #4f6bed; /* calm blue */
 }
 
 /* Reset */
@@ -23,142 +18,148 @@
 
 body {
   margin: 0;
-  padding: 24px;
+  padding: 20px;
   background: var(--bg);
-  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont,
-    "Segoe UI", Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, Helvetica, Arial, sans-serif;
   color: var(--text);
+  line-height: 1.45;
 }
 
-/* Layout */
 .container {
-  max-width: 760px;
+  max-width: 720px;
   margin: 0 auto;
 }
 
 /* Headings */
 h1 {
-  font-size: 2rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  margin-bottom: 6px;
+  font-size: 1.9rem;
+  font-weight: 600;
+  margin-bottom: 8px;
 }
 
 h2 {
-  font-size: 1.1rem;
-  font-weight: 600;
+  font-size: 1rem;
+  font-weight: 500;
   margin-bottom: 16px;
+  color: var(--muted);
 }
 
 h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
   margin-top: 28px;
-  margin-bottom: 10px;
-  font-size: 1rem;
 }
 
 h4 {
-  margin-top: 20px;
-  margin-bottom: 6px;
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
   color: var(--muted);
+  text-transform: uppercase;
+  margin-top: 24px;
+  margin-bottom: 8px;
 }
 
-/* Setup panel */
+/* Intro text (optional) */
+.app-intro {
+  color: var(--muted);
+  margin-bottom: 24px;
+  font-size: 0.95rem;
+}
+
+/* Setup section */
 .setup-card {
-  background: var(--panel);
-  padding: 22px;
-  border-radius: var(--radius);
-  border: 1px solid var(--line);
-  margin-bottom: 28px;
+  background: var(--surface);
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid var(--divider);
 }
 
-/* Labels & selects */
+/* Labels */
 label {
   display: block;
-  font-size: 0.75rem;
-  font-weight: 500;
+  font-size: 0.8rem;
   color: var(--muted);
-  margin-top: 14px;
+  margin-top: 18px;
 }
 
+/* Inputs */
 select {
   width: 100%;
-  appearance: none;
-  padding: 12px 14px;
-  margin-top: 6px;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--line);
-  background: #fff;
-  font-size: 0.9rem;
-}
-
-/* Buttons */
-button {
-  appearance: none;
   border: none;
-  border-radius: var(--radius);
-  padding: 14px;
-  font-size: 0.95rem;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-#generateWorkoutBtn {
-  background: var(--accent);
-  color: #022c22;
-  margin-top: 20px;
-}
-
-#startWorkoutBtn {
+  border-bottom: 1px solid var(--divider);
+  padding: 10px 2px;
+  font-size: 1rem;
   background: transparent;
-  color: var(--accent);
+  color: var(--text);
+}
+
+select:focus {
+  outline: none;
+  border-bottom-color: var(--accent);
+}
+
+/* Primary button */
+#generateWorkoutBtn {
+  margin-top: 28px;
+  width: 100%;
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 14px;
+  font-size: 1rem;
+  border-radius: 999px;
+}
+
+/* Secondary button */
+#startWorkoutBtn {
+  margin-top: 12px;
+  width: 100%;
+  background: transparent;
   border: 1px solid var(--accent);
-  margin-top: 8px;
+  color: var(--accent);
+  padding: 12px;
+  border-radius: 999px;
+  font-size: 0.95rem;
 }
 
 /* Output */
 #workoutOutput {
-  margin-top: 24px;
+  margin-top: 32px;
 }
 
-/* Exercise rows (not heavy cards) */
+/* Exercise rows */
 .exercise-card {
-  padding: 14px 0;
-  border-bottom: 1px solid var(--line);
+  padding: 16px 0;
+  border-bottom: 1px solid var(--divider);
 }
 
-.exercise-card:last-child {
-  border-bottom: none;
-}
-
+/* No card look */
 .exercise-card strong {
   display: block;
-  font-size: 0.95rem;
-  font-weight: 600;
+  font-size: 1.05rem;
+  font-weight: 500;
 }
 
 .exercise-card p {
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   color: var(--muted);
   margin: 4px 0 10px;
 }
 
-/* Complete button inside rows */
+/* Row action */
 .exercise-card button {
-  padding: 8px 12px;
-  font-size: 0.75rem;
-  border-radius: 999px;
-  border: 1px solid var(--line);
   background: transparent;
+  border: none;
+  padding: 6px 0;
+  font-size: 0.85rem;
+  color: var(--accent);
+  cursor: pointer;
 }
 
-/* Completed state */
+/* Completed */
 .exercise-card.completed {
-  background: var(--accent-soft);
-  padding: 14px;
-  border-radius: var(--radius-sm);
+  opacity: 0.55;
 }
 
 .exercise-card.completed strong {
@@ -168,15 +169,14 @@ button {
 /* Timer */
 #workoutTimer {
   font-size: 0.85rem;
-  font-weight: 600;
   color: var(--accent);
-  margin-bottom: 12px;
+  margin-bottom: 16px;
+  font-weight: 500;
 }
 
 /* Mobile spacing */
-@media (max-width: 640px) {
+@media (max-width: 600px) {
   body {
     padding: 16px;
   }
 }
-``
