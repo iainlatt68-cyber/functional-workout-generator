@@ -117,6 +117,15 @@ function timeForExercise(level, style, duration) {
 }
 
 /* ========= WORKOUT ========= */
+function updateProgress(output) {
+  var total = output.querySelectorAll(".exercise-card").length;
+  var done = output.querySelectorAll(".exercise-card.completed").length;
+
+  var counter = output.querySelector(".progress-counter");
+  if (counter) {
+    counter.textContent = "Progress: " + done + " / " + total;
+  }
+}
 
 function generateWorkout() {
   var equipment = document.getElementById("equipment").value;
@@ -129,6 +138,11 @@ function generateWorkout() {
 
   var output = document.getElementById("workoutOutput");
   output.innerHTML = "";
+  var progress = document.createElement("p");
+progress.className = "progress-counter";
+progress.style.fontWeight = "bold";
+progress.textContent = "Progress: 0 / 0";
+output.appendChild(progress);
 
   // Warm-up
   var h = document.createElement("h3");
