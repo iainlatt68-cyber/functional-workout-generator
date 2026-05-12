@@ -184,11 +184,14 @@ output.appendChild(progress);
       var btn = document.createElement("button");
       btn.textContent = "Mark complete ✅";
       btn.onclick = function () {
-        card.classList.toggle("completed");
-        btn.textContent = card.classList.contains("completed")
-          ? "Completed ✅"
-          : "Mark complete ✅";
-      };
+      card.classList.toggle("completed");
+      btn.textContent = card.classList.contains("completed")
+    ? "Completed ✅"
+    : "Mark complete ✅";
+
+  updateProgress(output);
+};
+
 
       card.innerHTML =
         "<strong>" + exercise + "</strong>" +
