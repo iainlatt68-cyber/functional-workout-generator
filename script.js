@@ -47,14 +47,41 @@ function pickExercises(level) {
   return chosen;
 }
 /* ===============================
-   WORKOUT GENERATOR (SAFE)
+   GOAL-BASED TRAINING RULES
 ================================ */
 
+var GOALS = {
+  strength: {
+    reps: "3–6 reps",
+    time: "20–30 seconds",
+    rounds: 3
+  },
+  hypertrophy: {
+    reps: "8–15 reps",
+    time: "30–45 seconds",
+    rounds: 3
+  },
+  conditioning: {
+    reps: "12–20 reps",
+    time: "40–60 seconds",
+    rounds: 4
+  },
+  recovery: {
+    reps: "8–10 easy reps",
+    time: "20–30 seconds",
+    rounds: 2
+  }
+};
+``
+/* ===============================
+   WORKOUT GENERATOR (SAFE)
+================================ */
+var goal = document.getElementById("session").value;
 function generateWorkout() {
   console.log("✅ generateWorkout() running");
 
   var level = document.getElementById("level").value;
-  var rounds = Number(document.getElementById("rounds").value || 1);
+  var rounds = GOALS[goal].rounds;
   var output = document.getElementById("workoutOutput");
 
   output.innerHTML = "";
@@ -73,9 +100,9 @@ function generateWorkout() {
 
 for (var i = 0; i < workout.length; i++) {
   var exercise = workout[i];
-   p.textContent = exercise.timeBased
-  ? "30–45 seconds"
-  : "8–12 reps";
+  p.textContent = exercise.timeBased
+  ? GOALS[goal].time
+  : GOALS[goal].reps;
 
       var card = document.createElement("div");
       card.className = "exercise-card";
