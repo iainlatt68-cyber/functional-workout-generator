@@ -376,4 +376,30 @@ button:hover {
   border-color: var(--accent);
 }
 ``
+@media (max-width: 600px) {
+  body {
+    padding: 16px;
+  }
 
+  .setup-card {
+    padding: 16px;
+  }
+
+  select {
+    padding: 14px;
+    font-size: 1rem;
+  }
+
+  button {
+    padding: 18px;
+    font-size: 1.05rem;
+  }
+
+  .exercise-card {
+    padding: 16px;
+  }
+
+  h1 {
+    font-size: 1.4rem;
+  }
+}
