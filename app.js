@@ -9,38 +9,43 @@ document.addEventListener("DOMContentLoaded", function () {
       "Air Squat",
       "Push-Ups",
       "Plank",
-      "Reverse Lunge"
+      "Reverse Lunge",
+      "Mountain Climbers"
     ],
     dumbbells: [
       "DB Goblet Squat",
       "DB Row",
       "DB Push Press",
+      "DB RDL",
       "Farmer Carry"
     ],
     kettlebell: [
       "KB Swing",
       "KB Goblet Squat",
       "KB Clean",
-      "KB Press"
+      "KB Press",
+      "KB Reverse Lunge"
     ],
     sandbag: [
       "Sandbag Clean",
       "Sandbag Front Squat",
       "Sandbag Carry",
-      "Sandbag Shouldering"
+      "Sandbag Shouldering",
+      "Sandbag Reverse Lunge"
     ],
     gym: [
       "Back Squat",
       "Bench Press",
       "Deadlift",
-      "Pull-Ups"
+      "Pull-Ups",
+      "Barbell Row"
     ]
   };
 
   const GOALS = {
-    strength: "5 reps",
-    hypertrophy: "8–12 reps",
-    conditioning: "12–20 reps",
+    strength: "3-6 reps",
+    hypertrophy: "8-12 reps",
+    conditioning: "12-20 reps",
     recovery: "Easy controlled reps"
   };
 
@@ -56,38 +61,47 @@ document.addEventListener("DOMContentLoaded", function () {
      STATE
   =============================== */
 
-  let exerciseIndex = 0;
+  let activeIndex = 0;
   let workoutStarted = false;
+  let restDuration = 60; // seconds
 
   /* ===============================
-     ACTIVE EXERCISE HANDLING
+     HELPERS
   =============================== */
 
-  function setActiveExercise() {
+  function setActiveBlock() {
     const cards = document.querySelectorAll(".exercise-card");
 
-    cards.forEach((card, index) => {
-      card.classList.toggle("active", index === exerciseIndex);
+    cards.forEach((card, idx) => {
+      card.classList.toggle("active", idx === activeIndex);
     });
 
-    if (cards[exerciseIndex]) {
-      cards[exerciseIndex].scrollIntoView({
+    if (cards[activeIndex]) {
+      cards[activeIndex].scrollIntoView({
         behavior: "smooth",
         block: "center"
       });
     }
   }
 
-  function advanceExercise() {
-    const cards = document.querySelectorAll(".exercise-card");
+  function showRestTimer(onComplete) {
+    const overlay = document.createElement("div");
+    overlay.id = "restOverlay";
+    document.body.appendChild(overlay);
 
-    if (exerciseIndex < cards.length - 1) {
-      cards[exerciseIndex].classList.add("completed");
-      exerciseIndex++;
-      setActiveExercise();
-    } else {
-      showWorkoutComplete();
-    }
+    let remaining = restDuration;
+    overlay.textContent = remaining;
+
+    const interval = setInterval(() => {
+      remaining--;
+      overlay.textContent = remaining;
+
+      if (remaining <= 0) {
+        clearInterval(interval);
+        overlay.remove();
+        onComplete();
+      }
+    }, 1000);
   }
 
   /* ===============================
@@ -106,6 +120,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let rounds = Number(roundsEl.value);
     const template = templateEl.value;
 
+    // Apply template overrides
     if (template && TEMPLATES[template]) {
       const t = TEMPLATES[template];
       if (t.goal) goal = t.goal;
@@ -114,15 +129,17 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     output.innerHTML = "";
-    exerciseIndex = 0;
     workoutStarted = false;
+    activeIndex = 0;
 
     const title = document.createElement("h3");
     title.textContent =
-      `Workout – ${equipment.toUpperCase()} (${rounds} sets each)`;
+      "Workout (" + goal.toUpperCase() + " / " + equipment.toUpperCase() + ")";
     output.appendChild(title);
 
-    EXERCISES[equipment].forEach(exercise => {
+    const list = EXERCISES[equipment];
+
+    list.forEach(exercise => {
       const card = document.createElement("div");
       card.className = "exercise-card";
 
@@ -133,14 +150,34 @@ document.addEventListener("DOMContentLoaded", function () {
       const prescription = document.createElement("p");
       prescription.textContent =
         exercise.toLowerCase().includes("carry") || exercise === "Plank"
-          ? `${rounds} rounds of 30–45 seconds`
-          : `${rounds} sets of ${GOALS[goal]}`;
+          ? "30-45 seconds"
+          : GOALS[goal];
       card.appendChild(prescription);
 
-      // CLICK TO ADVANCE
+      const roundsText = document.createElement("p");
+      roundsText.textContent = "Complete " + rounds + " rounds";
+      roundsText.style.fontSize = "0.85rem";
+      roundsText.style.opacity = "0.8";
+      card.appendChild(roundsText);
+
+      // Click to complete exercise and start rest
       card.addEventListener("click", function () {
         if (!workoutStarted) return;
-        advanceExercise();
+        if (!card.classList.contains("active")) return;
+
+        card.classList.add("completed");
+        card.classList.remove("active");
+
+        showRestTimer(() => {
+          activeIndex++;
+          const allCards = document.querySelectorAll(".exercise-card");
+
+          if (activeIndex < allCards.length) {
+            setActiveBlock();
+          } else {
+            showSessionComplete(goal, equipment, rounds);
+          }
+        });
       });
 
       output.appendChild(card);
@@ -160,40 +197,45 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     workoutStarted = true;
-    exerciseIndex = 0;
-    setActiveExercise();
+    activeIndex = 0;
+    setActiveBlock();
   }
 
   /* ===============================
-     COMPLETE
+     SESSION COMPLETE
   =============================== */
 
-  function showWorkoutComplete() {
+  function showSessionComplete(goal, equipment, rounds) {
     const output = document.getElementById("workoutOutput");
     output.innerHTML = "";
 
-    const wrapper = document.createElement("div");
-    wrapper.className = "exercise-card active";
+    const card = document.createElement("div");
+    card.className = "exercise-card active";
 
     const title = document.createElement("h3");
     title.textContent = "Workout Complete";
-    wrapper.appendChild(title);
+    card.appendChild(title);
 
-    const msg = document.createElement("p");
-    msg.textContent = "Good work. Recover, refuel, and repeat.";
-    wrapper.appendChild(msg);
+    const summary = document.createElement("p");
+    summary.textContent =
+      "Goal: " + goal +
+      " | Equipment: " + equipment +
+      " | Rounds per exercise: " + rounds;
+    card.appendChild(summary);
 
-    output.appendChild(wrapper);
+    output.appendChild(card);
   }
 
   /* ===============================
      EVENTS
   =============================== */
 
-  document.getElementById("generateWorkoutBtn")
+  document
+    .getElementById("generateWorkoutBtn")
     .addEventListener("click", generateWorkout);
 
-  document.getElementById("startWorkoutBtn")
+  document
+    .getElementById("startWorkoutBtn")
     .addEventListener("click", startWorkout);
 
 });
