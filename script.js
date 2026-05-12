@@ -45,7 +45,20 @@ var COOLDOWN = [
   "Thoracic Rotation",
   "Breathing – 2 min"
 ];
-
+/* ===============================
+   TIME‑BASED EXERCISES
+================================ */
+var TIME_BASED = [
+  "Plank",
+  "Side Plank",
+  "Dead Bug",
+  "Farmer Carry",
+  "Bike",
+  "Row Erg",
+  "Assault Bike",
+  "Treadmill Walk",
+  "Breathing"
+];
 /* ===============================
    HELPERS
 ================================ */
