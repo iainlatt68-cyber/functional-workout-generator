@@ -225,6 +225,24 @@ function timeForExercise(level, style, duration) {
     output.appendChild(p2);
   });
 }
+// Workout Summary
+var summary = document.createElement("div");
+summary.className = "exercise-card";
+
+var estTime;
+if (style === "strength") estTime = rounds * 12 + "–" + rounds * 15 + " min";
+else if (style === "conditioning") estTime = rounds * 8 + "–" + rounds * 10 + " min";
+else if (style === "emom") estTime = "10–15 min";
+else estTime = "15–20 min";
+
+summary.innerHTML =
+  "<strong>Workout Summary</strong>" +
+  "<p>Style: " + style.toUpperCase() + "</p>" +
+  "<p>Rounds: " + rounds + "</p>" +
+  "<p>Equipment: " + equipment + "</p>" +
+  "<p>Estimated time: " + estTime + "</p>";
+
+output.appendChild(summary);
 /* ===============================
    TIMER
 ================================ */
