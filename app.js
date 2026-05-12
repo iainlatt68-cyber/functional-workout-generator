@@ -1,4 +1,3 @@
-
 document.addEventListener("DOMContentLoaded", function () {
 
   /* ===============================
@@ -51,70 +50,46 @@ document.addEventListener("DOMContentLoaded", function () {
   };
 
   const TEMPLATES = {
-    burner: {
-      goal: "conditioning",
-      rounds: 3
-    },
-    strength: {
-      goal: "strength",
-      rounds: 5
-    },
-    grinder: {
-      goal: "conditioning",
-      rounds: 4,
-      equipment: "sandbag"
-    },
-    kettle: {
-      goal: "conditioning",
-      rounds: 4,
-      equipment: "kettlebell"
-    },
-    recovery: {
-      goal: "recovery",
-      rounds: 2
-    }
+    burner: { goal: "conditioning", rounds: 3 },
+    strength: { goal: "strength", rounds: 5 },
+    grinder: { goal: "conditioning", rounds: 4, equipment: "sandbag" },
+    kettle: { goal: "conditioning", rounds: 4, equipment: "kettlebell" },
+    recovery: { goal: "recovery", rounds: 2 }
   };
 
   /* ===============================
-     COACHING NOTES
+     STATE
   =============================== */
 
-  function getCoachingNotes(goal, equipment, rounds) {
-    const notes = [];
+  let exerciseIndex = 0;
+  let workoutStarted = false;
+  let workoutTimer = null;
+  let workoutStartTime = null;
 
-    if (goal === "strength") {
-      notes.push("Prioritise tight technique and full rest between sets.");
-      notes.push("If reps slowed noticeably, keep load the same next time.");
+  /* ===============================
+     UTILITIES
+  =============================== */
+
+  function setActiveExercise() {
+    const cards = document.querySelectorAll(".exercise-card");
+
+    cards.forEach((card, index) => {
+      card.classList.toggle("active", index === exerciseIndex);
+    });
+
+    // Auto-scroll to active exercise
+    if (cards[exerciseIndex]) {
+      cards[exerciseIndex].scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
     }
+  }
 
-    if (goal === "conditioning") {
-      notes.push("Consistent pacing beats early intensity.");
-      notes.push("If breathing recovered quickly, consider adding a round next session.");
-    }
-
-    if (goal === "hypertrophy") {
-      notes.push("Control the tempo and aim for muscular fatigue, not failure.");
-      notes.push("Minor muscle soreness is expected; joint pain is not.");
-    }
-
-    if (goal === "recovery") {
-      notes.push("This session should leave you feeling refreshed, not exhausted.");
-      notes.push("Reduce volume further if fatigue carried into the next day.");
-    }
-
-    if (equipment === "kettlebell") {
-      notes.push("Use the hips to drive power. The arms guide, not lift.");
-    }
-
-    if (equipment === "sandbag") {
-      notes.push("Stay braced and move deliberately. Instability is the stimulus.");
-    }
-
-    if (rounds >= 4) {
-      notes.push("Training volume was high. Focus on hydration, calories, and sleep.");
-    }
-
-    return notes;
+  function clearActiveExercises() {
+    document
+      .querySelectorAll(".exercise-card")
+      .forEach(card => card.classList.remove("active"));
   }
 
   /* ===============================
@@ -141,20 +116,26 @@ document.addEventListener("DOMContentLoaded", function () {
       if (t.equipment) equipment = t.equipment;
     }
 
+    // Reset state
+    workoutStarted = false;
+    exerciseIndex = 0;
+    clearActiveExercises();
+
     output.innerHTML = "";
 
     const title = document.createElement("h3");
-    title.textContent = "Workout (" + goal.toUpperCase() + " / " + equipment.toUpperCase() + ")";
+    title.textContent =
+      `Workout (${goal.toUpperCase()} / ${equipment.toUpperCase()})`;
     output.appendChild(title);
 
     const list = EXERCISES[equipment];
 
     for (let r = 1; r <= rounds; r++) {
       const roundHeader = document.createElement("h4");
-      roundHeader.textContent = "Round " + r;
+      roundHeader.textContent = `Round ${r}`;
       output.appendChild(roundHeader);
 
-      list.forEach(function (exercise) {
+      list.forEach(exercise => {
         const card = document.createElement("div");
         card.className = "exercise-card";
 
@@ -172,67 +153,46 @@ document.addEventListener("DOMContentLoaded", function () {
         output.appendChild(card);
       });
     }
-
-    // Finish button
-    const finishBtn = document.createElement("button");
-    finishBtn.textContent = "Finish Workout";
-    finishBtn.style.marginTop = "16px";
-    finishBtn.onclick = function () {
-      showSessionComplete(goal, equipment, rounds);
-    };
-
-    output.appendChild(finishBtn);
   }
 
   /* ===============================
-     SESSION COMPLETE
+     START WORKOUT
   =============================== */
 
-  function showSessionComplete(goal, equipment, rounds) {
-    const output = document.getElementById("workoutOutput");
-    output.innerHTML = "";
+  function startWorkout() {
+    const cards = document.querySelectorAll(".exercise-card");
 
-    const wrapper = document.createElement("div");
-    wrapper.className = "exercise-card active";
+    if (!cards.length) {
+      alert("Generate a workout first.");
+      return;
+    }
 
-    const title = document.createElement("h3");
-    title.textContent = "Workout Complete";
-    wrapper.appendChild(title);
+    if (workoutStarted) return;
 
-    const summary = document.createElement("p");
-    summary.textContent =
-      "Goal: " + goal.toUpperCase() +
-      " | Equipment: " + equipment +
-      " | Rounds: " + rounds;
-    wrapper.appendChild(summary);
+    workoutStarted = true;
+    exerciseIndex = 0;
 
-    const notesTitle = document.createElement("h4");
-    notesTitle.textContent = "Coach Notes";
-    wrapper.appendChild(notesTitle);
+    // Activate first exercise
+    setActiveExercise();
 
-    const notes = getCoachingNotes(goal, equipment, rounds);
-    const ul = document.createElement("ul");
-
-    notes.forEach(function (note) {
-      const li = document.createElement("li");
-      li.textContent = note;
-      ul.appendChild(li);
-    });
-
-    wrapper.appendChild(ul);
-    output.appendChild(wrapper);
+    // Start timer (simple)
+    workoutStartTime = Date.now();
+    workoutTimer = setInterval(() => {
+      const elapsed = Math.floor((Date.now() - workoutStartTime) / 1000);
+      console.log("Workout time:", elapsed, "seconds");
+    }, 1000);
   }
 
   /* ===============================
      EVENTS
   =============================== */
 
-  document.getElementById("generateWorkoutBtn")
+  document
+    .getElementById("generateWorkoutBtn")
     .addEventListener("click", generateWorkout);
 
-  document.getElementById("startWorkoutBtn")
-    .addEventListener("click", function () {
-      console.log("Workout started");
-    });
+  document
+    .getElementById("startWorkoutBtn")
+    .addEventListener("click", startWorkout);
 
 });
