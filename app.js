@@ -1,113 +1,84 @@
-/* ===============================
-   Functional Workout Generator
-   Single Source of Truth Script
-   =============================== */
-
 document.addEventListener("DOMContentLoaded", init);
 
-/* ---------- GLOBAL STATE ---------- */
 let workout = [];
 let currentIndex = 0;
 let restTimer = null;
 
-/* ---------- DATA ---------- */
 const EXERCISES = {
   kettlebell: [
     "Kettlebell Swing",
     "Goblet Squat",
-    "Clean & Press",
-    "Racked Lunge",
-    "Single‑Arm Row"
+    "Clean & Press"
   ],
   sandbag: [
     "Sandbag Clean",
-    "Sandbag Bear Hug Squat",
-    "Sandbag Carry",
-    "Sandbag Reverse Lunge"
+    "Bear Hug Squat",
+    "Sandbag Carry"
   ],
   bodyweight: [
     "Press‑Up",
     "Air Squat",
-    "Plank",
-    "Burpee",
-    "Mountain Climbers"
+    "Plank"
   ]
 };
 
-const REST_BY_GOAL = {
+const REST = {
   strength: 90,
   conditioning: 45,
   hybrid: 60
 };
 
-/* ---------- INIT ---------- */
 function init() {
   console.log("✅ JS IS RUNNING");
 
+  document.getElementById("activeWorkout").innerHTML = "";
+
   document.getElementById("generateWorkout")
-    ?.addEventListener("click", generateWorkout);
+    .addEventListener("click", generateWorkout);
 
   document.getElementById("startWorkout")
-    ?.addEventListener("click", startWorkout);
-
-  disableStart();
+    .addEventListener("click", startWorkout);
 }
 
-/* ---------- GENERATE WORKOUT ---------- */
 function generateWorkout() {
-  const equipment = getValues("equipment");
-  const rounds = Number(getValue("rounds", 3));
-  const goal = getValue("goal", "hybrid");
-  const difficulty = getValue("difficulty", "medium");
-
   workout = [];
   currentIndex = 0;
 
-  equipment.forEach(eq => {
-    const pool = EXERCISES[eq] || [];
-    shuffle(pool);
+  const goal = goalValue();
+  const difficulty = difficultyValue();
+  const rounds = Number(roundsValue());
+  const equipment = equipmentValues();
 
-    pool.slice(0, rounds).forEach(name => {
+  equipment.forEach(eq => {
+    shuffle(EXERCISES[eq]);
+    EXERCISES[eq].slice(0, rounds).forEach(name => {
       workout.push({
         name,
-        equipment: eq,
-        rest: adjustRest(REST_BY_GOAL[goal], difficulty)
+        rest: adjustRest(REST[goal], difficulty)
       });
     });
   });
 
-  renderWorkoutPreview();
-  enableStart();
+  renderPreview();
+  document.getElementById("startWorkout").disabled = false;
 }
 
-/* ---------- START WORKOUT ---------- */
 function startWorkout() {
   if (!workout.length) return;
-
-  document.body.classList.add("workout-mode");
+  currentIndex = 0;
   renderExercise();
 }
 
-/* ---------- RENDER ---------- */
-function renderWorkoutPreview() {
-  const container = document.getElementById("workoutDisplay");
-  if (!container) return;
-
-  container.innerHTML = "";
-
-  workout.forEach((ex, i) => {
-    const div = document.createElement("div");
-    div.className = "exercise-preview";
-    div.textContent = `${i + 1}. ${ex.name}`;
-    container.appendChild(div);
+function renderPreview() {
+  const el = document.getElementById("workoutDisplay");
+  el.innerHTML = "";
+  workout.forEach((e, i) => {
+    el.innerHTML += `<div>${i + 1}. ${e.name}</div>`;
   });
 }
 
 function renderExercise() {
   clearRest();
-
-  const display = document.getElementById("activeWorkout");
-  if (!display) return;
 
   if (currentIndex >= workout.length) {
     renderFinish();
@@ -116,24 +87,22 @@ function renderExercise() {
 
   const ex = workout[currentIndex];
 
-  display.innerHTML = `
+  const el = document.getElementById("activeWorkout");
+  el.innerHTML = `
     <div class="exercise-card">
       <h2>${ex.name}</h2>
-      <p class="tap-hint">Tap to complete & start rest</p>
+      <p class="tap-hint">Tap to complete</p>
     </div>
   `;
 
-  display.onclick = () => startRest(ex.rest);
+  el.onclick = () => startRest(ex.rest);
 }
 
-/* ---------- REST ---------- */
 function startRest(seconds) {
-  const display = document.getElementById("activeWorkout");
   let remaining = seconds;
+  const el = document.getElementById("activeWorkout");
 
-  display.onclick = null;
-
-  display.innerHTML = `
+  el.innerHTML = `
     <div class="rest-card">
       <h2>Rest</h2>
       <div id="restTimer">${remaining}</div>
@@ -144,18 +113,35 @@ function startRest(seconds) {
   restTimer = setInterval(() => {
     remaining--;
     document.getElementById("restTimer").textContent = remaining;
-
-    if (remaining <= 0) nextExercise();
+    if (remaining <= 0) next();
   }, 1000);
 
-  display.onclick = nextExercise;
+  el.onclick = next;
 }
 
-/* ---------- PROGRESSION ---------- */
-function nextExercise() {
+function next() {
   clearRest();
   currentIndex++;
   renderExercise();
+}
+
+function renderFinish() {
+  const el = document.getElementById("activeWorkout");
+
+  el.innerHTML = `
+    <div class="finish-screen">
+      <h2>SESSION COMPLETE</h2>
+      <p>Solid work. Recover well.</p>
+      <button id="reset">Back to Generator</button>
+    </div>
+  `;
+
+  document.getElementById("reset").onclick = () => {
+    workout = [];
+    currentIndex = 0;
+    el.innerHTML = "";
+    document.getElementById("startWorkout").disabled = true;
+  };
 }
 
 function clearRest() {
@@ -165,60 +151,26 @@ function clearRest() {
   }
 }
 
-/* ---------- FINISH ---------- */
-function renderFinish() {
-  const display = document.getElementById("activeWorkout");
-
-  const feedback = generateFeedback();
-
-  display.innerHTML = `
-    <div class="finish-screen">
-      <h2>SESSION COMPLETE</h2>
-      <p>${feedback}</p>
-    </div>
-  `;
-}
-
-/* ---------- FEEDBACK ---------- */
-function generateFeedback() {
-  const count = workout.length;
-
-  if (count >= 12) return "High volume session – prioritise recovery.";
-  if (count >= 8) return "Solid workload with good movement variety.";
-  return "Short, sharp session – ideal for consistency.";
-}
-
-/* ---------- HELPERS ---------- */
-function shuffle(arr) {
-  for (let i = arr.length - 1; i > 0; i--) {
+function shuffle(a) {
+  for (let i = a.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
+    [a[i], a[j]] = [a[j], a[i]];
   }
 }
 
-function adjustRest(base, difficulty) {
-  if (difficulty === "easy") return base - 15;
-  if (difficulty === "hard") return base + 15;
-  return base;
+function adjustRest(r, d) {
+  return d === "easy" ? r - 15 : d === "hard" ? r + 15 : r;
 }
 
-function getValue(id, fallback = null) {
-  const el = document.getElementById(id);
-  return el ? el.value : fallback;
+function goalValue() {
+  return document.getElementById("goal").value;
 }
-
-function getValues(id) {
-  const el = document.getElementById(id);
-  if (!el) return [];
-  return Array.from(el.selectedOptions).map(o => o.value);
+function difficultyValue() {
+  return document.getElementById("difficulty").value;
 }
-
-function disableStart() {
-  const btn = document.getElementById("startWorkout");
-  if (btn) btn.disabled = true;
+function roundsValue() {
+  return document.getElementById("rounds").value;
 }
-
-function enableStart() {
-  const btn = document.getElementById("startWorkout");
-  if (btn) btn.disabled = false;
+function equipmentValues() {
+  return Array.from(document.getElementById("equipment").selectedOptions).map(o => o.value);
 }
