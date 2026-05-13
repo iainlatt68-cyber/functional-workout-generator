@@ -65,7 +65,13 @@ function generateWorkout() {
 
 function startWorkout() {
   if (!workout.length) return;
+
   currentIndex = 0;
+  clearRest();
+
+  // ✅ ENTER FULL-SCREEN WORKOUT MODE
+  document.body.classList.add("workout-mode");
+
   renderExercise();
 }
 
@@ -109,7 +115,11 @@ function startRest(seconds) {
       <p>Tap to skip</p>
     </div>
   `;
+el.style.pointerEvents = "none";
 
+setTimeout(() => {
+  el.style.pointerEvents = "auto";
+}, 300);
   restTimer = setInterval(() => {
     remaining--;
     document.getElementById("restTimer").textContent = remaining;
@@ -137,8 +147,13 @@ function renderFinish() {
   `;
 
   document.getElementById("reset").onclick = () => {
+    // ✅ EXIT FULL-SCREEN MODE
+    document.body.classList.remove("workout-mode");
+
     workout = [];
     currentIndex = 0;
+    clearRest();
+
     el.innerHTML = "";
     document.getElementById("startWorkout").disabled = true;
   };
