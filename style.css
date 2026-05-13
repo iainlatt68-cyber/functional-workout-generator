@@ -1,17 +1,16 @@
 :root{
   --bg:#0b1220;
-  --panel:#0a1020;
-  --card:#0b1630;
+  --panel:rgba(8,16,32,.7);
+  --card:rgba(2,6,23,.55);
   --border:#22304a;
   --text:#e5e7eb;
   --muted:#94a3b8;
   --blue:#2563eb;
   --blue2:#1d4ed8;
-  --good:#22c55e;
-  --warn:#f59e0b;
 }
 
 *{ box-sizing:border-box; font-family:system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Arial,sans-serif; }
+
 body{
   margin:0;
   color:var(--text);
@@ -29,12 +28,14 @@ body{
   text-align:center;
   margin-bottom:16px;
 }
+
 h1{
   margin:0 0 8px;
   letter-spacing:.08em;
   text-transform:uppercase;
   font-size:20px;
 }
+
 .subtitle{
   margin:0;
   color:var(--muted);
@@ -42,13 +43,14 @@ h1{
 }
 
 .controls{
-  background: rgba(8,16,32,.7);
-  border: 1px solid var(--border);
+  background: var(--panel);
+  border:1px solid var(--border);
   border-radius:16px;
   padding:14px;
 }
 
 .control-group{ margin-bottom:14px; }
+
 .label{
   font-size:12px;
   letter-spacing:.06em;
@@ -69,17 +71,19 @@ h1{
   gap:8px;
   flex-wrap:wrap;
 }
+
 .button-row button{
   flex: 1 1 calc(50% - 4px);
-  padding:10px 10px;
+  padding:10px;
   border-radius:10px;
   border:1px solid var(--border);
   background: rgba(2,6,23,.5);
   color:var(--text);
   font-weight:650;
   cursor:pointer;
-  transition: transform .08s ease, filter .12s ease, background .12s ease;
+  transition: transform .08s ease, filter .12s ease;
 }
+
 .button-row button:active{ transform:scale(.98); }
 .button-row button:hover{ filter:brightness(1.05); }
 
@@ -101,16 +105,18 @@ h1{
   border:1px solid var(--border);
   background: rgba(2,6,23,.45);
   color:var(--text);
-  font-weight:750;
+  font-weight:800;
   letter-spacing:.04em;
   cursor:pointer;
 }
+
 .btn:disabled{ opacity:.35; cursor:not-allowed; }
 
 .btn.primary{
   border:none;
   background: linear-gradient(180deg, var(--blue), var(--blue2));
 }
+
 .btn.ghost{
   width:auto;
   padding:10px 12px;
@@ -133,12 +139,14 @@ h1{
   gap:12px;
   margin-bottom:10px;
 }
+
 .preview h2{
   margin:0;
   font-size:13px;
   letter-spacing:.06em;
   text-transform:uppercase;
 }
+
 .meta{
   color:var(--muted);
   font-size:12px;
@@ -151,7 +159,7 @@ h1{
 }
 
 .preview-item{
-  padding:10px 10px;
+  padding:10px;
   border-radius:12px;
   border:1px solid rgba(34,48,74,.9);
   background: rgba(2,6,23,.25);
@@ -160,10 +168,11 @@ h1{
   gap:10px;
   align-items:flex-start;
 }
-.preview-item .name{ font-weight:800; }
+
+.preview-item .name{ font-weight:900; }
 .preview-item .prescription{ color:var(--muted); font-size:12px; white-space:nowrap; }
 
-/* ===== FULL SCREEN WORKOUT ===== */
+/* Full-screen workout */
 .workout{
   position:fixed;
   inset:0;
@@ -173,6 +182,7 @@ h1{
   flex-direction:column;
   gap:14px;
 }
+
 .hidden{ display:none; }
 
 .workout-top{
@@ -183,10 +193,12 @@ h1{
 }
 
 .workout-progress{ flex:1; min-width:0; }
+
 .progress-text{
-  font-weight:900;
+  font-weight:950;
   letter-spacing:.06em;
 }
+
 .mode-text{
   margin-top:8px;
   font-size:12px;
@@ -203,6 +215,7 @@ h1{
   overflow:hidden;
   margin-top:10px;
 }
+
 .progress-fill{
   height:100%;
   width:0%;
@@ -225,37 +238,43 @@ h1{
 }
 
 .card{
-  width:min(580px,100%);
+  width:min(600px,100%);
   border-radius:18px;
   border:1px solid rgba(34,48,74,.95);
   background: rgba(2,6,23,.55);
   padding:22px;
+  text-align:left;
 }
 
 .card h3{
   margin:0 0 10px;
-  font-size:38px;
+  font-size:34px;
   letter-spacing:.01em;
+  text-align:center;
 }
+
 .card .sub{
   margin:0;
   color:var(--muted);
   font-size:13px;
   letter-spacing:.08em;
   text-transform:uppercase;
+  text-align:center;
 }
 
 .big{
-  font-size:74px;
+  font-size:72px;
   font-weight:950;
   letter-spacing:.06em;
-  margin:10px 0 6px;
+  margin:12px 0 6px;
+  text-align:center;
 }
 
 .hintline{
   margin-top:14px;
   color:var(--muted);
   font-size:13px;
+  text-align:center;
 }
 
 .pills{
@@ -265,6 +284,7 @@ h1{
   gap:10px;
   flex-wrap:wrap;
 }
+
 .pill{
   padding:6px 10px;
   border-radius:999px;
@@ -276,12 +296,12 @@ h1{
 
 .noteBox{
   margin-top:14px;
-  text-align:left;
   border:1px solid rgba(34,48,74,.9);
   background: rgba(2,6,23,.18);
   border-radius:14px;
   padding:12px;
 }
+
 .noteBox strong{
   display:block;
   font-size:12px;
@@ -290,12 +310,12 @@ h1{
   color:var(--muted);
   margin-bottom:6px;
 }
+
 .noteBox ul{
   margin:0;
   padding-left:18px;
   color:var(--text);
   opacity:.92;
 }
-.noteBox li{
-  margin:6px
-<link rel="stylesheet" href="./style.css">
+
+.noteBox li{ margin:6px 0; }
