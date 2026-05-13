@@ -1,7 +1,6 @@
 :root{
   --bg:#0b1220;
   --panel:rgba(8,16,32,.7);
-  --card:rgba(2,6,23,.55);
   --border:#22304a;
   --text:#e5e7eb;
   --muted:#94a3b8;
@@ -318,4 +317,4 @@ h1{
   opacity:.92;
 }
 
-.noteBox li{ margin:6px 0; }
+.noteBox li{ margin
