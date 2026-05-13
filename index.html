@@ -2,67 +2,96 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Functional Workout Generator</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-<div class="background-glow"></div>
+
   <div class="app">
+    <header class="top">
+      <h1>Functional Workout Generator</h1>
+      <p class="sub">Fast. Athletic. Minimal kit switching.</p>
+    </header>
 
-    <h1>Functional Workout Generator</h1>
+    <section class="controls" id="controls">
+      <div class="grid">
+        <label class="field">
+          <span>Training Goal</span>
+          <select id="goal">
+            <option value="strength">Strength</option>
+            <option value="conditioning">Conditioning</option>
+            <option value="hybrid" selected>Hybrid</option>
+          </select>
+        </label>
 
-    <!-- CONTROLS -->
-    <div class="controls">
-      <label>
-        Training Goal
-        <select id="goal">
-          <option value="strength">Strength</option>
-          <option value="conditioning">Conditioning</option>
-          <option value="hybrid" selected>Hybrid</option>
-        </select>
-      </label>
+        <label class="field">
+          <span>Difficulty</span>
+          <select id="difficulty">
+            <option value="easy">Easy</option>
+            <option value="medium" selected>Medium</option>
+            <option value="hard">Hard</option>
+          </select>
+        </label>
 
-      <label>
-        Difficulty
-        <select id="difficulty">
-          <option value="easy">Easy</option>
-          <option value="medium" selected>Medium</option>
-          <option value="hard">Hard</option>
-        </select>
-      </label>
+        <label class="field">
+          <span>Equipment (multi-select)</span>
+          <select id="equipment" multiple>
+            <option value="kettlebell" selected>Kettlebell</option>
+            <option value="sandbag" selected>Sandbag</option>
+            <option value="bodyweight" selected>Bodyweight</option>
+          </select>
+          <small class="hint">Tip: Ctrl/⌘ to select multiple</small>
+        </label>
 
-      <label>
-        Equipment
-        <select id="equipment" multiple>
-          <option value="kettlebell">Kettlebell</option>
-          <option value="sandbag">Sandbag</option>
-          <option value="bodyweight" selected>Bodyweight</option>
-        </select>
-      </label>
+        <label class="field">
+          <span>Exercises per equipment (1–5)</span>
+          <select id="perEquipment">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3" selected>3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </select>
+        </label>
+      </div>
 
-      <label>
-        Exercises per equipment
-        <select id="rounds">
-          <option>1</option>
-          <option>2</option>
-          <option selected>3</option>
-          <option>4</option>
-          <option>5</option>
-        </select>
-      </label>
+      <div class="actions">
+        <button id="generateBtn" class="btn primary">Generate Workout</button>
+        <button id="startBtn" class="btn" disabled>Start Workout</button>
+      </div>
+    </section>
 
-      <button id="generateWorkout">Generate Workout</button>
-      <button id="startWorkout" disabled>Start Workout</button>
+    <section class="preview" id="preview">
+      <div class="previewHead">
+        <h2>Workout Preview</h2>
+        <p class="muted" id="previewMeta">Generate to see your plan</p>
+      </div>
+      <div id="workoutList" class="workoutList"></div>
+    </section>
+  </div>
+
+  <!-- FULL-SCREEN WORKOUT OVERLAY -->
+  <section id="workoutOverlay" class="overlay" aria-hidden="true">
+    <div class="overlayTop">
+      <div class="progressBlock">
+        <div class="progressText">
+          <span id="progressCount">0 / 0</span>
+          <span class="dot">•</span>
+          <span id="modeLabel" class="muted">Ready</span>
+        </div>
+        <div class="progressBar">
+          <div id="progressFill" class="progressFill" style="width:0%"></div>
+        </div>
+      </div>
+
+      <button id="exitBtn" class="btn ghost" type="button" aria-label="Exit workout">
+        Exit
+      </button>
     </div>
 
-    <!-- PREVIEW -->
-    <div id="workoutDisplay" class="preview"></div>
-
-    <!-- ACTIVE WORKOUT -->
-    <div id="activeWorkout" class="active"></div>
-
-  </div>
+    <div id="cardHost" class="cardHost"></div>
+  </section>
 
   <script src="app.js"></script>
 </body>
