@@ -8,103 +8,84 @@
 </head>
 <body>
 
-  <main class="app">
-    <header class="header">
-      <h1>Workout Generator</h1>
-      <p class="subtitle">Warm‑up • Main work • Mobility • Warm‑down • Coaching notes</p>
-    </header>
+<main class="app">
+  <header class="header">
+    <h1>Workout Generator</h1>
+    <p class="subtitle">Warm‑up • Work • Conditioning • Cool‑down • Coach notes</p>
+  </header>
 
-    <section class="controls">
-      <div class="control-group">
-        <div class="label">Goal</div>
-        <div class="button-row" data-group="goal">
-          <button type="button" data-value="strength">Strength</button>
-          <button type="button" data-value="hypertrophy" class="active">Hypertrophy</button>
-          <button type="button" data-value="conditioning">Conditioning</button>
-          <button type="button" data-value="recovery">Recovery</button>
-          <button type="button" data-value="mobility">Mobility</button>
-        </div>
-      </div>
-
-      <div class="control-group">
-        <div class="label">Difficulty</div>
-        <div class="button-row" data-group="difficulty">
-          <button type="button" data-value="beginner">Beginner</button>
-          <button type="button" data-value="intermediate" class="active">Intermediate</button>
-          <button type="button" data-value="advanced">Advanced</button>
-          <button type="button" data-value="elite">Elite</button>
-        </div>
-      </div>
-
-      <div class="control-group">
-        <div class="label">Equipment</div>
-        <div class="button-row" data-group="equipment">
-          <button type="button" data-value="dumbbells">Dumbbells only</button>
-          <button type="button" data-value="fullgym" class="active">Full gym</button>
-          <button type="button" data-value="sandbag">Sandbag</button>
-          <button type="button" data-value="kettlebell">Kettlebell</button>
-        </div>
-      </div>
-
-      <div class="control-group">
-        <div class="label">Time</div>
-        <div class="button-row" data-group="time">
-          <button type="button" data-value="15">15 mins</button>
-          <button type="button" data-value="30" class="active">30 mins</button>
-          <button type="button" data-value="45">45 mins</button>
-          <button type="button" data-value="60">1 hr</button>
-          <button type="button" data-value="90">1.5 hr</button>
-        </div>
-      </div>
-
-      <div class="control-group">
-        <div class="label">Mobility Routine (optional)</div>
-        <div class="button-row" data-group="routine">
-          <button type="button" data-value="auto" class="active">Auto</button>
-          <button type="button" data-value="fullbody">Full body</button>
-          <button type="button" data-value="hips">Hips</button>
-          <button type="button" data-value="shoulders">Shoulders</button>
-          <button type="button" data-value="tspine">T‑spine</button>
-          <button type="button" data-value="postrun">Post‑run</button>
-        </div>
-        <div class="hint">Mainly used for Mobility/Recovery days. Auto picks based on time.</div>
-      </div>
-
-      <div class="actions">
-        <button id="generate" class="btn primary" type="button">Generate</button>
-        <button id="start" class="btn" type="button" disabled>Start Workout</button>
-      </div>
-    </section>
-
-    <section class="preview">
-      <div class="preview-head">
-        <h2>Preview</h2>
-        <div id="meta" class="meta">Choose options and tap Generate</div>
-      </div>
-      <div id="previewList" class="preview-list"></div>
-    </section>
-  </main>
-
-  <!-- Full-screen workout -->
-  <section id="workoutScreen" class="workout hidden" aria-hidden="true">
-    <div class="workout-top">
-      <div class="workout-progress">
-        <div id="progressText" class="progress-text">0 / 0</div>
-        <div class="progress-bar">
-          <div id="progressFill" class="progress-fill"></div>
-        </div>
-        <div id="modeText" class="mode-text">Ready</div>
-      </div>
-
-      <div class="top-actions">
-        <button id="skipStep" class="btn ghost" type="button">Skip</button>
-        <button id="exitWorkout" class="btn ghost" type="button">Exit</button>
+  <section class="controls">
+    <div class="control-group">
+      <div class="label">Goal</div>
+      <div class="button-row" data-group="goal">
+        <button type="button" data-value="strength">Strength</button>
+        <button type="button" data-value="hypertrophy" class="active">Hypertrophy</button>
+        <button type="button" data-value="conditioning">Conditioning</button>
+        <button type="button" data-value="recovery">Recovery</button>
+        <button type="button" data-value="mobility">Mobility</button>
       </div>
     </div>
 
-    <div id="workoutCard" class="workout-card"></div>
+    <div class="control-group">
+      <div class="label">Difficulty</div>
+      <div class="button-row" data-group="difficulty">
+        <button type="button" data-value="beginner">Beginner</button>
+        <button type="button" data-value="intermediate" class="active">Intermediate</button>
+        <button type="button" data-value="advanced">Advanced</button>
+        <button type="button" data-value="elite">Elite</button>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <div class="label">Equipment</div>
+      <div class="button-row" data-group="equipment">
+        <button type="button" data-value="dumbbells">Dumbbells</button>
+        <button type="button" data-value="fullgym" class="active">Full gym</button>
+        <button type="button" data-value="kettlebell">Kettlebell</button>
+        <button type="button" data-value="sandbag">Sandbag</button>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <div class="label">Time</div>
+      <div class="button-row" data-group="time">
+        <button type="button" data-value="15">15m</button>
+        <button type="button" data-value="30" class="active">30m</button>
+        <button type="button" data-value="45">45m</button>
+        <button type="button" data-value="60">60m</button>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button id="generate" class="btn primary">Generate</button>
+      <button id="start" class="btn" disabled>Start Workout</button>
+    </div>
   </section>
 
-  <script src="./app.js"></script>
+  <section class="preview">
+    <div class="preview-head">
+      <h2>Preview</h2>
+      <div id="meta" class="meta"></div>
+    </div>
+    <div id="previewList" class="preview-list"></div>
+  </section>
+</main>
+
+<section id="workoutScreen" class="workout hidden">
+  <div class="workout-top">
+    <div class="workout-progress">
+      <div id="progressText"></div>
+      <div class="progress-bar"><div id="progressFill"></div></div>
+      <div id="modeText" class="mode-text"></div>
+    </div>
+    <div class="top-actions">
+      <button id="skipStep" class="btn ghost">Skip</button>
+      <button id="exitWorkout" class="btn ghost">Exit</button>
+    </div>
+  </div>
+  <div id="workoutCard" class="workout-card"></div>
+</section>
+
+<script src="./app.js"></script>
 </body>
 </html>
