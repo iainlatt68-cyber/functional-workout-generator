@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const REST_BY_GOAL = {
     strength: 120,
     hypertrophy: 75,
-    conditioning: 25,
+    conditioning: 30,  // used for between-interval rests, not "sets"
     recovery: 35,
     mobility: 15
   };
@@ -81,21 +81,24 @@ document.addEventListener("DOMContentLoaded", () => {
       { name: "DB Press", tags: ["push"] },
       { name: "DB Row", tags: ["pull"] },
       { name: "Farmer Carry", tags: ["carry"] },
-      { name: "DB Split Squat", tags: ["unilateral","squat"] }
+      { name: "DB Split Squat", tags: ["unilateral","squat"] },
+      { name: "DB Thruster (light)", tags: ["conditioning"] }
     ],
     kettlebell: [
       { name: "KB Swing", tags: ["hinge","conditioning"] },
       { name: "KB Goblet Squat", tags: ["squat"] },
       { name: "KB Clean & Press", tags: ["push"] },
       { name: "KB One‑Arm Row", tags: ["pull"] },
-      { name: "Suitcase Carry", tags: ["carry"] }
+      { name: "Suitcase Carry", tags: ["carry"] },
+      { name: "KB Complex (light)", tags: ["conditioning"] }
     ],
     sandbag: [
       { name: "Sandbag Clean", tags: ["hinge"] },
       { name: "Bear Hug Squat", tags: ["squat"] },
       { name: "Sandbag Carry", tags: ["carry"] },
       { name: "Sandbag Reverse Lunge", tags: ["unilateral"] },
-      { name: "Sandbag Row", tags: ["pull"] }
+      { name: "Sandbag Row", tags: ["pull"] },
+      { name: "Sandbag EMOM (light)", tags: ["conditioning"] }
     ],
     fullgym: [
       { name: "Back Squat", tags: ["squat"] },
@@ -104,7 +107,8 @@ document.addEventListener("DOMContentLoaded", () => {
       { name: "Row", tags: ["pull"] },
       { name: "Overhead Press", tags: ["push"] },
       { name: "Lat Pulldown / Pull‑ups", tags: ["pull"] },
-      { name: "Bike / Rower", tags: ["conditioning"] }
+      { name: "Bike / Rower", tags: ["conditioning"] },
+      { name: "Sled / Incline Walk", tags: ["conditioning"] }
     ]
   };
 
@@ -141,74 +145,93 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const SESSION_COACHING = {
     strength: {
-      start: [
-        "Quality reps + full recovery.",
-        "Stop the set when speed/form drops."
+      start: ["Quality reps + full recovery.", "Stop the set when speed/form drops."]
+    },
+    hypertrophy: {
+      start: ["Chase tension: controlled reps, full range.", "Stop 0–2 reps short of ugly reps."]
+    },
+    conditioning: {
+      start: ["Start smoother than you think; build speed.", "Repeatable pace > sprinting the first block."]
+    },
+    recovery: {
+      start: ["Finish feeling better than you started.", "Keep it easy; nasal breathing if possible."]
+    },
+    mobility: {
+      start: ["Move slowly into end ranges—no forcing.", "Long exhale helps down‑regulate."]
+    }
+  };
+
+  // End-of-session coach note “options”
+  const END_NOTE_OPTIONS = {
+    strength: {
+      progression: [
+        "If bar speed stayed crisp: add 2.5–5% next time.",
+        "If reps slowed: keep load and tighten technique."
       ],
-      end: [
-        "If it felt easy: add load next time.",
-        "If reps were grinders: keep load, improve form."
+      recovery: [
+        "Hydrate + get protein in. Keep steps up today.",
+        "If joints feel beat up: swap one lift for a variation next time."
+      ],
+      technique: [
+        "Pick one cue to own next session (brace, tempo, depth).",
+        "Film one set next time to check positions."
       ]
     },
     hypertrophy: {
-      start: [
-        "Chase tension: controlled reps, full range.",
-        "Stop 0–2 reps short of ugly reps."
+      progression: [
+        "Next time: +1 rep per set OR +2.5–5% load (not both).",
+        "If you hit top reps easily: increase load next session."
       ],
-      end: [
-        "Progress next time: +1 rep per set or +2.5–5% load.",
-        "If you faded early: shorten rests slightly next time."
+      pump: [
+        "If pump died early: shorten rests slightly or slow eccentrics.",
+        "If you felt great: add one extra set for the main pattern."
+      ],
+      balance: [
+        "If push volume > pull: add one pulling accessory next time.",
+        "If legs dominated: start next session with upper focus."
       ]
     },
     conditioning: {
-      start: [
-        "Start smoother than you think; build speed.",
-        "Smooth transitions matter more than max effort."
+      pacing: [
+        "If you blew up: start 10% easier for first 2 blocks next time.",
+        "If you stayed smooth: reduce rest by 5–10s or add 1 round."
       ],
-      end: [
-        "If you blew up: start 10% easier next time.",
-        "If you stayed smooth: reduce rest or add 1 block."
+      aerobic: [
+        "If breathing never settled: keep it in ‘talk test’ pace next time.",
+        "If you recovered quickly: add 2–3 mins easy cooldown."
+      ],
+      intent: [
+        "Chase consistency: matching rounds beats a single fast one.",
+        "Relax shoulders; efficiency is a performance skill."
       ]
     },
     recovery: {
-      start: [
-        "Finish feeling better than you started.",
-        "Keep it easy; nasal breathing if possible."
+      downregulate: [
+        "If still wired: add 2 mins slow breathing (long exhale).",
+        "If stiff: repeat this session in 48 hours."
       ],
-      end: [
-        "If still tense: extend warm‑down + breathing.",
-        "Repeat 2–4×/week for best effect."
+      habits: [
+        "Aim for a short mobility snack later today (5 mins).",
+        "Keep movement gentle and frequent today."
       ]
     },
     mobility: {
-      start: [
-        "Move slowly into end ranges—no forcing.",
-        "Long exhale helps down‑regulate."
+      retest: [
+        "Retest a tight area now — smoother range is the goal.",
+        "Do this routine 10 mins most days for best results."
       ],
-      end: [
-        "Retest tight areas—aim for smoother, not extreme range.",
-        "Short and frequent beats long and rare."
+      focus: [
+        "Pick one area (hips/shoulders) and stay consistent for 2 weeks.",
+        "If something pinches: reduce range and slow down."
       ]
     }
   };
 
   const EFFORT_BY_DIFFICULTY = {
-    beginner: [
-      "Stay 2–3 reps in reserve (RIR).",
-      "Prioritise form and control."
-    ],
-    intermediate: [
-      "Most sets: 1–2 reps in reserve.",
-      "One hard set is fine—don’t redline everything."
-    ],
-    advanced: [
-      "Last set can push close to technical failure.",
-      "Autoregulate: crisp reps = progress next time."
-    ],
-    elite: [
-      "High intent; manage fatigue—quality stays king.",
-      "If output drops: reduce load or extend rest."
-    ]
+    beginner: ["Stay 2–3 reps in reserve (RIR).", "Prioritise form and control."],
+    intermediate: ["Most sets: 1–2 reps in reserve.", "One hard set is fine—don’t redline everything."],
+    advanced: ["Last set can push close to technical failure.", "Autoregulate: crisp reps = progress next time."],
+    elite: ["High intent; manage fatigue—quality stays king.", "If output drops: reduce load or extend rest."]
   };
 
   const MOBILITY_ROUTINES = {
@@ -251,7 +274,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   /* -----------------------------
-     GENERATION HELPERS
+     HELPERS
   ----------------------------- */
   function clamp(v, min, max){ return Math.max(min, Math.min(max, v)); }
 
@@ -285,7 +308,13 @@ document.addEventListener("DOMContentLoaded", () => {
     return clamp(base + adj, 10, 180);
   }
 
-  function prescriptionFor(goal, difficulty){
+  // IMPORTANT: conditioning has no sets/reps. It's effort + time.
+  function prescriptionFor(goal, difficulty, time){
+    const effort = conditioningEffort(difficulty);
+    if (goal === "conditioning") {
+      return `${effort.label} • ${effort.talkTest} • blocks total ~${time} mins`;
+    }
+
     const intensity =
       difficulty === "beginner" ? "RPE 6" :
       difficulty === "intermediate" ? "RPE 7" :
@@ -293,7 +322,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (goal === "strength") return `3–5 sets × 3–5 reps • ${intensity}`;
     if (goal === "hypertrophy") return `3–4 sets × 8–12 reps • ${intensity}`;
-    if (goal === "conditioning") return `Work 40s / Rest 20s • repeatable pace`;
     if (goal === "recovery") return `Easy pace • quality reps • breathe`;
     if (goal === "mobility") return `45–60s per move • slow control • breathe`;
     return `Work at ${intensity}`;
@@ -317,69 +345,85 @@ document.addEventListener("DOMContentLoaded", () => {
     return "fullbody";
   }
 
+  function conditioningEffort(difficulty){
+    if (difficulty === "beginner") return { label:"Easy–Moderate", talkTest:"can speak full sentences", rpe:"RPE 5–6" };
+    if (difficulty === "intermediate") return { label:"Moderate–Hard", talkTest:"short sentences", rpe:"RPE 7–8" };
+    if (difficulty === "advanced") return { label:"Hard", talkTest:"few words only", rpe:"RPE 8–9" };
+    return { label:"Very Hard", talkTest:"few words only", rpe:"RPE 9" };
+  }
+
+  function pickEndNotes(goal){
+    const buckets = END_NOTE_OPTIONS[goal] || {};
+    const keys = Object.keys(buckets);
+    if (!keys.length) return ["Recover well.", "Progress slowly."];
+    shuffle(keys);
+    const selected = [];
+    for (const k of keys.slice(0,2)){
+      const arr = buckets[k];
+      if (arr && arr.length) selected.push(arr[Math.floor(Math.random() * arr.length)]);
+    }
+    selected.push("If anything pinched/sharp: swap movement next time.");
+    return selected;
+  }
+
   /* -----------------------------
      STEP BUILDERS
   ----------------------------- */
-  function stepBlock(title, subtitle){
-    return { type:"block", title, subtitle };
-  }
-
   function stepCoach(title, subtitle, bullets){
     return { type:"coach", title, subtitle, bullets };
   }
-
   function stepTimer(title, subtitle, seconds, bullets=[]){
     return { type:"timer", title, subtitle, seconds, bullets };
   }
-
   function stepList(title, subtitle, bullets, doneText="Tap Done to continue"){
     return { type:"list", title, subtitle, bullets, doneText };
   }
-
   function stepExercise(name, prescription, restSeconds, cues){
     return { type:"exercise", name, prescription, restSeconds, cues };
   }
-
   function stepRest(seconds){
     return { type:"rest", seconds };
   }
-
   function stepFinish(){
     return { type:"finish" };
   }
 
-  function buildWarmup(goal, equipment, time){
-    // RAMP: Raise / Activate / Mobilise / Potentiate (structure) [1](https://ohanlonperformance.com/ramp-warm-up-guide/)[2](https://www.performancepurpose.ca/article/the-ramp-warm-up-protocol-for-skills-and-sampc)
-    const raise = time <= 15 ? 90 : time <= 30 ? 150 : 180;
-
-    const warm = [
-      stepBlock("Warm‑up (RAMP)", "Raise • Activate • Mobilise • Potentiate"),
-      stepTimer("Raise", "Light movement to warm up", raise, ["Walk/jog/bike easy", "Nose breathing if possible"]),
-      stepList("Activate", "Switch muscles on", ["Glute bridge × 10", "Scap push‑ups × 8", "Dead bug × 6/side"]),
-      stepList("Mobilise", "Open key joints", ["World’s greatest stretch × 3/side", "Hip circles × 6/side", "T‑spine rotation × 5/side"]),
-      stepList("Potentiate", "Prime for the session", goal === "conditioning"
-        ? ["3 × 10s faster pace + 20s easy", "2–3 powerful jumps (optional)"]
-        : ["2 light sets of first pattern", "3 crisp reps at moderate effort"])
+  /* -----------------------------
+     WARM-UP (single page)
+     (one screen listing stretches/activations)
+     Inspired by RAMP, but shown as a single list. [1](https://stackoverflow.com/questions/79512658/cant-trigger-push-workflow-when-push-happens-in-action)[2](https://github.com/orgs/community/discussions/22495)
+  ----------------------------- */
+  function buildWarmupSinglePage(goal, equipment){
+    const bullets = [
+      "Neck + shoulder rolls (30s)",
+      "Arm circles (20s each way)",
+      "Cat‑cow (6 reps)",
+      "World’s greatest stretch (2/side)",
+      "Hip circles (6/side)",
+      "Ankle rocks (10/side)"
     ];
 
-    if (equipment === "kettlebell"){
-      warm.push(stepList("KB Prep", "Hinge + shoulders", ["KB halo × 6/side", "Hip hinge drill × 8", "Light swings × 10"]));
-    }
-    if (equipment === "sandbag"){
-      warm.push(stepList("Sandbag Prep", "Brace + hinge", ["Bear hug hold × 20s", "Hip hinge drill × 8", "Empty clean pattern × 5"]));
-    }
+    if (goal === "conditioning") bullets.push("2 × 20s build‑ups (easy → hard)");
+    else bullets.push("2 light warm‑up sets of the first movement");
 
-    return warm;
+    if (equipment === "kettlebell") bullets.push("KB halo (6/side) + light swings (10)");
+    if (equipment === "sandbag") bullets.push("Bear hug hold (20s) + empty clean pattern (5)");
+
+    return [
+      stepList("Warm‑up (3–5 mins)", "Quick prep — loosen + switch on", bullets, "Tap Done to start")
+    ];
   }
 
+  /* -----------------------------
+     WARM-DOWN
+     (easy movement + static stretches + breathing) 
+  ----------------------------- */
   function buildCooldown(time){
-    // Cooldown commonly: 5–10 minutes easier movement + static stretches held ~10–30s [3](https://www.healthline.com/health/exercise-fitness/cooldown-exercises)[4](https://www.goodrx.com/well-being/movement-exercise/cool-down-exercises-after-workout)
     const easy = time <= 15 ? 180 : 300;
     const hold = time <= 30 ? "10–30s" : "15–30s";
     return [
-      stepBlock("Warm‑down", "Down‑regulate + restore length"),
-      stepTimer("Easy movement", "Bring breathing down", easy, ["Walk / easy bike", "Relax shoulders", "Longer exhale than inhale"]),
-      stepList("Static stretches", `Hold each for ${hold}`, ["Hip flexor stretch", "Hamstring stretch", "Calf stretch", "Chest/pec stretch", "Lat stretch"]),
+      stepTimer("Warm‑down: easy movement", "Bring breathing down", easy, ["Walk / easy bike", "Relax shoulders", "Longer exhale than inhale"]),
+      stepList("Static stretches", `Hold each for ${hold}`, ["Hip flexor stretch", "Hamstring stretch", "Calf stretch", "Chest/pec stretch", "Lat stretch"], "Tap Done"),
       stepTimer("Breathing", "Shift to calm", 90, ["4s in / 6–8s out", "Ribs soften down", "Jaw/shoulders unclench"])
     ];
   }
@@ -389,9 +433,58 @@ document.addEventListener("DOMContentLoaded", () => {
     const cap = time <= 15 ? 6 : time <= 30 ? 8 : time <= 45 ? 10 : list.length;
     const chosen = list.slice(0, cap);
     return [
-      stepBlock(`Mobility Routine: ${labelRoutine(routineKey)}`, "Move slow • breathe • no forcing"),
+      stepCoach(`Mobility: ${labelRoutine(routineKey)}`, "Move slow • breathe • no forcing", ["Focus on control, not range.", "Stop if you get pinching pain."]),
       ...chosen.map(item => stepList(item, "Controlled reps / holds", [], "Tap Done"))
     ];
+  }
+
+  /* -----------------------------
+     CONDITIONING BUILD (timed blocks + effort)
+     No sets/reps — just effort + time blocks.
+  ----------------------------- */
+  function buildConditioningBlocks(equipment, difficulty, totalMins){
+    const effort = conditioningEffort(difficulty);
+    const restBetween = clamp(restFor("conditioning", difficulty), 10, 60);
+
+    // Choose a conditioning movement
+    const pool = (POOLS[equipment] || []).filter(x => (x.tags || []).includes("conditioning"));
+    const fallback = [{ name:"Fast walk / step‑ups", tags:["conditioning"] }];
+    const engine = (pool.length ? pool : fallback);
+
+    // Interval structure by time
+    // (work seconds, rounds)
+    const plan =
+      totalMins <= 15 ? { work: 45, rounds: 8 } :
+      totalMins <= 30 ? { work: 60, rounds: 10 } :
+      totalMins <= 45 ? { work: 75, rounds: 12 } :
+      totalMins <= 60 ? { work: 90, rounds: 14 } :
+                        { work: 90, rounds: 18 };
+
+    const chosen = engine[Math.floor(Math.random() * engine.length)];
+    const blocks = [];
+
+    blocks.push(stepCoach(
+      "Conditioning Focus",
+      `${effort.label} • ${effort.rpe} • ${effort.talkTest}`,
+      [
+        "Goal: consistent pace across rounds.",
+        "If you blow up early, reduce pace 10% and finish strong."
+      ]
+    ));
+
+    for (let i = 1; i <= plan.rounds; i++){
+      blocks.push(stepTimer(
+        `WORK ${i}/${plan.rounds}: ${chosen.name}`,
+        `${effort.label} • ${effort.talkTest}`,
+        plan.work,
+        ["Smooth breathing", "Relax shoulders", "Move efficiently"]
+      ));
+      if (i !== plan.rounds){
+        blocks.push(stepTimer("REST", "Easy breathing, shake out", restBetween, ["Slow down fully", "Get ready for next round"]));
+      }
+    }
+
+    return blocks;
   }
 
   /* -----------------------------
@@ -420,32 +513,33 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const { goal, difficulty, equipment, time, routine } = state;
 
-    const presc = prescriptionFor(goal, difficulty);
+    const presc = prescriptionFor(goal, difficulty, time);
     const rest = restFor(goal, difficulty);
+    const routineKey = pickRoutine(goal, routine, time);
 
     const startNotes = [
       ...(SESSION_COACHING[goal]?.start || []),
       ...EFFORT_BY_DIFFICULTY[difficulty]
     ];
-    const endNotes = [
-      ...(SESSION_COACHING[goal]?.end || []),
-      "If anything pinched/sharp: swap movement next time."
-    ];
+    const endNotes = pickEndNotes(goal);
 
-    // Build steps
-    steps.push(...buildWarmup(goal, equipment, time));
+    // Warm-up: single list screen
+    steps.push(...buildWarmupSinglePage(goal, equipment));
 
+    // Coach start
     steps.push(stepCoach(
       "Coach Notes (Start)",
       `${goal.toUpperCase()} • ${difficulty.toUpperCase()} • ${labelEquipment(equipment)} • ${time} mins`,
       startNotes
     ));
 
-    const routineKey = pickRoutine(goal, routine, time);
-
+    // Main work
     if (goal === "mobility" || goal === "recovery"){
       steps.push(...buildMobilitySession(routineKey, time));
+    } else if (goal === "conditioning"){
+      steps.push(...buildConditioningBlocks(equipment, difficulty, time));
     } else {
+      // Strength / Hypertrophy blocks
       const pool = (POOLS[equipment] || []).slice();
       shuffle(pool);
       const n = EXERCISE_COUNT_BY_TIME[time] ?? 7;
@@ -457,22 +551,29 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
 
+    // Warm-down
     steps.push(...buildCooldown(time));
 
-    steps.push(stepCoach("Coach Notes (End)", "Recover well • progress slowly", endNotes));
+    // Coach end
+    steps.push(stepCoach("Coach Notes (End)", "Options + next steps", endNotes));
+
+    // Finish
     steps.push(stepFinish());
 
     // Preview
     meta.textContent = `${goal.toUpperCase()} • ${difficulty.toUpperCase()} • ${labelEquipment(equipment)} • ${time} mins • Mobility: ${labelRoutine(routineKey)}`;
 
     const previewItems = [];
-    previewItems.push({ left: "Warm‑up (RAMP)", right: "Raise • Activate • Mobilise • Potentiate" });
+    previewItems.push({ left: "Warm‑up (single page)", right: "Quick stretches + activation" });
     previewItems.push({ left: "Coach notes", right: "Start + End" });
 
     if (goal === "mobility" || goal === "recovery"){
       const list = MOBILITY_ROUTINES[routineKey] || MOBILITY_ROUTINES.fullbody;
       const cap = time <= 15 ? 6 : time <= 30 ? 8 : 10;
       list.slice(0, cap).forEach(x => previewItems.push({ left: x, right: "Mobility" }));
+    } else if (goal === "conditioning"){
+      const eff = conditioningEffort(difficulty);
+      previewItems.push({ left: "Conditioning blocks", right: `${eff.label} • ${eff.rpe} • timed intervals` });
     } else {
       const pool = (POOLS[equipment] || []).slice();
       shuffle(pool);
@@ -529,7 +630,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     modeText.textContent = modeLabel(step.type);
 
-    if (step.type === "block") return renderSimple(step.title, step.subtitle, "Tap to continue");
     if (step.type === "coach") return renderCoachCard(step);
     if (step.type === "timer") return renderTimerCard(step);
     if (step.type === "list") return renderListCard(step);
@@ -651,7 +751,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function modeLabel(type){
-    if (type === "timer" || type === "list" || type === "block") return "Warm‑up / Routine";
+    if (type === "timer" || type === "list") return "Warm‑up / Work";
     if (type === "coach") return "Coach";
     if (type === "exercise") return "Work";
     if (type === "rest") return "Rest";
