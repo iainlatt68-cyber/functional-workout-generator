@@ -12,15 +12,53 @@
 
     <h1>Workout Generator</h1>
 
-    <div class="controls">
-      <label>
-        Goal
-        <select id="goal">
-          <option value="strength">Strength</option>
-          <option value="conditioning">Conditioning</option>
-          <option value="hybrid" selected>Hybrid</option>
-        </select>
-      </label>
+   <div class="controls">
+
+  <div class="control-group">
+    <div class="label">Goal</div>
+    <div class="button-row" data-group="goal">
+      <button data-value="strength">Strength</button>
+      <button data-value="hypertrophy" class="active">Hypertrophy</button>
+      <button data-value="conditioning">Conditioning</button>
+      <button data-value="recovery">Recovery</button>
+      <button data-value="mobility">Mobility</button>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <div class="label">Difficulty</div>
+    <div class="button-row" data-group="difficulty">
+      <button data-value="beginner">Beginner</button>
+      <button data-value="intermediate" class="active">Intermediate</button>
+      <button data-value="advanced">Advanced</button>
+      <button data-value="elite">Elite</button>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <div class="label">Equipment</div>
+    <div class="button-row" data-group="equipment">
+      <button data-value="dumbbells">Dumbbells only</button>
+      <button data-value="fullgym" class="active">Full gym</button>
+      <button data-value="sandbag">Sandbag</button>
+      <button data-value="kettlebell">Kettlebell</button>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <div class="label">Time</div>
+    <div class="button-row" data-group="time">
+      <button data-value="15">15 min</button>
+      <button data-value="30" class="active">30 min</button>
+      <button data-value="45">45 min</button>
+      <button data-value="60">1 hr</button>
+      <button data-value="90">1.5 hr</button>
+    </div>
+  </div>
+
+  <button id="generate">Generate</button>
+  <button id="start" disabled>Start Workout</button>
+</div>
 
       <label>
         Difficulty
