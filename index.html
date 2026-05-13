@@ -1,204 +1,69 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <meta name="theme-color" content="#0b1220"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Functional Workout Generator</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <!-- Inter is clean + “fitness app” -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./style.css" />
+  <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
-  <div class="bg"></div>
-  <div class="grain" aria-hidden="true"></div>
 
-  <header class="topbar">
-    <div class="topbar__inner">
-      <div class="brand">
-        <div class="brand__mark" aria-hidden="true"></div>
-        <div class="brand__text">
-          <div class="brand__title">Functional</div>
-          <div class="brand__subtitle">Workout Generator</div>
-        </div>
-      </div>
+  <div class="app">
 
-      <div class="topbar__actions">
-        <button class="btn btn--ghost" id="btnRepeat" type="button" title="Load your last generated workout">
-          Repeat last
-        </button>
-        <button class="btn btn--ghost" id="btnReset" type="button" title="Clear current workout">
-          Reset
-        </button>
-      </div>
-    </div>
-    <div class="topbar__banner">
-      <div class="banner__pulse" aria-hidden="true"></div>
-      <div class="banner__text">
-        Build gym-friendly sessions that don’t bounce you between stations. Tap to advance — rest starts automatically.
-      </div>
-    </div>
-  </header>
+    <h1>Functional Workout Generator</h1>
 
-  <main class="container">
-    <section class="panel panel--setup" aria-label="Workout setup">
-      <div class="panel__header">
-        <h1 class="panel__title">Generate a workout</h1>
-        <div class="panel__meta">
-          <div class="chip" id="weeklyLoadChip" title="Based on your saved sessions">Weekly load: <span id="weeklyLoadText">—</span></div>
-          <div class="chip chip--muted" id="pbChip" hidden>New PB 🎯</div>
-        </div>
-      </div>
+    <!-- CONTROLS -->
+    <div class="controls">
+      <label>
+        Training Goal
+        <select id="goal">
+          <option value="strength">Strength</option>
+          <option value="conditioning">Conditioning</option>
+          <option value="hybrid" selected>Hybrid</option>
+        </select>
+      </label>
 
-      <div class="grid">
-        <div class="field">
-          <label for="goal">Training goal</label>
-          <select id="goal">
-            <option value="strength">Strength</option>
-            <option value="conditioning">Conditioning</option>
-            <option value="hybrid" selected>Hybrid</option>
-            <option value="mobility">Mobility / Recovery</option>
-          </select>
-          <div class="hint">Controls rep schemes + default rest.</div>
-        </div>
+      <label>
+        Difficulty
+        <select id="difficulty">
+          <option value="easy">Easy</option>
+          <option value="medium" selected>Medium</option>
+          <option value="hard">Hard</option>
+        </select>
+      </label>
 
-        <div class="field">
-          <label for="difficulty">Difficulty</label>
-          <select id="difficulty">
-            <option value="beginner">Beginner</option>
-            <option value="intermediate" selected>Intermediate</option>
-            <option value="advanced">Advanced</option>
-          </select>
-          <div class="hint">Affects complexity + volume.</div>
-        </div>
+      <label>
+        Equipment
+        <select id="equipment" multiple>
+          <option value="kettlebell">Kettlebell</option>
+          <option value="sandbag">Sandbag</option>
+          <option value="bodyweight" selected>Bodyweight</option>
+        </select>
+      </label>
 
-        <div class="field">
-          <label for="template">Workout template</label>
-          <select id="template">
-            <option value="circuit" selected>Circuit (station-friendly)</option>
-            <option value="strength_sets">Strength (sets)</option>
-            <option value="emom">EMOM</option>
-            <option value="amrap">AMRAP</option>
-            <option value="mobility_finisher">Mobility finisher</option>
-          </select>
-          <div class="hint">EMOM/AMRAP use time blocks.</div>
-        </div>
+      <label>
+        Exercises per equipment
+        <select id="rounds">
+          <option>1</option>
+          <option>2</option>
+          <option selected>3</option>
+          <option>4</option>
+          <option>5</option>
+        </select>
+      </label>
 
-        <div class="field">
-          <label for="duration">Duration</label>
-          <select id="duration">
-            <option value="15">15 min</option>
-            <option value="20" selected>20 min</option>
-            <option value="30">30 min</option>
-            <option value="40">40 min</option>
-          </select>
-          <div class="hint">Used for EMOM/AMRAP + pacing.</div>
-        </div>
-
-        <div class="field">
-          <label for="rounds">Rounds (1–5)</label>
-          <select id="rounds">
-            <option value="1">1</option>
-            <option value="2" selected>2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-          </select>
-          <div class="hint">For circuit-style repeats.</div>
-        </div>
-
-        <div class="field field--span2">
-          <label>Equipment (tap to select)</label>
-          <div class="equip" id="equipWrap" role="group" aria-label="Equipment selection">
-            <!-- filled by JS -->
-          </div>
-          <div class="hint">Workouts will be grouped by equipment to reduce station swaps.</div>
-        </div>
-      </div>
-
-      <div class="actions">
-        <button class="btn btn--primary" id="btnGenerate" type="button">
-          Generate workout
-        </button>
-        <button class="btn btn--secondary" id="btnStart" type="button" disabled>
-          Start workout
-        </button>
-      </div>
-
-      <div class="status" aria-live="polite" id="statusText"></div>
-    </section>
-
-    <section class="panel panel--workout" aria-label="Generated workout">
-      <div class="panel__header">
-        <h2 class="panel__title">Your session</h2>
-        <div class="panel__meta">
-          <div class="chip chip--muted" id="sessionSummary">—</div>
-        </div>
-      </div>
-
-      <div id="workoutBlocks" class="blocks">
-        <div class="empty">
-          <div class="empty__icon" aria-hidden="true">⚡</div>
-          <div class="empty__title">No workout yet</div>
-          <div class="empty__text">Pick your settings, then hit <strong>Generate workout</strong>.</div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <!-- Focus / Workout Runner -->
-  <div class="runner" id="runner" hidden aria-label="Workout runner">
-    <div class="runner__top">
-      <div class="runner__pill" id="runnerPill">WORK</div>
-      <button class="btn btn--ghost runner__exit" id="btnExit" type="button" aria-label="Exit workout">Exit</button>
+      <button id="generateWorkout">Generate Workout</button>
+      <button id="startWorkout" disabled>Start Workout</button>
     </div>
 
-    <div class="runner__main">
-      <div class="runner__title" id="runnerTitle">—</div>
-      <div class="runner__subtitle" id="runnerSubtitle">Tap an exercise to start rest.</div>
+    <!-- PREVIEW -->
+    <div id="workoutDisplay" class="preview"></div>
 
-      <div class="runner__timer" id="runnerTimerWrap" hidden>
-        <div class="timer__label" id="timerLabel">REST</div>
-        <div class="timer__value" id="timerValue">00:30</div>
-        <div class="timer__ring">
-          <svg viewBox="0 0 120 120" width="120" height="120" aria-hidden="true">
-            <circle class="ring__bg" cx="60" cy="60" r="52"></circle>
-            <circle class="ring__fg" cx="60" cy="60" r="52" id="ringFg"></circle>
-          </svg>
-        </div>
-        <div class="timer__actions">
-          <button class="btn btn--secondary" id="btnReady" type="button">I’m ready</button>
-          <button class="btn btn--ghost" id="btnAdd10" type="button">+10s</button>
-        </div>
-      </div>
+    <!-- ACTIVE WORKOUT -->
+    <div id="activeWorkout" class="active"></div>
 
-      <div class="runner__list" id="runnerList" aria-label="Exercise list">
-        <!-- filled by JS -->
-      </div>
-
-      <div class="runner__bottom">
-        <div class="runner__note" id="coachNote">—</div>
-      </div>
-    </div>
-
-    <div class="complete" id="complete" hidden>
-      <div class="complete__card">
-        <div class="complete__title">SESSION COMPLETE</div>
-        <div class="complete__score">
-          Effort score: <span id="effortScore">—</span>/100
-        </div>
-        <div class="complete__notes" id="completeNotes">—</div>
-        <div class="complete__actions">
-          <button class="btn btn--primary" id="btnDone" type="button">Done</button>
-          <button class="btn btn--secondary" id="btnGenerateAgain" type="button">Generate another</button>
-        </div>
-      </div>
-    </div>
   </div>
 
- <script src="app.js" defer></script>
+  <script src="app.js"></script>
 </body>
 </html>
