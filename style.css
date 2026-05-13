@@ -89,3 +89,39 @@ button:disabled {
   opacity: 0.7;
   font-size: 14px;
 }
+.control-group {
+  margin-bottom: 18px;
+}
+
+.label {
+  font-size: 13px;
+  opacity: 0.7;
+  margin-bottom: 6px;
+  letter-spacing: 0.05em;
+}
+
+.button-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.button-row button {
+  flex: 1 1 calc(50% - 4px);
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #334155;
+  background: #020617;
+  color: #e5e7eb;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.button-row button.active {
+  background: #2563eb;
+  border-color: #2563eb;
+}
+
+.button-row button:active {
+  transform: scale(0.98);
+}
