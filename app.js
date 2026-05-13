@@ -1,15 +1,14 @@
-console.log("✅ app.js loaded");
+document.addEventListener("DOMContentLoaded", () => {
+  console.log("✅ app.js loaded");
 
-/* ==============================
-   STATE
-   ============================== */
-const state = {
-  goal: "hypertrophy",
-  difficulty: "intermediate",
-  equipment: "fullgym",
-  time: 30,
-  routine: "auto"
-};
+  const state = {
+    goal: "hypertrophy",
+    difficulty: "intermediate",
+    equipment: "fullgym",
+    time: 30,
+    routine: "auto"
+  };
+``
 
 let workout = [];      // steps: warmup/exercise/rest/cooldown/finish
 let stepIndex = 0;
@@ -804,3 +803,4 @@ function escapeHtml(str) {
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
 }
+   });
