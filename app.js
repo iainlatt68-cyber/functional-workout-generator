@@ -9,7 +9,12 @@ const EXERCISES = {
   sandbag: ["Clean", "Bear Hug Squat", "Carry"],
   bodyweight: ["Press‑Up", "Air Squat", "Plank"]
 };
-
+const state = {
+  goal: "hypertrophy",
+  difficulty: "intermediate",
+  equipment: "fullgym",
+  time: 30
+};
 const RESTS = {
   strength: 90,
   conditioning: 45,
