@@ -1,3 +1,1 @@
-document.addEventListener("DOMContentLoaded", () => {
-  alert("✅ JS IS RUNNING");
-});
+alert("✅ app.js LOADED");
