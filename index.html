@@ -5,13 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Functional Workout Generator</title>
   <link rel="stylesheet" href="style.css" />
+  <script src="app.js" defer></script>
 </head>
 <body>
 
   <main class="app">
     <header class="header">
       <h1>Workout Generator</h1>
-      <p class="subtitle">Fast, athletic sessions. Minimal messing about.</p>
+      <p class="subtitle">Fast, athletic sessions. With warm-up, cues, and mobility.</p>
     </header>
 
     <section class="controls">
@@ -58,6 +59,19 @@
         </div>
       </div>
 
+      <div class="control-group">
+        <div class="label">Mobility Routine (optional)</div>
+        <div class="button-row" data-group="routine">
+          <button type="button" data-value="auto" class="active">Auto</button>
+          <button type="button" data-value="fullbody">Full body</button>
+          <button type="button" data-value="hips">Hips</button>
+          <button type="button" data-value="shoulders">Shoulders</button>
+          <button type="button" data-value="tspine">T‑spine</button>
+          <button type="button" data-value="postrun">Post‑run</button>
+        </div>
+        <div class="hint">Used mainly for Mobility/Recovery days. Auto picks best fit for time.</div>
+      </div>
+
       <div class="actions">
         <button id="generate" class="btn primary" type="button">Generate</button>
         <button id="start" class="btn" type="button" disabled>Start Workout</button>
@@ -80,13 +94,16 @@
       <div class="workout-progress">
         <div id="progressText" class="progress-text">0 / 0</div>
         <div class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+        <div id="modeText" class="mode-text">Ready</div>
       </div>
-      <button id="exitWorkout" class="btn ghost" type="button">Exit</button>
+      <div class="top-actions">
+        <button id="skipStep" class="btn ghost" type="button">Skip</button>
+        <button id="exitWorkout" class="btn ghost" type="button">Exit</button>
+      </div>
     </div>
 
     <div id="workoutCard" class="workout-card"></div>
   </section>
 
-  <script src="app.js"></script>
 </body>
 </html>
