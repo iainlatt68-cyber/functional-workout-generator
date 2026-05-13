@@ -7,6 +7,8 @@
   --muted:#94a3b8;
   --blue:#2563eb;
   --blue2:#1d4ed8;
+  --good:#22c55e;
+  --warn:#f59e0b;
 }
 
 *{ box-sizing:border-box; font-family:system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Arial,sans-serif; }
@@ -18,7 +20,7 @@ body{
 }
 
 .app{
-  max-width:520px;
+  max-width:540px;
   margin:0 auto;
   padding:20px 16px 40px;
 }
@@ -53,6 +55,13 @@ h1{
   text-transform:uppercase;
   color:var(--muted);
   margin-bottom:8px;
+}
+
+.hint{
+  margin-top:8px;
+  font-size:12px;
+  color:var(--muted);
+  opacity:.9;
 }
 
 .button-row{
@@ -151,14 +160,8 @@ h1{
   gap:10px;
   align-items:flex-start;
 }
-.preview-item .name{
-  font-weight:700;
-}
-.preview-item .prescription{
-  color:var(--muted);
-  font-size:12px;
-  white-space:nowrap;
-}
+.preview-item .name{ font-weight:800; }
+.preview-item .prescription{ color:var(--muted); font-size:12px; white-space:nowrap; }
 
 /* ===== FULL SCREEN WORKOUT ===== */
 .workout{
@@ -174,16 +177,24 @@ h1{
 
 .workout-top{
   display:flex;
-  align-items:center;
+  align-items:flex-start;
   justify-content:space-between;
   gap:12px;
 }
 
 .workout-progress{ flex:1; min-width:0; }
 .progress-text{
-  font-weight:800;
+  font-weight:900;
   letter-spacing:.06em;
 }
+.mode-text{
+  margin-top:8px;
+  font-size:12px;
+  color:var(--muted);
+  letter-spacing:.06em;
+  text-transform:uppercase;
+}
+
 .progress-bar{
   height:10px;
   border-radius:999px;
@@ -200,6 +211,11 @@ h1{
   border-radius:999px;
 }
 
+.top-actions{
+  display:flex;
+  gap:10px;
+}
+
 .workout-card{
   flex:1;
   display:flex;
@@ -209,7 +225,7 @@ h1{
 }
 
 .card{
-  width:min(560px,100%);
+  width:min(580px,100%);
   border-radius:18px;
   border:1px solid rgba(34,48,74,.95);
   background: rgba(2,6,23,.55);
@@ -218,7 +234,7 @@ h1{
 
 .card h3{
   margin:0 0 10px;
-  font-size:40px;
+  font-size:38px;
   letter-spacing:.01em;
 }
 .card .sub{
@@ -228,17 +244,20 @@ h1{
   letter-spacing:.08em;
   text-transform:uppercase;
 }
+
 .big{
-  font-size:78px;
-  font-weight:900;
+  font-size:74px;
+  font-weight:950;
   letter-spacing:.06em;
   margin:10px 0 6px;
 }
-.hint{
+
+.hintline{
   margin-top:14px;
   color:var(--muted);
   font-size:13px;
 }
+
 .pills{
   margin-top:12px;
   display:flex;
@@ -254,4 +273,28 @@ h1{
   color:var(--muted);
   font-size:12px;
 }
-``
+
+.noteBox{
+  margin-top:14px;
+  text-align:left;
+  border:1px solid rgba(34,48,74,.9);
+  background: rgba(2,6,23,.18);
+  border-radius:14px;
+  padding:12px;
+}
+.noteBox strong{
+  display:block;
+  font-size:12px;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-bottom:6px;
+}
+.noteBox ul{
+  margin:0;
+  padding-left:18px;
+  color:var(--text);
+  opacity:.92;
+}
+.noteBox li{
+  margin:6px
