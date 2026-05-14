@@ -6,7 +6,7 @@ body {
 }
 
 .app {
-  max-width: 520px;
+  max-width: 540px;
   margin: auto;
   padding: 16px;
 }
@@ -20,7 +20,7 @@ body {
   color: #94a3b8;
 }
 
-/* CONTROL PANEL */
+/* CONTROLS */
 .controls {
   display: grid;
   gap: 18px;
@@ -53,7 +53,6 @@ body {
   border: 1px solid #334155;
   background: #020617;
   color: #e5e7eb;
-  font-size: 14px;
 }
 
 .option-row button.active {
@@ -87,7 +86,7 @@ body {
 
 /* PREVIEW */
 .preview {
-  margin-top: 20px;
+  margin-top: 22px;
 }
 
 .flow-preview {
@@ -96,10 +95,11 @@ body {
 }
 
 .flow-item {
-  padding: 14px;
+  padding: 12px;
   border-radius: 14px;
   background: rgba(2,6,23,.85);
   border-left: 4px solid #2563eb;
+  font-size: 14px;
 }
 
 /* WORKOUT */
@@ -117,7 +117,7 @@ body {
 }
 
 .card {
-  max-width: 420px;
+  max-width: 440px;
   padding: 24px;
   border-radius: 22px;
   background: rgba(2,6,23,.95);
