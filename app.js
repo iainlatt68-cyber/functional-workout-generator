@@ -5,11 +5,12 @@ document.addEventListener("DOMContentLoaded", () => {
     equipment: "fullgym",
     difficulty: "moderate",
     rounds: 3,
-    condMode: "zone2"
+    condMode: "zone2",
+    cardioPlacement: "end"
   };
 
-  let workout = [];
-  let stepIndex = 0;
+  let steps = [];
+  let index = 0;
   let timer = null;
   let timeRemaining = 0;
   let emomMinute = 1;
@@ -27,7 +28,9 @@ document.addEventListener("DOMContentLoaded", () => {
       btn.onclick = () => {
         row.querySelectorAll("button").forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
-        state[group] = group === "rounds" ? Number(btn.dataset.value) : btn.dataset.value;
+        state[group] = group === "rounds"
+          ? Number(btn.dataset.value)
+          : btn.dataset.value;
       };
     });
   });
@@ -59,16 +62,35 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
+  const CARDIO = [
+    {
+      name: "Bike",
+      note: "Smooth cadence, nasal breathing."
+    },
+    {
+      name: "Row",
+      note: "18–22 spm, relaxed strokes."
+    },
+    {
+      name: "Treadmill Incline Walk",
+      note: "Brisk walk, no jogging."
+    },
+    {
+      name: "Cross‑trainer",
+      note: "Continuous, non‑spiky effort."
+    }
+  ];
+
   generateBtn.onclick = () => {
-    workout = buildWorkout();
-    preview.innerHTML = workout.map(w => `<div>${w.label}</div>`).join("");
+    steps = buildSteps();
+    preview.innerHTML = steps.map(s => `<div>${s.title}</div>`).join("");
     startBtn.disabled = false;
   };
 
   startBtn.onclick = () => {
     workoutScreen.classList.remove("hidden");
-    stepIndex = 0;
-    renderStep();
+    index = 0;
+    render();
   };
 
   exitBtn.onclick = () => {
@@ -76,10 +98,10 @@ document.addEventListener("DOMContentLoaded", () => {
     workoutScreen.classList.add("hidden");
   };
 
-  function renderStep() {
+  function render() {
     clearInterval(timer);
 
-    if (stepIndex >= workout.length) {
+    if (index >= steps.length) {
       workoutCard.innerHTML = `
         <div class="card">
           <h1>SESSION COMPLETE</h1>
@@ -88,63 +110,63 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    const step = workout[stepIndex];
+    const s = steps[index];
 
-    if (step.type === "strength") {
+    if (s.type === "strength") {
       workoutCard.innerHTML = `
         <div class="card">
-          <h2>${step.label}</h2>
-          <p>${step.detail}</p>
-          <p class="coach-note">${step.coach}</p>
+          <span class="badge ${s.pattern}">${s.pattern}</span>
+          <h2>${s.exercise}</h2>
+          <p>${s.prescription}</p>
+          <p class="coach-note">${s.coach}</p>
           <button class="big-action" id="next">Next</button>
         </div>`;
       document.getElementById("next").onclick = () => {
-        stepIndex++;
-        renderStep();
+        index++;
+        render();
       };
       return;
     }
 
-    if (step.type === "zone2") {
+    if (s.type === "zone2") {
       workoutCard.innerHTML = `
         <div class="card">
-          <h2>Zone 2 Conditioning</h2>
-          <p>${step.detail}</p>
-          <p class="coach-note">Nasal breathing, full sentences.</p>
+          <h2>Zone 2 — ${s.cardio}</h2>
+          <p>${s.duration}</p>
+          <p class="coach-note">${s.coach}</p>
           <button class="big-action" id="next">Finish</button>
         </div>`;
       document.getElementById("next").onclick = () => {
-        stepIndex++;
-        renderStep();
+        index++;
+        render();
       };
       return;
     }
 
-    if (step.type === "emom") startEMOM(step);
-    if (step.type === "amrap") startAMRAP(step);
+    if (s.type === "emom") startEMOM(s);
+    if (s.type === "amrap") startAMRAP(s);
   }
 
-  function startEMOM(step) {
+  function startEMOM(s) {
     emomMinute = 1;
     timeRemaining = 60;
 
     function tick() {
       workoutCard.innerHTML = `
         <div class="card">
-          <h2>EMOM ${emomMinute}/${step.minutes}</h2>
-          <p>${step.exercise}</p>
+          <h2>EMOM ${emomMinute}/${s.minutes}</h2>
+          <p>${s.exercise}</p>
           <div class="timer">${timeRemaining}</div>
-          <p class="coach-note">Finish early to earn rest.</p>
+          <p class="coach-note">${s.coach}</p>
         </div>`;
 
       timeRemaining--;
       if (timeRemaining < 0) {
         emomMinute++;
         timeRemaining = 60;
-        if (emomMinute > step.minutes) {
-          clearInterval(timer);
-          stepIndex++;
-          renderStep();
+        if (emomMinute > s.minutes) {
+          index++;
+          render();
         }
       }
     }
@@ -153,30 +175,29 @@ document.addEventListener("DOMContentLoaded", () => {
     timer = setInterval(tick, 1000);
   }
 
-  function startAMRAP(step) {
-    timeRemaining = step.minutes * 60;
+  function startAMRAP(s) {
+    timeRemaining = s.minutes * 60;
 
     function tick() {
       workoutCard.innerHTML = `
         <div class="card">
-          <h2>AMRAP ${step.minutes} min</h2>
-          <p>${step.exercises.join(" • ")}</p>
+          <h2>AMRAP ${s.minutes} min</h2>
+          <p>${s.exercises.join(" • ")}</p>
           <div class="timer">${timeRemaining}</div>
-          <p class="coach-note">Avoid redlining early.</p>
-          <button class="big-action" id="finish">Finish AMRAP</button>
+          <p class="coach-note">${s.coach}</p>
+          <button class="big-action" id="finish">Finish</button>
         </div>`;
 
       document.getElementById("finish").onclick = () => {
         clearInterval(timer);
-        stepIndex++;
-        renderStep();
+        index++;
+        render();
       };
 
       timeRemaining--;
       if (timeRemaining < 0) {
-        clearInterval(timer);
-        stepIndex++;
-        renderStep();
+        index++;
+        render();
       }
     }
 
@@ -184,55 +205,104 @@ document.addEventListener("DOMContentLoaded", () => {
     timer = setInterval(tick, 1000);
   }
 
-  function buildWorkout() {
+  function buildSteps() {
+    const steps = [];
     const pool = EXERCISES[state.equipment];
     const patterns = ["squat","hinge","push","pull"];
-    const strengthMoves = patterns.map(p =>
-      pool[p][Math.floor(Math.random()*pool[p].length)]
-    );
 
-    const out = [];
+    const strengthCards = [];
     for (let r = 1; r <= state.rounds; r++) {
-      out.push({
-        type: "strength",
-        label: `Round ${r}`,
-        detail: strengthMoves.join(" • "),
-        coach: "Smooth reps. Leave 1–2 in reserve."
+      patterns.forEach(p => {
+        const ex = pool[p][Math.floor(Math.random()*pool[p].length)];
+        strengthCards.push({
+          type:"strength",
+          pattern:p,
+          exercise:ex,
+          title:`${p.toUpperCase()} — Round ${r}`,
+          prescription:
+            state.goal === "strength"
+              ? "3–5 reps"
+              : "8–12 reps",
+          coach:
+            p === "squat"
+              ? "Brace, sit between hips."
+              : p === "hinge"
+              ? "Push the floor away."
+              : p === "push"
+              ? "Ribs down, control the lockout."
+              : "Pull elbows to ribs."
+        });
       });
     }
 
+    const cardio = CARDIO[Math.floor(Math.random()*CARDIO.length)];
+
+    if (state.cardioPlacement === "start") {
+      steps.push(buildConditioning(cardio));
+      steps.push(...strengthCards);
+    } else {
+      steps.push(...strengthCards);
+      steps.push(buildConditioning(cardio));
+    }
+
+    return steps;
+  }
+
+  function buildConditioning(cardio) {
     if (state.condMode === "zone2") {
-      out.push({ type:"zone2", detail:"20–30 min steady pace" });
+      return {
+        type:"zone2",
+        cardio:cardio.name,
+        duration:"20–30 minutes",
+        coach:cardio.note
+      };
     }
 
     if (state.condMode === "emom") {
-      out.push({
+      return {
         type:"emom",
         minutes:10,
-        exercise:"12 Wall Balls"
-      });
+        exercise:"12 Wall Balls",
+        coach:"Finish early to earn rest."
+      };
     }
 
-    if (state.condMode === "amrap") {
-      out.push({
-        type:"amrap",
-        minutes:12,
-        exercises:["10 KB Swings","10 Push‑ups","10 Air Squats"]
-      });
-    }
-
-    return out;
+    return {
+      type:"amrap",
+      minutes:12,
+      exercises:["10 KB Swings","10 Push‑ups","10 Air Squats"],
+      coach:"Smooth pace, no redlining."
+    };
   }
 
-  /* Onboarding – safe */
+  /* Onboarding — expert panel guidance */
   if (!localStorage.getItem("onboardingSeen")) {
     const modal = document.getElementById("onboarding");
+    const steps = [
+      ["How workouts are built","Prepare → Train → Condition → Recover"],
+      ["Strength first","Quality reps before fatigue."],
+      ["Zone 2 matters","Build your aerobic base."],
+      ["Repeatability","Finish worked, not wrecked."]
+    ];
+    let i = 0;
     modal.classList.remove("hidden");
-    document.getElementById("onboard-next").onclick =
-    document.getElementById("onboard-skip").onclick = () => {
-      modal.classList.add("hidden");
-      localStorage.setItem("onboardingSeen","true");
+
+    document.getElementById("onboard-next").onclick = () => {
+      i++;
+      if (i >= steps.length) {
+        modal.classList.add("hidden");
+        localStorage.setItem("onboardingSeen","true");
+      } else {
+        document.getElementById("onboard-title").textContent = steps[i][0];
+        document.getElementById("onboard-text").textContent = steps[i][1];
+      }
     };
+
+    document.getElementById("onboard-skip").onclick =
+      document.getElementById("onboard-next").onclick;
+
+    document.getElementById("onboard-title").textContent = steps[0][0];
+    document.getElementById("onboard-text").textContent = steps[0][1];
   }
 
 });
