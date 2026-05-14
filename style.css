@@ -97,18 +97,3 @@ body {
 .hidden {
   display: none;
 }
-
-.feedback {
-  margin-top: 20px;
-  text-align: center;
-}
-
-.feedback button {
-  margin: 6px;
-  padding: 10px 14px;
-  border-radius: 10px;
-  border: 1px solid #334155;
-  background: #0f172a;
-  color: #e5e7eb;
-  font-weight: 600;
-}
