@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-
   const state = {
     goal: "hypertrophy",
     equipment: "fullgym",
@@ -31,24 +30,24 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  /* ---------------- FUNCTIONAL EXERCISES ---------------- */
+  /* ---------------- FUNCTIONAL POOLS ---------------- */
   const EXERCISES = {
     fullgym: {
-      squat: ["Back Squat","Front Squat","Goblet Squat"],
-      hinge: ["Deadlift","RDL"],
-      push: ["Bench Press","Overhead Press","Push-ups"],
-      pull: ["Row","Pull-ups","Lat Pulldown"]
+      squat: ["Back Squat", "Goblet Squat"],
+      hinge: ["Deadlift", "RDL"],
+      push: ["Push‑ups", "Bench Press"],
+      pull: ["Row", "Pull‑ups"]
     },
     dumbbells: {
       squat: ["DB Goblet Squat"],
       hinge: ["DB RDL"],
-      push: ["DB Press"],
+      push: ["DB Push‑ups"],
       pull: ["DB Row"]
     },
     kettlebell: {
       squat: ["KB Goblet Squat"],
       hinge: ["KB Swing"],
-      push: ["KB Press"],
+      push: ["KB Push Press"],
       pull: ["KB Row"]
     },
     sandbag: {
@@ -60,17 +59,18 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const CARDIO = {
-    fullgym: ["Assault Bike","Row Erg","Sled Push / Drag","Incline Walk"],
-    dumbbells: ["Farmer Carry March","DB Step-ups"],
-    kettlebell: ["KB Carry March","KB Swing Intervals"],
-    sandbag: ["Sandbag Carry","Sandbag March"]
+    fullgym: ["Assault Bike", "Row Erg", "Sled Push / Drag", "Incline Walk"],
+    dumbbells: ["Farmer Carry March", "DB Step‑ups"],
+    kettlebell: ["KB Carry March", "KB Swing"],
+    sandbag: ["Sandbag Carry", "Sandbag March"]
   };
 
   const COACHING = {
-    strength: ["Quality reps over load","Full recovery between sets"],
-    hypertrophy: ["Chase tension","Stop 0–2 reps before breakdown"],
-    cardio: ["Conversational pace","Supports recovery"],
-    conditioning: ["Repeatable pace","Finish strong"]
+    conditioning: [
+      "Pace should be repeatable",
+      "Breathe early, don’t panic",
+      "Finish feeling worked, not wrecked"
+    ]
   };
 
   function loadProg() {
@@ -113,14 +113,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const step = workout[stepIndex];
 
-    /* Warm-up checklist */
+    /* Warm‑up checklist */
     if (step.type === "warmup") {
       workoutCard.innerHTML = `
         <h2>Warm‑up</h2>
         <ul class="warmup-list">
           ${step.items.map(i => `<li>${i}</li>`).join("")}
         </ul>
-        <button class="big-action" id="next">Begin Session</button>
+        <button class="big-action" id="next">Begin</button>
       `;
       workoutCard.querySelectorAll("li").forEach(li =>
         li.onclick = () => li.classList.toggle("done")
@@ -132,33 +132,34 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    /* Round */
-    if (step.type === "round") {
+    /* Conditioning block with exercises */
+    if (step.type === "conditioning") {
       const ex = step.exercises[exerciseIndex];
+
       workoutCard.innerHTML = `
-        <div class="round-indicator">ROUND ${step.roundNumber} / ${step.totalRounds}</div>
+        <h2>${step.title}</h2>
         <div class="current-exercise">${ex}</div>
-        <p>${step.prescription}</p>
+        <p>${step.detail}</p>
         <ul>${step.cues.map(c => `<li>${c}</li>`).join("")}</ul>
         <button class="big-action" id="done">Done</button>
       `;
+
       document.getElementById("done").onclick = () => {
         exerciseIndex++;
         if (exerciseIndex >= step.exercises.length) {
-          exerciseIndex = 0;
           stepIndex++;
+          exerciseIndex = 0;
         }
         renderStep();
       };
       return;
     }
 
-    /* Simple step */
+    /* Cool‑down */
     workoutCard.innerHTML = `
       <h2>${step.title}</h2>
       <p>${step.detail}</p>
-      ${step.cues ? `<ul>${step.cues.map(c => `<li>${c}</li>`).join("")}</ul>` : ""}
-      <button class="big-action" id="next">Continue</button>
+      <button class="big-action" id="next">Finish</button>
     `;
     document.getElementById("next").onclick = () => {
       stepIndex++;
@@ -171,10 +172,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const out = [];
     const pool = EXERCISES[state.equipment];
     const cardioPool = CARDIO[state.equipment] || CARDIO.fullgym;
+    const patterns = ["squat", "hinge", "push", "pull"];
     const prog = loadProg();
-    const patterns = ["squat","hinge","push","pull"];
 
-    /* Warm-up */
+    /* Warm‑up */
     out.push({
       label: "Warm‑up",
       type: "warmup",
@@ -185,47 +186,33 @@ document.addEventListener("DOMContentLoaded", () => {
         "World’s greatest stretch",
         "90–90 hips",
         "Ankle rocks",
-        "Ramp‑up sets of first lift"
+        "Ramp‑up sets of first movement"
       ]
     });
 
     /* Conditioning day */
     if (state.goal === "conditioning") {
+      let exercises;
+
+      if (["zone2", "auto"].includes(state.condMode)) {
+        exercises = [cardioPool[Math.floor(Math.random() * cardioPool.length)]];
+      } else {
+        exercises = patterns
+          .slice(0, 2)
+          .map(p => pool[p][Math.floor(Math.random() * pool[p].length)]);
+      }
+
       out.push({
         label: "Conditioning",
-        title: "Conditioning",
+        type: "conditioning",
+        title: state.condMode.toUpperCase(),
+        exercises,
         detail: `${state.condMode.toUpperCase()} • ${state.time} minutes`,
         cues: COACHING.conditioning
       });
-    } else {
-      /* Cardio first if selected */
-      if (state.cardioPlacement === "start") {
-        out.push(buildCardio(cardioPool));
-      }
-
-      for (let r = 1; r <= prog.rounds; r++) {
-        out.push({
-          label: `Round ${r}`,
-          type: "round",
-          roundNumber: r,
-          totalRounds: prog.rounds,
-          exercises: patterns.map(p =>
-            pool[p][Math.floor(Math.random() * pool[p].length)]
-          ),
-          prescription:
-            state.goal === "strength"
-              ? "3–5 reps each • RPE 7–9"
-              : "8–12 reps each • RPE 7–8",
-          cues: COACHING[state.goal]
-        });
-      }
-
-      /* Cardio at end */
-      if (state.cardioPlacement === "end") {
-        out.push(buildCardio(cardioPool));
-      }
     }
 
+    /* Cool‑down */
     out.push({
       label: "Cool‑down",
       title: "Cool‑down",
@@ -234,18 +221,5 @@ document.addEventListener("DOMContentLoaded", () => {
 
     return out;
   }
-
-  function buildCardio(pool) {
-    const mins =
-      state.time <= 30 ? "8–12 minutes" :
-      state.time <= 45 ? "10–15 minutes" :
-      "12–20 minutes";
-
-    return {
-      label: "Cardio",
-      title: "Engine Work",
-      detail: `${pool[Math.floor(Math.random() * pool.length)]} — ${mins} • RPE 5–7`,
-      cues: COACHING.cardio
-    };
-  }
 });
+``
