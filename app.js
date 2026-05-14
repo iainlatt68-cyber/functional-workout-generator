@@ -48,16 +48,26 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   /* ---------- FLOW ---------- */
-  function showStep() {
-    if (step >= workout.length) {
-      workoutCard.innerHTML = `<h2>Session complete</h2>`;
-      feedbackBox.classList.remove("hidden");
-      return;
-    }
-document.getElementById("nextBtn").onclick = () => {
-  step++;
-  showStep();
-};
+ function showStep() {
+  if (step >= workout.length) {
+    workoutCard.innerHTML = `<h2>Session complete</h2>`;
+    feedbackBox.classList.remove("hidden");
+    return;
+  }
+
+  const w = workout[step];
+
+  workoutCard.innerHTML = `
+    <h2>${w.title}</h2>
+    <p>${w.detail}</p>
+    <button id="nextBtn">Next</button>
+  `;
+
+  document.getElementById("nextBtn").onclick = () => {
+    step++;
+    showStep();
+  };
+}
     const w = workout[step];
     workoutCard.innerHTML = `
       <h2>${w.title}</h2>
