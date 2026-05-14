@@ -5,80 +5,50 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Workout Generator</title>
 
-  <link rel="stylesheet" href="./style.css" />
+  <link rel="stylesheet" href="./style.css">
 </head>
 <body>
 
 <main class="app">
   <header class="header">
     <h1>Workout Generator</h1>
-    <p class="subtitle">Strength • Conditioning • Aerobic • Mobility</p>
+    <p class="subtitle">Strength • Hypertrophy • Conditioning</p>
   </header>
 
   <section class="controls">
 
-    <!-- GOAL -->
     <div class="control-group">
       <div class="label">Goal</div>
       <div class="button-row" data-group="goal">
-        <button data-value="strength">Strength</button>
-        <button data-value="hypertrophy" class="active">Hypertrophy</button>
-        <button data-value="conditioning">Conditioning</button>
-        <button data-value="recovery">Recovery</button>
-        <button data-value="mobility">Mobility</button>
+        <button type="button" data-value="strength">Strength</button>
+        <button type="button" data-value="hypertrophy" class="active">Hypertrophy</button>
+        <button type="button" data-value="conditioning">Conditioning</button>
       </div>
     </div>
 
-    <!-- DIFFICULTY -->
-    <div class="control-group">
-      <div class="label">Difficulty</div>
-      <div class="button-row" data-group="difficulty">
-        <button data-value="beginner">Beginner</button>
-        <button data-value="intermediate" class="active">Intermediate</button>
-        <button data-value="advanced">Advanced</button>
-        <button data-value="elite">Elite</button>
-      </div>
-    </div>
-
-    <!-- EQUIPMENT -->
-    <div class="control-group">
-      <div class="label">Equipment</div>
-      <div class="button-row" data-group="equipment">
-        <button data-value="fullgym" class="active">Full gym</button>
-        <button data-value="dumbbells">Dumbbells</button>
-        <button data-value="kettlebell">Kettlebell</button>
-        <button data-value="sandbag">Sandbag</button>
-      </div>
-    </div>
-
-    <!-- TIME -->
     <div class="control-group">
       <div class="label">Time (mins)</div>
       <div class="button-row" data-group="time">
-        <button data-value="15">15</button>
-        <button data-value="30" class="active">30</button>
-        <button data-value="45">45</button>
-        <button data-value="60">60</button>
-        <button data-value="90">90</button>
+        <button type="button" data-value="15">15</button>
+        <button type="button" data-value="30" class="active">30</button>
+        <button type="button" data-value="45">45</button>
       </div>
     </div>
 
-    <!-- CONDITIONING MODE -->
     <div class="control-group">
       <div class="label">Conditioning Mode</div>
       <div class="button-row" data-group="condMode">
-        <button data-value="auto" class="active">Auto</button>
-        <button data-value="hiit">HIIT</button>
-        <button data-value="zone2">Zone 2</button>
-        <button data-value="tempo">Tempo</button>
-        <button data-value="mixed">Mixed</button>
+        <button type="button" data-value="auto" class="active">Auto</button>
+        <button type="button" data-value="hiit">HIIT</button>
+        <button type="button" data-value="zone2">Zone 2</button>
+        <button type="button" data-value="tempo">Tempo</button>
+        <button type="button" data-value="mixed">Mixed</button>
       </div>
     </div>
 
-    <!-- ACTIONS -->
     <div class="actions">
-      <button id="generate" class="btn primary">Generate</button>
-      <button id="start" class="btn" disabled>Start Workout</button>
+      <button id="generate" class="btn primary" type="button">Generate</button>
+      <button id="start" class="btn" type="button" disabled>Start Workout</button>
     </div>
 
   </section>
@@ -89,10 +59,9 @@
   </section>
 </main>
 
-<!-- WORKOUT SCREEN -->
 <section id="workoutScreen" class="workout hidden">
   <div id="workoutCard"></div>
-  <button id="exit" class="btn ghost">Exit</button>
+  <button id="exit" class="btn ghost" type="button">Exit</button>
 </section>
 
 <script src="./app.js"></script>
