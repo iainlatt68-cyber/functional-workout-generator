@@ -146,7 +146,19 @@ document.addEventListener("DOMContentLoaded", () => {
     const pool = EXERCISES[state.equipment];
     const prog = loadProg();
 
-    out.push({ label: "Warm‑up", title: "Warm‑up", detail: "Dynamic mobility" });
+    out.push({
+  label: "Warm‑up",
+  title: "Warm‑up",
+  detail: `
+• Neck & shoulder rolls (30s)
+• Arm circles / band pull‑aparts (10–15)
+• Cat–cow (6–8 reps)
+• World’s greatest stretch (2–3 / side)
+• Hip openers / 90–90 (6 reps)
+• Ankle rocks (10 / side)
+• 1–2 light sets of first exercise
+`.trim()
+});
 
     if (state.goal === "conditioning") {
       out.push({
