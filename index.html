@@ -11,17 +11,16 @@
 <main class="app">
   <header class="header">
     <h1>Workout Generator</h1>
-    <p class="subtitle">Strength • Conditioning • Aerobic Base</p>
+    <p class="subtitle">Train with intent • Move with purpose</p>
   </header>
 
   <section class="controls">
 
     <div class="control-group">
-      <div class="label">Goal</div>
+      <div class="label">Training focus</div>
       <div class="button-row" data-group="goal">
         <button data-value="strength">Strength</button>
         <button data-value="hypertrophy" class="active">Hypertrophy</button>
-        <button data-value="conditioning">Conditioning</button>
       </div>
     </div>
 
@@ -31,40 +30,20 @@
         <button data-value="fullgym" class="active">Full Gym</button>
         <button data-value="dumbbells">Dumbbells</button>
         <button data-value="kettlebell">Kettlebell</button>
-        <button data-value="sandbag">Sandbag</button>
-      </div>
-    </div>
-
-    <div class="control-group">
-      <div class="label">Difficulty</div>
-      <div class="button-row" data-group="difficulty">
-        <button data-value="easy">Easy</button>
-        <button data-value="moderate" class="active">Moderate</button>
-        <button data-value="hard">Hard</button>
       </div>
     </div>
 
     <div class="control-group">
       <div class="label">Rounds</div>
       <div class="button-row" data-group="rounds">
-        <button data-value="1">1</button>
         <button data-value="2">2</button>
         <button data-value="3" class="active">3</button>
         <button data-value="4">4</button>
-        <button data-value="5">5</button>
       </div>
     </div>
 
     <div class="control-group">
-      <div class="label">Cardio Placement</div>
-      <div class="button-row" data-group="cardioPlacement">
-        <button data-value="start">Start</button>
-        <button data-value="end" class="active">End</button>
-      </div>
-    </div>
-
-    <div class="control-group">
-      <div class="label">Conditioning Mode</div>
+      <div class="label">Conditioning</div>
       <div class="button-row" data-group="condMode">
         <button data-value="zone2" class="active">Zone 2</button>
         <button data-value="emom">EMOM</button>
@@ -72,16 +51,24 @@
       </div>
     </div>
 
+    <div class="control-group">
+      <div class="label">Cardio timing</div>
+      <div class="button-row" data-group="cardioPlacement">
+        <button data-value="start">Start</button>
+        <button data-value="end" class="active">End</button>
+      </div>
+    </div>
+
     <div class="actions">
-      <button id="generate" class="btn primary">Generate Workout</button>
-      <button id="start" class="big-action" disabled>Start Workout</button>
+      <button id="generate" class="btn primary">Build my session</button>
+      <button id="start" class="big-action" disabled>Start training</button>
     </div>
 
   </section>
 
   <section class="preview">
-    <h2>Session Preview</h2>
-    <div id="preview"></div>
+    <h2>Today’s flow</h2>
+    <div id="preview" class="flow-preview"></div>
   </section>
 </main>
 
@@ -90,15 +77,11 @@
   <button id="exit" class="btn ghost">Exit</button>
 </section>
 
-<!-- ONBOARDING -->
 <div id="onboarding" class="onboarding hidden">
   <div class="onboarding-card">
     <h2 id="onboard-title"></h2>
     <p id="onboard-text"></p>
-    <div class="onboard-actions">
-      <button id="onboard-next" class="big-action">Next</button>
-      <button id="onboard-skip" class="btn ghost">Skip</button>
-    </div>
+    <button id="onboard-next" class="big-action">Next</button>
   </div>
 </div>
 
