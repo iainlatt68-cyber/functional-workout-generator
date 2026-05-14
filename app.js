@@ -149,5 +149,63 @@ document.addEventListener("DOMContentLoaded", () => {
     if (state.time >= 45) return "zone2";
     return "tempo";
   }
+const COACHING_CUES = {
+  strength: {
+    focus: [
+      "Quality reps beat load",
+      "Bar speed tells the truth",
+      "Leave the gym feeling capable"
+    ],
+    cardio: [
+      "This supports recovery, not fatigue",
+      "RPE 5–6",
+      "Conversational to short sentences"
+    ]
+  },
 
+  hypertrophy: {
+    focus: [
+      "Chase tension, not fatigue",
+      "Stop 0–2 reps before form degrades",
+      "Control the eccentric"
+    ],
+    cardio: [
+      "Breathing elevated but controlled",
+      "RPE 6–7",
+      "Stop before legs feel heavy"
+    ]
+  },
+
+  hiit: {
+    cues: [
+      "Fast but repeatable",
+      "If round one is best, you went too hard",
+      "Finish strong, not smashed"
+    ]
+  },
+
+  zone2: {
+    cues: [
+      "This should feel almost too easy",
+      "Full sentences",
+      "You could do this again tomorrow"
+    ]
+  },
+
+  tempo: {
+    cues: [
+      "Uncomfortable but controlled",
+      "All intervals should feel similar",
+      "Don’t turn this into HIIT"
+    ]
+  },
+
+  mixed: {
+    cues: [
+      "Smooth beats fast",
+      "Consistency over intensity",
+      "Transitions matter"
+    ]
+  }
+};
 });
