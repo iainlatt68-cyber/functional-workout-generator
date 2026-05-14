@@ -4,8 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Workout Generator</title>
-
-  <!-- ✅ Correct wiring -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -25,6 +23,14 @@
         <button class="active" data-value="strength">Get stronger</button>
         <button data-value="muscle">Build muscle</button>
         <button data-value="fitness">Improve fitness</button>
+      </div>
+    </div>
+
+    <div class="control-card">
+      <h3>Equipment</h3>
+      <div class="option-row" data-key="equipment">
+        <button class="active" data-value="gym">Gym</button>
+        <button data-value="minimal">Minimal</button>
       </div>
     </div>
 
@@ -50,7 +56,7 @@
       <h3>Conditioning</h3>
       <div class="option-row" data-key="conditioning">
         <button class="active" data-value="easy">Easy aerobic</button>
-        <button data-value="structured">Structured</button>
+        <button data-value="structured">Structured intervals</button>
         <button data-value="hard">Hard finisher</button>
       </div>
 
@@ -60,19 +66,14 @@
       </div>
     </div>
 
-    <button id="generate" class="big-action primary">
-      Build my session
-    </button>
-
-    <button id="start" class="big-action secondary" disabled>
-      Start workout
-    </button>
+    <button id="generate" class="big-action primary">Build my session</button>
+    <button id="start" class="big-action secondary" disabled>Start workout</button>
 
   </section>
 
   <!-- PREVIEW -->
   <section class="preview">
-    <h2>Session flow</h2>
+    <h2>Session overview</h2>
     <div id="preview" class="flow-preview"></div>
   </section>
 </main>
@@ -82,7 +83,6 @@
   <div id="card"></div>
 </section>
 
-<!-- ✅ Correct wiring -->
 <script src="app.js"></script>
 </body>
 </html>
