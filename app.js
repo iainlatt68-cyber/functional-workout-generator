@@ -12,44 +12,58 @@ document.addEventListener("DOMContentLoaded", () => {
   let weeklyLoad = 0;
 
   const exercises = [
-    { name: "Back Squat", pattern: "Squat", reps: 10 },
-    { name: "Deadlift", pattern: "Hinge", reps: 8 },
-    { name: "Bench Press", pattern: "Push", reps: 10 },
-    { name: "Barbell Row", pattern: "Pull", reps: 10 }
+    { name:"Back Squat", pattern:"squat", reps:10, coach:"Brace first. Sit smoothly between the hips." },
+    { name:"Deadlift", pattern:"hinge", reps:8, coach:"Push the floor away. Stay tight." },
+    { name:"Bench Press", pattern:"push", reps:10, coach:"Control the descent. Strong lockout." },
+    { name:"Barbell Row", pattern:"pull", reps:10, coach:"Pull elbows back. Pause briefly." }
   ];
 
   generateBtn.onclick = () => {
     steps = [];
     preview.innerHTML = "";
+    weeklyLoad = 0;
 
     for (let r = 1; r <= rounds; r++) {
       exercises.forEach(ex => {
         steps.push({ ...ex, round: r });
-        preview.innerHTML += `<div>Round ${r}: ${ex.name}</div>`;
+        preview.innerHTML += `
+          <div class="flow-item ${ex.pattern}">
+            Round ${r}: ${ex.name}
+          </div>`;
       });
     }
 
-    steps.push({ type: "cardio", name: "Zone 2 Conditioning" });
+    steps.push({ type:"cardio" });
+    preview.innerHTML += `
+      <div class="flow-item cardio">
+        Zone 2 conditioning
+      </div>`;
 
     startBtn.disabled = false;
   };
 
   startBtn.onclick = () => {
     index = 0;
-    weeklyLoad = 0;
-    workout.style.display = "block";
+    workout.classList.remove("hidden");
     render();
   };
 
   function render() {
     if (index >= steps.length) {
       card.innerHTML = `
-        <h2>Session complete</h2>
-        <p>Weekly load: ${weeklyLoad} kg</p>
-        <button id="finish">Finish</button>
+        <div class="card">
+          <h2>Session complete</h2>
+          <p class="coach">Weekly load: ${weeklyLoad} kg</p>
+          <p class="coach">
+            ${weeklyLoad < 6000
+              ? "Steady work. Build again next session."
+              : "Solid load. Prioritise recovery."}
+          </p>
+          <button class="btn start" id="finish">Finish</button>
+        </div>
       `;
       document.getElementById("finish").onclick = () => {
-        workout.style.display = "none";
+        workout.classList.add("hidden");
       };
       return;
     }
@@ -58,9 +72,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (step.type === "cardio") {
       card.innerHTML = `
-        <h2>${step.name}</h2>
-        <p>Easy, steady pace. You should be able to talk.</p>
-        <button id="next">Finish cardio</button>
+        <div class="card">
+          <h2>Zone 2 conditioning</h2>
+          <p class="coach">Easy pace. You should be able to talk.</p>
+          <button class="btn primary" id="next">Finish</button>
+        </div>
       `;
       document.getElementById("next").onclick = () => {
         index++;
@@ -70,14 +86,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     card.innerHTML = `
-      <div>
-        <div>Round ${step.round} of ${rounds}</div>
-        <div>${step.pattern}</div>
+      <div class="card">
+        <div class="round">Round ${step.round} of ${rounds}</div>
+        <div class="pattern">${step.pattern}</div>
         <h2>${step.name}</h2>
         <p>${step.reps} reps</p>
-        <input id="weight" type="number" placeholder="Weight used (kg)">
-        <p>If this felt good, consider +2.5kg next time.</p>
-        <button id="next">Save & Next</button>
+        <p class="coach">${step.coach}</p>
+        <input type="number" id="weight" placeholder="Weight used (kg)">
+        <p class="coach">If this felt smooth, consider +2.5kg next time.</p>
+        <button class="btn primary" id="next">Save & Next</button>
       </div>
     `;
 
