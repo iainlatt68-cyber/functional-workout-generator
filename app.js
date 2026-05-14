@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const state = {
     goal: "hypertrophy",
+    equipment: "fullgym",
     time: 30,
     cardioPlacement: "end"
   };
@@ -57,28 +58,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const step = workout[stepIndex];
-
-    if (step.type === "warmup") {
-      workoutCard.innerHTML = `
-        <h2>Warm‑up</h2>
-        <ul class="warmup-list">
-          ${step.items.map(i => `<li>${i}</li>`).join("")}
-        </ul>
-        <button class="big-action" id="next">Begin</button>`;
-      workoutCard.querySelectorAll("li").forEach(li =>
-        li.onclick = () => li.classList.toggle("done")
-      );
-      document.getElementById("next").onclick = () => {
-        stepIndex++;
-        renderStep();
-      };
-      return;
-    }
-
     workoutCard.innerHTML = `
       <h2>${step.label}</h2>
       <p>${step.detail}</p>
-      <button class="big-action" id="next">Continue</button>`;
+      <button class="big-action" id="next">Continue</button>
+    `;
     document.getElementById("next").onclick = () => {
       stepIndex++;
       renderStep();
@@ -86,29 +70,30 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function buildWorkout() {
+    const kitMap = {
+      fullgym: "barbell, machines and cardio equipment",
+      dumbbells: "dumbbells only",
+      kettlebell: "kettlebells only",
+      sandbag: "sandbags and bodyweight"
+    };
+
     return [
       {
         label: "Warm‑up",
-        type: "warmup",
-        items: [
-          "Pulse raise 2–3 mins",
-          "Hip & shoulder mobility",
-          "Cat–cow",
-          "World’s greatest stretch"
-        ]
+        detail: "Pulse raise, mobility and prep work"
       },
       {
         label: "Strength",
-        detail: "Balanced squat, hinge, push and pull work."
+        detail: `Balanced squat, hinge, push and pull using ${kitMap[state.equipment]}`
       },
       {
         label: "Zone 2 Conditioning",
-        detail: "20–30 mins • conversational pace"
+        detail: "20–30 mins at conversational pace"
       }
     ];
   }
 
-  /* ✅ ONBOARDING (FINAL) */
+  /* ONBOARDING */
   const onboardingSteps = [
     {
       title: "How workouts are built",
