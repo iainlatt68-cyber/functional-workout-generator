@@ -11,18 +11,10 @@ body {
   padding: 16px;
 }
 
-.header {
-  text-align: center;
-  margin-bottom: 12px;
-}
-
-.subtitle {
-  font-size: 13px;
-  color: #94a3b8;
-}
+.header { text-align: center; }
+.subtitle { color: #94a3b8; font-size: 13px; }
 
 .control-group { margin-bottom: 14px; }
-
 .label {
   font-size: 12px;
   text-transform: uppercase;
@@ -58,7 +50,6 @@ body {
 
 .big-action {
   width: 100%;
-  margin-top: 12px;
   padding: 18px;
   border-radius: 18px;
   font-size: 18px;
@@ -67,9 +58,7 @@ body {
   border: none;
 }
 
-.preview {
-  margin-top: 20px;
-}
+.preview { margin-top: 20px; }
 
 .flow-preview {
   display: grid;
@@ -80,19 +69,19 @@ body {
   padding: 14px;
   border-radius: 16px;
   background: rgba(2,6,23,.85);
-  border-left: 4px solid #2563eb;
+  border-left: 4px solid;
 }
 
-.flow-title {
-  font-weight: 700;
-}
+.flow-card.squat { border-color:#2563eb; }
+.flow-card.hinge { border-color:#7c3aed; }
+.flow-card.push  { border-color:#059669; }
+.flow-card.pull  { border-color:#d97706; }
+.flow-card.cardio { border-color:#38bdf8; }
 
-.flow-sub {
-  font-size: 13px;
-  color: #94a3b8;
-}
+.flow-title { font-weight:700; }
+.flow-sub { font-size:13px; color:#94a3b8; }
 
-/* WORKOUT MODE */
+/* Workout mode */
 .workout {
   position: fixed;
   inset: 0;
@@ -102,9 +91,7 @@ body {
   justify-content: center;
 }
 
-.hidden {
-  display: none;
-}
+.hidden { display: none; }
 
 .card {
   max-width: 420px;
@@ -117,6 +104,12 @@ body {
 .pattern {
   font-size: 12px;
   letter-spacing: .1em;
+  text-transform: uppercase;
+  color: #94a3b8;
+}
+
+.round {
+  font-size: 12px;
   color: #94a3b8;
   margin-bottom: 6px;
 }
@@ -126,4 +119,14 @@ body {
   color: #94a3b8;
   font-style: italic;
   margin-top: 12px;
+}
+
+input {
+  width: 100%;
+  margin-top: 10px;
+  padding: 14px;
+  border-radius: 14px;
+  border: none;
+  font-size: 18px;
+  text-align: center;
 }
