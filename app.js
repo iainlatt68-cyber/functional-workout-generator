@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
     workoutCard.innerHTML = `
       <h2>${w.title}</h2>
       <p>${w.detail}</p>
-      <button onclick="nextStep()">Next</button>
+      <button id="nextBtn">Next</button>
     `;
   }
 
