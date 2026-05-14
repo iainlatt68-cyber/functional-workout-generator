@@ -45,6 +45,7 @@ body {
   border: 1px solid #334155;
   background: #020617;
   color: #e5e7eb;
+  cursor: pointer;
 }
 
 .button-row button.active {
@@ -109,7 +110,7 @@ body {
   display: none;
 }
 
-/* Onboarding */
+/* ✅ ONBOARDING FIX */
 .onboarding {
   position: fixed;
   inset: 0;
@@ -122,6 +123,7 @@ body {
 
 .onboarding.hidden {
   display: none !important;
+  pointer-events: none !important;
 }
 
 .onboarding-card {
