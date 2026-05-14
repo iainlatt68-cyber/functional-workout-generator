@@ -1,12 +1,16 @@
 .controls {
   display: grid;
-  gap: 16px;
+  gap: 18px;
 }
 
 .control-card {
   background: rgba(2,6,23,.7);
   border-radius: 18px;
   padding: 16px;
+}
+
+.control-card.primary {
+  border: 1px solid #2563eb;
 }
 
 .control-card h3 {
@@ -33,6 +37,7 @@
 
 .option-row button.active {
   background: linear-gradient(180deg,#2563eb,#1d4ed8);
+  border-color: transparent;
 }
 
 .option-row.subtle button {
@@ -41,7 +46,17 @@
   font-size: 13px;
 }
 
+.big-action.primary {
+  margin-top: 10px;
+  width: 100%;
+  padding: 18px;
+  border-radius: 18px;
+  font-size: 18px;
+  background: linear-gradient(180deg,#2563eb,#1d4ed8);
+  color: white;
+  border: none;
+}
+
 .hidden {
   display: none;
 }
-``
