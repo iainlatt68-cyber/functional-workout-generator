@@ -1,42 +1,50 @@
-const controlState = {
-  goal: "strength",
-  equipment: "gym",
-  addons: [],
-  duration: 45,
-  effort: "moderate",
-  conditioning: "easy",
-  placement: "after"
-};
+document.addEventListener("DOMContentLoaded", () => {
 
-document.querySelectorAll(".option-row").forEach(row => {
-  const key = row.dataset.key;
+  const state = {
+    goal: "strength",
+    duration: 45,
+    effort: "moderate"
+  };
 
-  row.querySelectorAll("button").forEach(btn => {
-    btn.addEventListener("click", () => {
+  const generateBtn = document.getElementById("generate");
+  const startBtn = document.getElementById("start");
+  const preview = document.getElementById("preview");
+  const workout = document.getElementById("workout");
+  const card = document.getElementById("card");
 
-      // Multi-select (addons)
-      if (key === "addons") {
-        btn.classList.toggle("active");
-        const v = btn.dataset.value;
-        controlState.addons.includes(v)
-          ? controlState.addons.splice(controlState.addons.indexOf(v), 1)
-          : controlState.addons.push(v);
-        return;
-      }
-
-      // Single select
-      row.querySelectorAll("button").forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-      controlState[key] = btn.dataset.value;
-
-      // Show / hide addon equipment
-      if (key === "equipment") {
-        document
-          .getElementById("addons")
-          .classList.toggle("hidden", btn.dataset.value !== "minimal");
-      }
+  /* CONTROL PANEL */
+  document.querySelectorAll(".option-row").forEach(row => {
+    const key = row.dataset.key;
+    row.querySelectorAll("button").forEach(btn => {
+      btn.addEventListener("click", () => {
+        row.querySelectorAll("button").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        state[key] = btn.dataset.value;
+      });
     });
   });
-});
 
-// You now read `controlState` inside Generate
+  /* GENERATE */
+  generateBtn.addEventListener("click", () => {
+    preview.innerHTML = `
+      <div>Focus: ${state.goal}</div>
+      <div>Duration: ${state.duration} minutes</div>
+      <div>Effort: ${state.effort}</div>
+    `;
+    startBtn.disabled = false;
+  });
+
+  /* START */
+  startBtn.addEventListener("click", () => {
+    workout.classList.remove("hidden");
+    card.innerHTML = `
+      <h2>Workout started</h2>
+      <p>This is where exercise cards will appear.</p>
+      <button id="next">Next</button>
+    `;
+    document.getElementById("next").onclick = () => {
+      workout.classList.add("hidden");
+    };
+  });
+
+});
