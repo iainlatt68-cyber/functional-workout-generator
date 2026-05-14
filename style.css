@@ -20,16 +20,20 @@ body {
   color: #94a3b8;
 }
 
-/* Controls */
+/* CONTROL PANEL */
 .controls {
   display: grid;
-  gap: 16px;
+  gap: 18px;
 }
 
 .control-card {
   background: rgba(2,6,23,.7);
   padding: 16px;
   border-radius: 18px;
+}
+
+.control-card.primary {
+  border: 1px solid #2563eb;
 }
 
 .control-card h3 {
@@ -49,6 +53,7 @@ body {
   border: 1px solid #334155;
   background: #020617;
   color: #e5e7eb;
+  font-size: 14px;
 }
 
 .option-row button.active {
@@ -56,33 +61,48 @@ body {
   border-color: transparent;
 }
 
+.option-row.subtle button {
+  background: transparent;
+  border-color: #1e293b;
+  font-size: 13px;
+}
+
 .big-action {
   padding: 18px;
   border-radius: 18px;
   font-size: 18px;
-  background: linear-gradient(180deg,#2563eb,#1d4ed8);
   border: none;
+}
+
+.big-action.primary {
+  background: linear-gradient(180deg,#2563eb,#1d4ed8);
   color: white;
 }
 
 .big-action.secondary {
   background: #020617;
   border: 1px solid #334155;
+  color: #e5e7eb;
 }
 
-/* Preview */
+/* PREVIEW */
 .preview {
   margin-top: 20px;
 }
 
-.preview div {
-  padding: 10px;
-  margin-bottom: 6px;
-  background: rgba(2,6,23,.85);
-  border-radius: 12px;
+.flow-preview {
+  display: grid;
+  gap: 10px;
 }
 
-/* Workout */
+.flow-item {
+  padding: 14px;
+  border-radius: 14px;
+  background: rgba(2,6,23,.85);
+  border-left: 4px solid #2563eb;
+}
+
+/* WORKOUT */
 .workout {
   position: fixed;
   inset: 0;
@@ -96,9 +116,38 @@ body {
   display: none;
 }
 
-#card {
-  background: rgba(2,6,23,.95);
+.card {
+  max-width: 420px;
   padding: 24px;
   border-radius: 22px;
+  background: rgba(2,6,23,.95);
+  text-align: center;
+}
+
+.pattern {
+  font-size: 12px;
+  letter-spacing: .1em;
+  color: #94a3b8;
+}
+
+.round {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.coach {
+  font-size: 13px;
+  font-style: italic;
+  color: #94a3b8;
+  margin-top: 10px;
+}
+
+input {
+  width: 100%;
+  padding: 14px;
+  border-radius: 14px;
+  border: none;
+  font-size: 18px;
+  margin-top: 10px;
   text-align: center;
 }
