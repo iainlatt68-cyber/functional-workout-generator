@@ -1,3 +1,4 @@
+
 body {
   margin: 0;
   font-family: system-ui, sans-serif;
@@ -98,10 +99,6 @@ body {
   background: rgba(2,6,23,.6);
 }
 
-.preview div {
-  padding: 6px 0;
-}
-
 .workout {
   position: fixed;
   inset: 0;
@@ -113,28 +110,7 @@ body {
   display: none;
 }
 
-.workout-card {
-  max-width: 520px;
-  margin: auto;
-  background: rgba(2,6,23,.9);
-  padding: 22px;
-  border-radius: 22px;
-}
-
-.warmup-list li {
-  list-style: none;
-  padding: 10px;
-  border: 1px solid #334155;
-  border-radius: 10px;
-  margin-bottom: 6px;
-}
-
-.warmup-list li.done {
-  opacity: 0.5;
-  text-decoration: line-through;
-}
-
-/* Onboarding */
+/* ✅ ONBOARDING */
 .onboarding {
   position: fixed;
   inset: 0;
@@ -143,6 +119,11 @@ body {
   align-items: center;
   justify-content: center;
   z-index: 999;
+}
+
+/* ✅ THIS IS THE FIX */
+.onboarding.hidden {
+  display: none !important;
 }
 
 .onboarding-card {
