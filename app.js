@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  /* Generate workout */
+  /* Generate */
   generateBtn.onclick = () => {
     workout = buildWorkout();
     preview.innerHTML = workout.map(w => `<div>${w.label}</div>`).join("");
@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
     startBtn.disabled = false;
   };
 
-  /* Start workout ✅ FIXED */
+  /* Start */
   startBtn.onclick = () => {
     workoutScreen.classList.remove("hidden");
     stepIndex = 0;
@@ -93,74 +93,32 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function buildWorkout() {
-    const out = [];
-
-    out.push({
-      label: "Warm‑up",
-      type: "warmup",
-      items: [
-        "Pulse raise 2–3 mins",
-        "Hip & shoulder mobility",
-        "Cat–cow",
-        "World’s greatest stretch"
-      ]
-    });
-
-    out.push({
-      label: "Strength",
-      detail: "Balanced squat, hinge, push and pull work."
-    });
-
-    out.push({
-      label: "Zone 2 Conditioning",
-      detail: "20–30 mins • conversational pace"
-    });
-
-    return out;
-  }
-
-  /* Onboarding */
-  const onboardingSteps = [
-    { title: "How workouts are built", text: "Prepare → Train → Build engine → Recover." },
-    { title: "Strength first", text: "Train strength while fresh to keep quality high." },
-    { title: "Conditioning has purpose", text: "Zone 2 builds aerobic base without burnout." },
-    { title: "Progress over time", text: "You should finish feeling worked, not wrecked." }
-  ];
-
-  let onboardIndex = 0;
-
-  function showOnboarding() {
-    if (localStorage.getItem("onboardingSeen")) return;
-
-    const modal = document.getElementById("onboarding");
-    const title = document.getElementById("onboard-title");
-    const text = document.getElementById("onboard-text");
-
-    modal.classList.remove("hidden");
-
-    document.getElementById("onboard-next").onclick = () => {
-      onboardIndex++;
-      if (onboardIndex >= onboardingSteps.length) {
-        modal.classList.add("hidden");
-        localStorage.setItem("onboardingSeen", "true");
-      } else {
-        title.textContent = onboardingSteps[onboardIndex].title;
-        text.textContent = onboardingSteps[onboardIndex].text;
+    return [
+      {
+        label: "Warm‑up",
+        type: "warmup",
+        items: [
+          "Pulse raise 2–3 mins",
+          "Hip & shoulder mobility",
+          "Cat–cow",
+          "World’s greatest stretch"
+        ]
+      },
+      {
+        label: "Strength",
+        detail: "Balanced squat, hinge, push and pull work."
+      },
+      {
+        label: "Zone 2 Conditioning",
+        detail: "20–30 mins • conversational pace"
       }
-    };
-
-    document.getElementById("onboard-skip").onclick = () => {
-      modal.classList.add("hidden");
-      localStorage.setItem("onboardingSeen", "true");
-    };
-
-    title.textContent = onboardingSteps[0].title;
-    text.textContent = onboardingSteps[0].text;
+    ];
   }
 
+  /* WEEKLY CONTEXT */
   function saveWeeklyHistory() {
     const history = JSON.parse(localStorage.getItem("weeklyHistory")) || [];
-    history.push({ date: new Date().toISOString(), type: state.goal });
+    history.push({ date: new Date().toISOString() });
     localStorage.setItem("weeklyHistory", JSON.stringify(history));
   }
 
@@ -168,12 +126,69 @@ document.addEventListener("DOMContentLoaded", () => {
     const history = JSON.parse(localStorage.getItem("weeklyHistory")) || [];
     const weekAgo = new Date();
     weekAgo.setDate(weekAgo.getDate() - 7);
-
     const recent = history.filter(h => new Date(h.date) > weekAgo);
     if (recent.length >= 2) {
       return `This is your ${recent.length + 1}ᵗʰ session this week.`;
     }
     return "";
+  }
+
+  /* ONBOARDING (FIXED) */
+  const onboardingSteps = [
+    {
+      title: "How workouts are built",
+      text: "Prepare → Train → Build engine → Recover.\n\nThis keeps quality high and fatigue controlled."
+    },
+    {
+      title: "Strength comes first",
+      text: "Strength work is done while you’re fresh so technique stays sharp."
+    },
+    {
+      title: "Conditioning has a purpose",
+      text: "Zone 2 builds your aerobic base without burning you out."
+    },
+    {
+      title: "Progress over time",
+      text: "You should finish sessions feeling worked — not wrecked."
+    }
+  ];
+
+  function showOnboarding() {
+    if (localStorage.getItem("onboardingSeen") === "true") return;
+
+    const modal = document.getElementById("onboarding");
+    const title = document.getElementById("onboard-title");
+    const text = document.getElementById("onboard-text");
+    const nextBtn = document.getElementById("onboard-next");
+    const skipBtn = document.getElementById("onboard-skip");
+
+    let index = 0;
+
+    function render() {
+      title.textContent = onboardingSteps[index].title;
+      text.textContent = onboardingSteps[index].text;
+      nextBtn.textContent =
+        index === onboardingSteps.length - 1 ? "Start Training" : "Next";
+    }
+
+    function close() {
+      modal.classList.add("hidden");
+      localStorage.setItem("onboardingSeen", "true");
+    }
+
+    nextBtn.onclick = () => {
+      if (index === onboardingSteps.length - 1) {
+        close();
+      } else {
+        index++;
+        render();
+      }
+    };
+
+    skipBtn.onclick = close;
+
+    modal.classList.remove("hidden");
+    render();
   }
 
   showOnboarding();
