@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   let steps = [];
-  let i = 0;
+  let idx = 0;
   let timer = null;
   let timeRemaining = 0;
   let emomMinute = 1;
@@ -35,47 +35,32 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
+  /* CNS + STATION MODEL */
   const EXERCISES = {
-    fullgym: {
-      squat: ["Back Squat","Front Squat"],
-      hinge: ["Deadlift","Romanian Deadlift"],
-      push: ["Bench Press","Overhead Press"],
-      pull: ["Barbell Row","Pull‑ups"]
-    },
-    dumbbells: {
-      squat: ["Goblet Squat"],
-      hinge: ["DB RDL"],
-      push: ["DB Press"],
-      pull: ["DB Row"]
-    },
-    kettlebell: {
-      squat: ["KB Goblet Squat"],
-      hinge: ["KB Swing"],
-      push: ["KB Push Press"],
-      pull: ["KB Row"]
-    },
-    sandbag: {
-      squat: ["Sandbag Squat"],
-      hinge: ["Sandbag Deadlift"],
-      push: ["Sandbag Push Press"],
-      pull: ["Sandbag Row"]
-    }
+    fullgym: [
+      { name:"Back Squat", station:"rack", cns:1 },
+      { name:"Front Squat", station:"rack", cns:1 },
+      { name:"Deadlift", station:"platform", cns:1 },
+      { name:"Bench Press", station:"bench", cns:2 },
+      { name:"Overhead Press", station:"rack", cns:2 },
+      { name:"Barbell Row", station:"bench", cns:2 }
+    ]
   };
 
   const CARDIO = [
     { name:"Bike", coach:"Smooth cadence, nasal breathing." },
-    { name:"Row", coach:"18–22 spm, relaxed strokes." },
-    { name:"Treadmill Incline Walk", coach:"Brisk walk, no jogging." },
+    { name:"Row", coach:"Relaxed strokes, long exhales." },
+    { name:"Incline Walk", coach:"Brisk walk, no jogging." },
     { name:"Cross‑trainer", coach:"Continuous, non‑spiky effort." }
   ];
 
   generateBtn.onclick = () => {
     steps = buildSteps();
-    preview.innerHTML = steps.map((s,idx) => `
+    preview.innerHTML = steps.map((s,i) => `
       <div class="preview-card">
-        <span class="preview-index">${idx+1}</span>
+        <span class="preview-index">${i+1}</span>
         <div>
-          <strong>${s.type.toUpperCase()}</strong>
+          <strong>${s.station ? s.station.toUpperCase() : "CARDIO"}</strong>
           <div class="preview-text">${s.exercise || s.cardio || ""}</div>
         </div>
       </div>
@@ -85,7 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   startBtn.onclick = () => {
     workoutScreen.classList.remove("hidden");
-    i = 0;
+    idx = 0;
     render();
   };
 
@@ -97,18 +82,18 @@ document.addEventListener("DOMContentLoaded", () => {
   function render() {
     clearInterval(timer);
 
-    if (i >= steps.length) {
+    if (idx >= steps.length) {
       showSummary();
       return;
     }
 
-    const s = steps[i];
+    const s = steps[idx];
 
     if (s.type === "strength") {
       workoutCard.innerHTML = `
         <div class="card">
           <div class="round-indicator">Round ${s.round} of ${state.rounds}</div>
-          <span class="badge ${s.pattern}">${s.pattern}</span>
+          <span class="badge ${s.station}">${s.station}</span>
           <h2>${s.exercise}</h2>
           <p>${s.prescription}</p>
           <p class="coach-note">${s.coach}</p>
@@ -122,13 +107,13 @@ document.addEventListener("DOMContentLoaded", () => {
                      font-size:20px;text-align:center;" />
           </label>
 
-          <p class="coach-note">${getProgressionAdvice(s.pattern)}</p>
+          <p class="coach-note">${s.progression}</p>
 
           <button class="big-action" id="saveNext">Save & Next</button>
         </div>`;
       document.getElementById("saveNext").onclick = () => {
         logExercise(s.exercise, Number(document.getElementById("weightInput").value)||0, s.reps);
-        i++; render();
+        idx++; render();
       };
       return;
     }
@@ -141,12 +126,58 @@ document.addEventListener("DOMContentLoaded", () => {
           <p class="coach-note">${s.coach}</p>
           <button class="big-action" id="next">Finish</button>
         </div>`;
-      document.getElementById("next").onclick = () => { i++; render(); };
+      document.getElementById("next").onclick = () => { idx++; render(); };
       return;
     }
 
     if (s.type === "emom") startEMOM(s);
     if (s.type === "amrap") startAMRAP(s);
+  }
+
+  function buildSteps() {
+    const out = [];
+    const lifts = EXERCISES[state.equipment];
+
+    // CNS-first, station-aware ordering
+    lifts.sort((a,b) => a.cns - b.cns || a.station.localeCompare(b.station));
+
+    lifts.forEach(lift => {
+      for (let r=1;r<=state.rounds;r++) {
+        out.push({
+          type:"strength",
+          exercise: lift.name,
+          station: lift.station,
+          round: r,
+          reps: state.goal==="strength"?5:10,
+          prescription: state.goal==="strength"?"3–5 reps":"8–12 reps",
+          coach:
+            lift.cns===1
+              ? "This is a primary lift. Stay focused and unrushed."
+              : "Strong, controlled reps. No grinding.",
+          progression:
+            lift.cns===1
+              ? "If all sets moved well, consider +2.5kg next time."
+              : "Progress only if speed and control were excellent."
+        });
+      }
+    });
+
+    const cardio = CARDIO[Math.floor(Math.random()*CARDIO.length)];
+    const conditioning = buildConditioning(cardio);
+
+    return state.cardioPlacement==="start"
+      ? [conditioning, ...out]
+      : [...out, conditioning];
+  }
+
+  function buildConditioning(cardio) {
+    if (state.condMode==="zone2") {
+      return { type:"zone2", cardio:cardio.name, duration:"20–30 minutes", coach:cardio.coach };
+    }
+    if (state.condMode==="emom") {
+      return { type:"emom", minutes:10, exercise:"12 Wall Balls", coach:"Finish early to earn rest." };
+    }
+    return { type:"amrap", minutes:12, exercises:["10 KB Swings","10 Push‑ups","10 Air Squats"], coach:"Smooth pace, no redlining." };
   }
 
   function startEMOM(s) {
@@ -163,7 +194,7 @@ document.addEventListener("DOMContentLoaded", () => {
       timeRemaining--;
       if (timeRemaining < 0) {
         emomMinute++; timeRemaining = 60;
-        if (emomMinute > s.minutes) { clearInterval(timer); i++; render(); }
+        if (emomMinute > s.minutes) { clearInterval(timer); idx++; render(); }
       }
     },1000);
   }
@@ -179,51 +210,10 @@ document.addEventListener("DOMContentLoaded", () => {
           <p class="coach-note">${s.coach}</p>
           <button class="big-action" id="finish">Finish</button>
         </div>`;
-      document.getElementById("finish").onclick = () => { clearInterval(timer); i++; render(); };
+      document.getElementById("finish").onclick = () => { clearInterval(timer); idx++; render(); };
       timeRemaining--;
-      if (timeRemaining < 0) { clearInterval(timer); i++; render(); }
+      if (timeRemaining < 0) { clearInterval(timer); idx++; render(); }
     },1000);
-  }
-
-  function buildSteps() {
-    const out = [];
-    const pool = EXERCISES[state.equipment];
-    const patterns = ["squat","hinge","push","pull"];
-
-    for (let r = 1; r <= state.rounds; r++) {
-      patterns.forEach(p => {
-        const ex = pool[p][Math.floor(Math.random()*pool[p].length)];
-        out.push({
-          type:"strength",
-          round:r,
-          pattern:p,
-          exercise:ex,
-          reps: state.goal==="strength"?5:10,
-          prescription: state.goal==="strength"?"3–5 reps":"8–12 reps",
-          coach:
-            p==="squat"?"Brace first, then sit smoothly between the hips.":
-            p==="hinge"?"Push the floor away, keep the bar close.":
-            p==="push"?"Ribs down, control the lockout.":
-            "Pull elbows to ribs, pause briefly."
-        });
-      });
-    }
-
-    const cardio = CARDIO[Math.floor(Math.random()*CARDIO.length)];
-    const conditioning = buildConditioning(cardio);
-
-    if (state.cardioPlacement==="start") return [conditioning, ...out];
-    return [...out, conditioning];
-  }
-
-  function buildConditioning(cardio) {
-    if (state.condMode==="zone2") {
-      return { type:"zone2", cardio:cardio.name, duration:"20–30 minutes", coach:cardio.coach };
-    }
-    if (state.condMode==="emom") {
-      return { type:"emom", minutes:10, exercise:"12 Wall Balls", coach:"Finish early to earn rest." };
-    }
-    return { type:"amrap", minutes:12, exercises:["10 KB Swings","10 Push‑ups","10 Air Squats"], coach:"Smooth pace, no redlining." };
   }
 
   function logExercise(name, weight, reps) {
@@ -262,19 +252,13 @@ document.addEventListener("DOMContentLoaded", () => {
     return "🔴 Consider holding load steady next week.";
   }
 
-  function getProgressionAdvice(pattern) {
-    if (pattern==="squat" || pattern==="hinge")
-      return "If this felt strong and controlled, consider +2.5kg next time.";
-    return "Progress cautiously — small jumps go a long way.";
-  }
-
-  /* Onboarding */
+  /* Onboarding — expert panel */
   if (!localStorage.getItem("onboardingSeen")) {
     const modal=document.getElementById("onboarding");
     const steps=[
       ["How workouts are built","Prepare → Train → Condition → Recover"],
-      ["Strength first","Quality reps before fatigue."],
-      ["Zone 2 matters","Build your aerobic base."],
+      ["Compounds first","High‑neural lifts are prioritised while fresh."],
+      ["Station‑aware","Rack and bench work is grouped to avoid losing equipment."],
       ["Repeatability","Finish worked, not wrecked."]
     ];
     let x=0;
