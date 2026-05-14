@@ -8,14 +8,13 @@
 </head>
 <body>
 
-<main class="app">
+<main class="app" id="app">
   <header class="header">
     <h1>Workout Generator</h1>
     <p class="subtitle">Train with intent • Move with purpose</p>
   </header>
 
-  <section class="controls">
-
+  <section class="controls" id="controls">
     <div class="control-group">
       <div class="label">Training focus</div>
       <div class="button-row" data-group="goal">
@@ -42,19 +41,10 @@
       </div>
     </div>
 
-    <div class="control-group">
-      <div class="label">Cardio timing</div>
-      <div class="button-row" data-group="cardioPlacement">
-        <button data-value="start">Start</button>
-        <button data-value="end" class="active">End</button>
-      </div>
-    </div>
-
     <div class="actions">
       <button id="generate" class="btn primary">Build my session</button>
       <button id="start" class="big-action" disabled>Start training</button>
     </div>
-
   </section>
 
   <section class="preview">
@@ -63,17 +53,9 @@
   </section>
 </main>
 
-<section id="workoutScreen" class="workout hidden">
-  <div id="workoutCard" class="workout-card"></div>
-  <button id="exit" class="btn ghost">Exit</button>
-</section>
-
-<div id="onboarding" class="onboarding hidden">
-  <div class="onboarding-card">
-    <h2 id="onboard-title"></h2>
-    <p id="onboard-text"></p>
-    <button id="onboard-next" class="big-action">Next</button>
-  </div>
+<!-- WORKOUT MODE -->
+<div id="workoutRoot" class="workout hidden">
+  <div id="workoutCard"></div>
 </div>
 
 <script src="app.js"></script>
