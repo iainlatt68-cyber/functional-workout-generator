@@ -39,7 +39,7 @@ body {
 }
 
 .button-row button {
-  flex: 1 1 45%;
+  flex: 1 1 30%;
   padding: 14px;
   border-radius: 14px;
   border: 1px solid #334155;
@@ -89,7 +89,6 @@ body {
 
 .big-action:disabled {
   opacity: 0.5;
-  cursor: not-allowed;
 }
 
 .preview {
@@ -110,7 +109,7 @@ body {
   display: none;
 }
 
-/* ✅ ONBOARDING FIX */
+/* ONBOARDING */
 .onboarding {
   position: fixed;
   inset: 0;
