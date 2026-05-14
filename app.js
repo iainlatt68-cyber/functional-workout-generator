@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("✅ app.js loaded – no rest timers");
+  console.log("✅ app.js loaded – cardio + coaching restored");
 
   const state = {
     goal: "hypertrophy",
@@ -19,6 +19,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const workoutCard = document.getElementById("workoutCard");
   const exitBtn = document.getElementById("exit");
 
+  /* ------------------------
+     BUTTON GROUPS
+  ------------------------ */
   document.querySelectorAll(".button-row").forEach(row => {
     const group = row.dataset.group;
     row.querySelectorAll("button").forEach(btn => {
@@ -30,6 +33,9 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
+  /* ------------------------
+     EXERCISES (FILTERED)
+  ------------------------ */
   const EXERCISES = {
     fullgym: ["Back Squat", "Deadlift", "Bench Press", "Row"],
     dumbbells: ["DB Goblet Squat", "DB RDL", "DB Press", "DB Row"],
@@ -37,6 +43,35 @@ document.addEventListener("DOMContentLoaded", () => {
     sandbag: ["Sandbag Squat", "Sandbag Deadlift", "Sandbag Press", "Sandbag Row"]
   };
 
+  /* ------------------------
+     COACHING NOTES
+  ------------------------ */
+  const COACHING = {
+    strength: [
+      "Quality reps beat load",
+      "Stop the set when speed drops",
+      "Full recovery between sets"
+    ],
+    hypertrophy: [
+      "Chase tension, not fatigue",
+      "Stop 0–2 reps before breakdown",
+      "Control the eccentric"
+    ],
+    cardio: [
+      "This supports recovery, not fatigue",
+      "Breathing elevated but controlled",
+      "You should be able to talk in short sentences"
+    ],
+    conditioning: [
+      "Pace should be repeatable",
+      "If round one is your best, you went too hard",
+      "Finish strong, not smashed"
+    ]
+  };
+
+  /* ------------------------
+     AUTO‑PROGRESSION
+  ------------------------ */
   function loadProgression() {
     return JSON.parse(localStorage.getItem("progression")) || { rounds: 3 };
   }
@@ -45,6 +80,9 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.setItem("progression", JSON.stringify(p));
   }
 
+  /* ------------------------
+     GENERATE / START / EXIT
+  ------------------------ */
   generateBtn.onclick = () => {
     workout = buildWorkout();
     stepIndex = 0;
@@ -64,6 +102,9 @@ document.addEventListener("DOMContentLoaded", () => {
     workoutCard.innerHTML = "";
   };
 
+  /* ------------------------
+     STEP FLOW
+  ------------------------ */
   function renderStep() {
     if (stepIndex >= workout.length) {
       workoutCard.innerHTML = `
@@ -81,12 +122,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const step = workout[stepIndex];
 
+    /* ---- ROUND WITH INDIVIDUAL EXERCISES ---- */
     if (step.type === "round") {
       const exercise = step.exercises[exerciseIndex];
       workoutCard.innerHTML = `
         <h2>${step.title}</h2>
-        <p>${exercise}</p>
+        <p><strong>${exercise}</strong></p>
         <p>${step.prescription}</p>
+        <ul>${step.cues.map(c => `<li>${c}</li>`).join("")}</ul>
         <button id="complete">Complete</button>
       `;
       document.getElementById("complete").onclick = () => {
@@ -100,9 +143,11 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+    /* ---- SIMPLE STEP (WARM‑UP / CARDIO / CONDITIONING / COOL‑DOWN) ---- */
     workoutCard.innerHTML = `
       <h2>${step.title}</h2>
       <p>${step.detail}</p>
+      ${step.cues ? `<ul>${step.cues.map(c => `<li>${c}</li>`).join("")}</ul>` : ""}
       <button id="next">Next</button>
     `;
     document.getElementById("next").onclick = () => {
@@ -111,6 +156,9 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   }
 
+  /* ------------------------
+     FEEDBACK → PROGRESSION
+  ------------------------ */
   function handleFeedback(feedback) {
     const p = loadProgression();
     if (feedback === "easy") p.rounds++;
@@ -119,11 +167,15 @@ document.addEventListener("DOMContentLoaded", () => {
     workoutScreen.classList.add("hidden");
   }
 
+  /* ------------------------
+     WORKOUT BUILD
+  ------------------------ */
   function buildWorkout() {
     const out = [];
     const pool = EXERCISES[state.equipment];
     const prog = loadProgression();
 
+    /* Warm‑up */
     out.push({
       label: "Warm‑up",
       title: "Warm‑up",
@@ -138,13 +190,8 @@ document.addEventListener("DOMContentLoaded", () => {
 `.trim()
     });
 
-    if (state.goal === "conditioning") {
-      out.push({
-        label: state.condMode.toUpperCase(),
-        title: state.condMode.toUpperCase(),
-        detail: `${state.time} mins • ${state.condMode}`
-      });
-    } else {
+    /* Strength / Hypertrophy */
+    if (state.goal !== "conditioning") {
       for (let r = 1; r <= prog.rounds; r++) {
         out.push({
           label: `Round ${r}`,
@@ -153,22 +200,41 @@ document.addEventListener("DOMContentLoaded", () => {
           exercises: pool,
           prescription:
             state.goal === "strength"
-              ? "3–5 reps each"
-              : "8–12 reps each"
+              ? "3–5 reps each • RPE 7–9"
+              : "8–12 reps each • RPE 7–8",
+          cues: COACHING[state.goal]
         });
       }
+
+      /* Cardio — TIME + EFFORT RESTORED */
+      const cardioMins =
+        state.time <= 30 ? "8–12 minutes" :
+        state.time <= 45 ? "10–15 minutes" :
+        "12–20 minutes";
 
       out.push({
         label: "Cardio",
         title: "Cardio Finish",
-        detail: "8–15 minutes • RPE 5–7"
+        detail: `${cardioMins} • RPE 5–7 • conversational to short sentences`,
+        cues: COACHING.cardio
       });
     }
 
+    /* Conditioning day */
+    if (state.goal === "conditioning") {
+      out.push({
+        label: state.condMode.toUpperCase(),
+        title: state.condMode.toUpperCase(),
+        detail: `${state.time} minutes • ${state.condMode}`,
+        cues: COACHING.conditioning
+      });
+    }
+
+    /* Cool‑down */
     out.push({
       label: "Cool‑down",
       title: "Cool‑down",
-      detail: "Easy walk + stretching"
+      detail: "Easy walk + stretching + breathing"
     });
 
     return out;
