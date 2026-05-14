@@ -54,7 +54,10 @@ document.addEventListener("DOMContentLoaded", () => {
       feedbackBox.classList.remove("hidden");
       return;
     }
-
+document.getElementById("nextBtn").onclick = () => {
+  step++;
+  showStep();
+};
     const w = workout[step];
     workoutCard.innerHTML = `
       <h2>${w.title}</h2>
