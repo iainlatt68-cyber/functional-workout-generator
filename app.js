@@ -1,8 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-  /* =========================
-     STATE
-  ========================= */
   const state = {
     goal: "hypertrophy",
     time: 30,
@@ -19,9 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const workoutCard = document.getElementById("workoutCard");
   const exitBtn = document.getElementById("exit");
 
-  /* =========================
-     BUTTON GROUPS
-  ========================= */
+  /* BUTTON GROUPS */
   document.querySelectorAll(".button-row").forEach(row => {
     const group = row.dataset.group;
     row.querySelectorAll("button").forEach(btn => {
@@ -33,15 +28,14 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  /* =========================
-     GENERATE / START
-  ========================= */
+  /* GENERATE */
   generateBtn.onclick = () => {
     workout = buildWorkout();
     preview.innerHTML = workout.map(w => `<div>${w.label}</div>`).join("");
     startBtn.disabled = false;
   };
 
+  /* START */
   startBtn.onclick = () => {
     workoutScreen.classList.remove("hidden");
     stepIndex = 0;
@@ -52,9 +46,6 @@ document.addEventListener("DOMContentLoaded", () => {
     workoutScreen.classList.add("hidden");
   };
 
-  /* =========================
-     RENDER
-  ========================= */
   function renderStep() {
     if (stepIndex >= workout.length) {
       workoutCard.innerHTML = `
@@ -117,9 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ];
   }
 
-  /* =========================
-     ONBOARDING (FINAL, FIXED)
-  ========================= */
+  /* ✅ ONBOARDING (FINAL) */
   const onboardingSteps = [
     {
       title: "How workouts are built",
