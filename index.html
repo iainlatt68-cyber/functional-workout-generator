@@ -1,22 +1,22 @@
-<section class="controls">
+<section class="controls" id="controls">
 
-  <div class="control-card">
-    <h3>Today’s focus</h3>
+  <div class="control-card primary">
+    <h3>What’s the focus today?</h3>
     <div class="option-row" data-key="goal">
-      <button data-value="strength" class="active">Get stronger</button>
+      <button class="active" data-value="strength">Get stronger</button>
       <button data-value="muscle">Build muscle</button>
       <button data-value="fitness">Improve fitness</button>
     </div>
   </div>
 
   <div class="control-card">
-    <h3>Equipment</h3>
+    <h3>Equipment available</h3>
     <div class="option-row" data-key="equipment">
-      <button data-value="gym" class="active">Gym</button>
+      <button class="active" data-value="gym">Gym</button>
       <button data-value="minimal">Minimal</button>
     </div>
 
-    <div class="option-row subtle hidden" data-key="addons" id="addons">
+    <div class="option-row subtle hidden" id="addons" data-key="addons">
       <button data-value="db">Dumbbells</button>
       <button data-value="kb">Kettlebell</button>
       <button data-value="sb">Sandbag</button>
@@ -24,10 +24,10 @@
   </div>
 
   <div class="control-card">
-    <h3>Session length</h3>
+    <h3>How long have you got?</h3>
     <div class="option-row" data-key="duration">
       <button data-value="30">30 min</button>
-      <button data-value="45" class="active">45 min</button>
+      <button class="active" data-value="45">45 min</button>
       <button data-value="60">60 min</button>
     </div>
   </div>
@@ -36,7 +36,7 @@
     <h3>How should it feel?</h3>
     <div class="option-row" data-key="effort">
       <button data-value="light">Light</button>
-      <button data-value="moderate" class="active">Challenging</button>
+      <button class="active" data-value="moderate">Challenging</button>
       <button data-value="hard">Push</button>
     </div>
   </div>
@@ -44,15 +44,19 @@
   <div class="control-card">
     <h3>Conditioning</h3>
     <div class="option-row" data-key="conditioning">
-      <button data-value="easy" class="active">Easy aerobic</button>
+      <button class="active" data-value="easy">Easy aerobic</button>
       <button data-value="structured">Structured</button>
       <button data-value="hard">Hard finisher</button>
     </div>
 
     <div class="option-row subtle" data-key="placement">
       <button data-value="before">Before lifting</button>
-      <button data-value="after" class="active">After lifting</button>
+      <button class="active" data-value="after">After lifting</button>
     </div>
   </div>
+
+  <button id="generate" class="big-action primary">
+    Build my session
+  </button>
 
 </section>
