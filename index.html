@@ -5,69 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Workout Generator</title>
 
-  <!-- ✅ CSS ACTUALLY LOADS -->
+  <!-- ✅ CSS REALLY LOADS -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <main class="app">
-  <header class="header">
-    <h1>Workout Generator</h1>
-    <p class="subtitle">Train with intent • Finish strong</p>
-  </header>
+  <h1>Workout Generator</h1>
 
-  <section class="controls">
-    <div class="control-group">
-      <div class="label">Goal</div>
-      <div class="button-row" data-group="goal">
-        <button data-value="strength">Strength</button>
-        <button data-value="hypertrophy" class="active">Hypertrophy</button>
-      </div>
-    </div>
+  <button id="generate">Generate</button>
+  <button id="start" disabled>Start Workout</button>
 
-    <div class="control-group">
-      <div class="label">Rounds</div>
-      <div class="button-row" data-group="rounds">
-        <button data-value="2">2</button>
-        <button data-value="3" class="active">3</button>
-        <button data-value="4">4</button>
-      </div>
-    </div>
-
-    <div class="control-group">
-      <div class="label">Conditioning</div>
-      <div class="button-row" data-group="condMode">
-        <button data-value="zone2" class="active">Zone 2</button>
-        <button data-value="emom">EMOM</button>
-        <button data-value="amrap">AMRAP</button>
-      </div>
-    </div>
-
-    <div class="control-group">
-      <div class="label">Cardio timing</div>
-      <div class="button-row" data-group="cardioPlacement">
-        <button data-value="start">Start</button>
-        <button data-value="end" class="active">End</button>
-      </div>
-    </div>
-
-    <div class="actions">
-      <button id="generate" class="btn primary">Build my session</button>
-      <button id="start" class="big-action" disabled>Start training</button>
-    </div>
-  </section>
-
-  <section class="preview">
-    <h2>Today’s session flow</h2>
-    <div id="preview" class="flow-preview"></div>
-  </section>
+  <div id="preview"></div>
 </main>
 
-<div id="workoutRoot" class="workout hidden">
-  <div id="workoutCard"></div>
+<div id="workout" style="display:none;">
+  <div id="card"></div>
 </div>
 
-<!-- ✅ JS ACTUALLY RUNS -->
+<!-- ✅ JS REALLY RUNS -->
 <script src="app.js"></script>
 </body>
 </html>
