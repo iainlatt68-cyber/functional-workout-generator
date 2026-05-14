@@ -2,6 +2,16 @@ document.addEventListener("DOMContentLoaded", () => {
   console.log("✅ app.js loaded");
 
   /* -------------------------
+     GLOBAL BUTTON SAFETY
+     Prevent all default submits
+  ------------------------- */
+  document.addEventListener("click", (e) => {
+    if (e.target.tagName === "BUTTON") {
+      e.preventDefault();
+    }
+  });
+
+  /* -------------------------
      STATE
   ------------------------- */
   const state = {
@@ -40,7 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const value = btn.dataset.value;
         state[group] = group === "time" ? Number(value) : value;
 
-        console.log("STATE:", { ...state });
+        console.log(`✅ ${group} set to`, state[group]);
       });
     });
   });
@@ -49,6 +59,8 @@ document.addEventListener("DOMContentLoaded", () => {
      GENERATE WORKOUT
   ------------------------- */
   generateBtn.addEventListener("click", () => {
+    console.log("✅ Generate clicked");
+
     workout = buildWorkout();
     stepIndex = 0;
 
@@ -57,13 +69,16 @@ document.addEventListener("DOMContentLoaded", () => {
       .join("");
 
     startBtn.disabled = false;
-    console.log("✅ Workout generated", workout);
+
+    console.log("✅ Workout generated:", workout);
   });
 
   /* -------------------------
      START WORKOUT
   ------------------------- */
   startBtn.addEventListener("click", () => {
+    console.log("✅ Start workout");
+
     workoutScreen.classList.remove("hidden");
     feedbackBox.classList.add("hidden");
     stepIndex = 0;
@@ -71,7 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   /* -------------------------
-     EXIT WORKOUT
+     EXIT
   ------------------------- */
   exitBtn.addEventListener("click", () => {
     workoutScreen.classList.add("hidden");
@@ -109,19 +124,16 @@ document.addEventListener("DOMContentLoaded", () => {
   function buildWorkout() {
     const out = [];
 
-    /* Warm-up */
     out.push({
       label: "Warm‑up",
       title: "Warm‑up",
       detail: "Joint circles, cat‑cow, lunges, arm swings"
     });
 
-    /* Conditioning day */
     if (state.goal === "conditioning") {
       out.push(...buildConditioning());
     }
 
-    /* Strength / Hypertrophy */
     if (state.goal === "strength" || state.goal === "hypertrophy") {
       out.push({
         label: "Main work",
@@ -136,7 +148,6 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
 
-    /* Cool-down */
     out.push({
       label: "Cool‑down",
       title: "Cool‑down",
