@@ -134,10 +134,10 @@ body {
   margin-bottom: 8px;
 }
 
-.badge.squat { background:#2563eb; }
-.badge.hinge { background:#7c3aed; }
-.badge.push { background:#059669; }
-.badge.pull { background:#d97706; }
+.badge.rack { background:#2563eb; }
+.badge.bench { background:#7c3aed; }
+.badge.platform { background:#059669; }
+.badge.dumbbells { background:#d97706; }
 
 .round-indicator {
   font-size: 12px;
