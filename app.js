@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("✅ app.js loaded");
+  console.log("✅ app.js loaded – rounds + EMOM/AMRAP");
 
   /* ======================
      STATE
@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let workout = [];
   let stepIndex = 0;
+  let exerciseIndex = 0;
   let restTimer = null;
 
   /* ======================
@@ -42,41 +43,17 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   /* ======================
-     EXERCISE POOLS (FILTERABLE)
+     EXERCISES BY EQUIPMENT
   ====================== */
   const EXERCISES = {
-    fullgym: {
-      squat: ["Back Squat"],
-      hinge: ["Deadlift"],
-      push: ["Bench Press"],
-      pull: ["Row"],
-      carry: ["Farmer Carry"]
-    },
-    dumbbells: {
-      squat: ["DB Goblet Squat"],
-      hinge: ["DB RDL"],
-      push: ["DB Press"],
-      pull: ["DB Row"],
-      carry: ["DB Carry"]
-    },
-    kettlebell: {
-      squat: ["KB Goblet Squat"],
-      hinge: ["KB Swing"],
-      push: ["KB Press"],
-      pull: ["KB Row"],
-      carry: ["KB Suitcase Carry"]
-    },
-    sandbag: {
-      squat: ["Sandbag Squat"],
-      hinge: ["Sandbag Deadlift"],
-      push: ["Sandbag Push Press"],
-      pull: ["Sandbag Row"],
-      carry: ["Sandbag Carry"]
-    }
+    fullgym: ["Back Squat", "Deadlift", "Bench Press", "Row"],
+    dumbbells: ["DB Goblet Squat", "DB RDL", "DB Press", "DB Row"],
+    kettlebell: ["KB Goblet Squat", "KB Swing", "KB Press", "KB Row"],
+    sandbag: ["Sandbag Squat", "Sandbag Deadlift", "Sandbag Press", "Sandbag Row"]
   };
 
   /* ======================
-     AUTO‑PROGRESSION MEMORY
+     AUTO‑PROGRESSION (ROUNDS)
   ====================== */
   function loadProgression() {
     return JSON.parse(localStorage.getItem("progression")) || { rounds: 3 };
@@ -89,27 +66,28 @@ document.addEventListener("DOMContentLoaded", () => {
   /* ======================
      GENERATE
   ====================== */
-  generateBtn.addEventListener("click", () => {
+  generateBtn.onclick = () => {
     workout = buildWorkout();
     stepIndex = 0;
     preview.innerHTML = workout.map(w => `<div>${w.label}</div>`).join("");
     startBtn.disabled = false;
-  });
+  };
 
-  startBtn.addEventListener("click", () => {
+  startBtn.onclick = () => {
     workoutScreen.classList.remove("hidden");
     stepIndex = 0;
+    exerciseIndex = 0;
     renderStep();
-  });
+  };
 
-  exitBtn.addEventListener("click", () => {
+  exitBtn.onclick = () => {
     workoutScreen.classList.add("hidden");
     workoutCard.innerHTML = "";
     clearInterval(restTimer);
-  });
+  };
 
   /* ======================
-     STEP FLOW + REST TIMER
+     STEP FLOW
   ====================== */
   function renderStep() {
     clearInterval(restTimer);
@@ -130,17 +108,59 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const step = workout[stepIndex];
 
+    /* ---------- ROUND WITH EXERCISES ---------- */
+    if (step.type === "round") {
+      const exercise = step.exercises[exerciseIndex];
+
+      workoutCard.innerHTML = `
+        <h2>${step.title}</h2>
+        <p>Exercise ${exerciseIndex + 1} of ${step.exercises.length}</p>
+        <h3>${exercise}</h3>
+        <p>${step.prescription}</p>
+        <button id="complete">Complete</button>
+        <div id="rest"></div>
+      `;
+
+      document.getElementById("complete").onclick = () =>
+        startRest(step.rest || 60, () => {
+          exerciseIndex++;
+          if (exerciseIndex >= step.exercises.length) {
+            exerciseIndex = 0;
+            stepIndex++;
+          }
+          renderStep();
+        });
+
+      return;
+    }
+
+    /* ---------- CONDITIONING BLOCK ---------- */
+    if (step.type === "conditioning") {
+      workoutCard.innerHTML = `
+        <h2>${step.title}</h2>
+        <p>${step.detail}</p>
+        <button id="done">Done</button>
+      `;
+      document.getElementById("done").onclick = () => {
+        stepIndex++;
+        renderStep();
+      };
+      return;
+    }
+
+    /* ---------- SIMPLE STEP ---------- */
     workoutCard.innerHTML = `
       <h2>${step.title}</h2>
       <p>${step.detail}</p>
-      <button id="complete">Complete</button>
-      <div id="rest"></div>
+      <button id="next">Next</button>
     `;
-
-    document.getElementById("complete").onclick = () => startRest(step.rest || 60);
+    document.getElementById("next").onclick = () => {
+      stepIndex++;
+      renderStep();
+    };
   }
 
-  function startRest(seconds) {
+  function startRest(seconds, callback) {
     let remaining = seconds;
     const restEl = document.getElementById("rest");
 
@@ -150,8 +170,7 @@ document.addEventListener("DOMContentLoaded", () => {
       restEl.textContent = `Rest: ${remaining}s`;
       if (remaining <= 0) {
         clearInterval(restTimer);
-        stepIndex++;
-        renderStep();
+        callback();
       }
     }, 1000);
   }
@@ -177,32 +196,35 @@ document.addEventListener("DOMContentLoaded", () => {
 
     out.push({ label: "Warm‑up", title: "Warm‑up", detail: "Dynamic mobility" });
 
-    if (state.goal !== "conditioning") {
+    if (state.goal === "conditioning") {
+      out.push(buildConditioningBlock());
+    } else {
       for (let r = 1; r <= prog.rounds; r++) {
         out.push({
           label: `Round ${r}`,
           title: `Round ${r}`,
-          detail: `${pool.squat[0]} → ${pool.hinge[0]} → ${pool.push[0]} → ${pool.pull[0]}`,
-          rest: 90
+          type: "round",
+          exercises: pool,
+          prescription:
+            state.goal === "strength"
+              ? "3–5 reps each"
+              : "8–12 reps each",
+          rest: state.goal === "strength" ? 120 : 75
         });
       }
 
       out.push({
         label: "Cardio",
         title: "Cardio Finish",
-        detail: "8–15 minutes • RPE 5–7",
-        rest: 0
-      });
-    } else {
-      out.push({
-        label: "Conditioning",
-        title: "Conditioning",
-        detail: `${state.time} mins • ${state.condMode.toUpperCase()}`
+        detail: "8–15 minutes • RPE 5–7"
       });
     }
 
     out.push({ label: "Cool‑down", title: "Cool‑down", detail: "Walk + stretch" });
-
     return out;
   }
-});
+
+  /* ======================
+     CONDITIONING: EMOM / AMRAP
+  ====================== */
+  function buildConditioningBlock() {
