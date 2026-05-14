@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Workout Generator</title>
 
-  <!-- ✅ MUST BE EXACT -->
+  <!-- ✅ Correct wiring -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -16,10 +16,11 @@
     <p class="subtitle">Train with intent • Finish strong</p>
   </header>
 
+  <!-- CONTROL PANEL -->
   <section class="controls">
 
-    <div class="control-card">
-      <h3>Focus</h3>
+    <div class="control-card primary">
+      <h3>Today’s focus</h3>
       <div class="option-row" data-key="goal">
         <button class="active" data-value="strength">Get stronger</button>
         <button data-value="muscle">Build muscle</button>
@@ -37,7 +38,7 @@
     </div>
 
     <div class="control-card">
-      <h3>Effort today</h3>
+      <h3>How should it feel?</h3>
       <div class="option-row" data-key="effort">
         <button data-value="light">Light</button>
         <button class="active" data-value="moderate">Challenging</button>
@@ -45,8 +46,22 @@
       </div>
     </div>
 
-    <button id="generate" class="big-action">
-      Build session
+    <div class="control-card">
+      <h3>Conditioning</h3>
+      <div class="option-row" data-key="conditioning">
+        <button class="active" data-value="easy">Easy aerobic</button>
+        <button data-value="structured">Structured</button>
+        <button data-value="hard">Hard finisher</button>
+      </div>
+
+      <div class="option-row subtle" data-key="placement">
+        <button data-value="before">Before lifting</button>
+        <button class="active" data-value="after">After lifting</button>
+      </div>
+    </div>
+
+    <button id="generate" class="big-action primary">
+      Build my session
     </button>
 
     <button id="start" class="big-action secondary" disabled>
@@ -55,17 +70,19 @@
 
   </section>
 
+  <!-- PREVIEW -->
   <section class="preview">
     <h2>Session flow</h2>
-    <div id="preview"></div>
+    <div id="preview" class="flow-preview"></div>
   </section>
 </main>
 
+<!-- WORKOUT MODE -->
 <section id="workout" class="workout hidden">
   <div id="card"></div>
 </section>
 
-<!-- ✅ MUST BE EXACT -->
+<!-- ✅ Correct wiring -->
 <script src="app.js"></script>
 </body>
 </html>
