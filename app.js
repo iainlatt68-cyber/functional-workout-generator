@@ -21,11 +21,11 @@ document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll(".button-row").forEach(row => {
     const group = row.dataset.group;
     row.querySelectorAll("button").forEach(btn => {
-      btn.onclick = () => {
+      btn.addEventListener("click", () => {
         row.querySelectorAll("button").forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
         state[group] = group === "time" ? Number(btn.dataset.value) : btn.dataset.value;
-      };
+      });
     });
   });
 
@@ -50,10 +50,8 @@ document.addEventListener("DOMContentLoaded", () => {
   function renderStep() {
     if (stepIndex >= workout.length) {
       workoutCard.innerHTML = `
-        <div class="session-complete">
-          <h1>SESSION COMPLETE</h1>
-          <p>Nice work. Recover well.</p>
-        </div>`;
+        <h1>SESSION COMPLETE</h1>
+        <p>Nice work. Recover well.</p>`;
       return;
     }
 
@@ -63,6 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
       <p>${step.detail}</p>
       <button class="big-action" id="next">Continue</button>
     `;
+
     document.getElementById("next").onclick = () => {
       stepIndex++;
       renderStep();
@@ -70,47 +69,26 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function buildWorkout() {
-    const kitMap = {
-      fullgym: "barbell, machines and cardio equipment",
-      dumbbells: "dumbbells only",
-      kettlebell: "kettlebells only",
-      sandbag: "sandbags and bodyweight"
+    const kit = {
+      fullgym: "barbell and machines",
+      dumbbells: "dumbbells",
+      kettlebell: "kettlebells",
+      sandbag: "sandbags"
     };
 
     return [
-      {
-        label: "Warm‑up",
-        detail: "Pulse raise, mobility and prep work"
-      },
-      {
-        label: "Strength",
-        detail: `Balanced squat, hinge, push and pull using ${kitMap[state.equipment]}`
-      },
-      {
-        label: "Zone 2 Conditioning",
-        detail: "20–30 mins at conversational pace"
-      }
+      { label: "Warm‑up", detail: "Mobility and pulse raise" },
+      { label: "Strength", detail: `Squat, hinge, push and pull using ${kit[state.equipment]}` },
+      { label: "Zone 2 Conditioning", detail: "20–30 mins conversational pace" }
     ];
   }
 
   /* ONBOARDING */
   const onboardingSteps = [
-    {
-      title: "How workouts are built",
-      text: "Prepare → Train → Build engine → Recover.\n\nThis keeps quality high and fatigue controlled."
-    },
-    {
-      title: "Strength comes first",
-      text: "Strength work is done while you’re fresh so technique stays sharp."
-    },
-    {
-      title: "Conditioning has a purpose",
-      text: "Zone 2 builds your aerobic base without burning you out."
-    },
-    {
-      title: "Progress over time",
-      text: "You should finish sessions feeling worked — not wrecked."
-    }
+    { title: "How workouts are built", text: "Prepare → Train → Build engine → Recover." },
+    { title: "Strength first", text: "Strength is trained while fresh for quality." },
+    { title: "Conditioning", text: "Zone 2 builds aerobic base safely." },
+    { title: "Progress", text: "Finish worked, not wrecked." }
   ];
 
   function showOnboarding() {
@@ -119,16 +97,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const modal = document.getElementById("onboarding");
     const title = document.getElementById("onboard-title");
     const text = document.getElementById("onboard-text");
-    const nextBtn = document.getElementById("onboard-next");
-    const skipBtn = document.getElementById("onboard-skip");
+    const next = document.getElementById("onboard-next");
+    const skip = document.getElementById("onboard-skip");
 
     let index = 0;
 
     function render() {
       title.textContent = onboardingSteps[index].title;
       text.textContent = onboardingSteps[index].text;
-      nextBtn.textContent =
-        index === onboardingSteps.length - 1 ? "Start Training" : "Next";
+      next.textContent = index === onboardingSteps.length - 1 ? "Start Training" : "Next";
     }
 
     function close() {
@@ -136,16 +113,12 @@ document.addEventListener("DOMContentLoaded", () => {
       localStorage.setItem("onboardingSeen", "true");
     }
 
-    nextBtn.onclick = () => {
-      if (index === onboardingSteps.length - 1) {
-        close();
-      } else {
-        index++;
-        render();
-      }
+    next.onclick = () => {
+      if (index === onboardingSteps.length - 1) close();
+      else { index++; render(); }
     };
 
-    skipBtn.onclick = close;
+    skip.onclick = close;
 
     modal.classList.remove("hidden");
     render();
