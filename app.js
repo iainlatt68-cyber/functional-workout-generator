@@ -1,19 +1,24 @@
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("✅ app.js loaded");
+  console.log("✅ app.js loaded – click-safe mode");
 
-  /* -------------------------
-     GLOBAL BUTTON SAFETY
-     Prevent all default submits
-  ------------------------- */
-  document.addEventListener("click", (e) => {
-    if (e.target.tagName === "BUTTON") {
-      e.preventDefault();
-    }
+  /* =====================================================
+     HARD SAFETY: MAKE BUTTONS CLICKABLE NO MATTER WHAT
+  ===================================================== */
+
+  // 1. Force all buttons to be non-submit buttons
+  document.querySelectorAll("button").forEach(btn => {
+    btn.type = "button";
   });
 
-  /* -------------------------
+  // 2. Ensure hidden workout overlay never intercepts clicks
+  const workoutScreen = document.getElementById("workoutScreen");
+  if (workoutScreen) {
+    workoutScreen.style.pointerEvents = "none";
+  }
+
+  /* =====================================================
      STATE
-  ------------------------- */
+  ===================================================== */
   const state = {
     goal: "hypertrophy",
     difficulty: "intermediate",
@@ -25,39 +30,42 @@ document.addEventListener("DOMContentLoaded", () => {
   let workout = [];
   let stepIndex = 0;
 
-  /* -------------------------
+  /* =====================================================
      DOM
-  ------------------------- */
+  ===================================================== */
   const preview = document.getElementById("preview");
   const generateBtn = document.getElementById("generate");
   const startBtn = document.getElementById("start");
-  const workoutScreen = document.getElementById("workoutScreen");
   const workoutCard = document.getElementById("workoutCard");
   const exitBtn = document.getElementById("exit");
   const feedbackBox = document.getElementById("feedback");
 
-  /* -------------------------
-     BUTTON GROUP HANDLING
-  ------------------------- */
+  /* =====================================================
+     BUTTON GROUP HANDLING (GOAL / TIME / MODE ETC.)
+  ===================================================== */
   document.querySelectorAll(".button-row").forEach(row => {
     const group = row.dataset.group;
 
     row.querySelectorAll("button").forEach(btn => {
       btn.addEventListener("click", () => {
-        row.querySelectorAll("button").forEach(b => b.classList.remove("active"));
+        console.log(`✅ ${group} button clicked`, btn.dataset.value);
+
+        row.querySelectorAll("button").forEach(b =>
+          b.classList.remove("active")
+        );
         btn.classList.add("active");
 
         const value = btn.dataset.value;
         state[group] = group === "time" ? Number(value) : value;
 
-        console.log(`✅ ${group} set to`, state[group]);
+        console.log("STATE NOW:", { ...state });
       });
     });
   });
 
-  /* -------------------------
+  /* =====================================================
      GENERATE WORKOUT
-  ------------------------- */
+  ===================================================== */
   generateBtn.addEventListener("click", () => {
     console.log("✅ Generate clicked");
 
@@ -73,30 +81,35 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log("✅ Workout generated:", workout);
   });
 
-  /* -------------------------
+  /* =====================================================
      START WORKOUT
-  ------------------------- */
+  ===================================================== */
   startBtn.addEventListener("click", () => {
     console.log("✅ Start workout");
 
     workoutScreen.classList.remove("hidden");
+    workoutScreen.style.pointerEvents = "auto";
     feedbackBox.classList.add("hidden");
+
     stepIndex = 0;
     renderStep();
   });
 
-  /* -------------------------
-     EXIT
-  ------------------------- */
+  /* =====================================================
+     EXIT WORKOUT
+  ===================================================== */
   exitBtn.addEventListener("click", () => {
+    console.log("✅ Exit workout");
+
     workoutScreen.classList.add("hidden");
+    workoutScreen.style.pointerEvents = "none";
     workoutCard.innerHTML = "";
     feedbackBox.classList.add("hidden");
   });
 
-  /* -------------------------
+  /* =====================================================
      STEP RENDERING
-  ------------------------- */
+  ===================================================== */
   function renderStep() {
     if (stepIndex >= workout.length) {
       workoutCard.innerHTML = `<h2>Session complete</h2>`;
@@ -113,14 +126,15 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
 
     document.getElementById("nextStepBtn").addEventListener("click", () => {
+      console.log("✅ Next step");
       stepIndex++;
       renderStep();
     });
   }
 
-  /* -------------------------
+  /* =====================================================
      WORKOUT LOGIC
-  ------------------------- */
+  ===================================================== */
   function buildWorkout() {
     const out = [];
 
