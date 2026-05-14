@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Functional Workout Generator</title>
-  <link rel="stylesheet" href="./style.css">
+  ./style.css
 </head>
 <body>
 
@@ -16,7 +16,6 @@
 
   <section class="controls">
 
-    <!-- Goal -->
     <div class="control-group">
       <div class="label">Goal</div>
       <div class="button-row" data-group="goal">
@@ -28,7 +27,6 @@
       </div>
     </div>
 
-    <!-- Difficulty -->
     <div class="control-group">
       <div class="label">Difficulty</div>
       <div class="button-row" data-group="difficulty">
@@ -39,20 +37,18 @@
       </div>
     </div>
 
-    <!-- Equipment -->
     <div class="control-group">
       <div class="label">Equipment</div>
       <div class="button-row" data-group="equipment">
-        <button data-value="fullgym" class="active">Full Gym</button>
+        <button data-value="fullgym" class="active">Full gym</button>
         <button data-value="dumbbells">Dumbbells</button>
         <button data-value="kettlebell">Kettlebell</button>
         <button data-value="sandbag">Sandbag</button>
       </div>
     </div>
 
-    <!-- Time -->
     <div class="control-group">
-      <div class="label">Time</div>
+      <div class="label">Time (mins)</div>
       <div class="button-row" data-group="time">
         <button data-value="20">20</button>
         <button data-value="30" class="active">30</button>
@@ -61,7 +57,6 @@
       </div>
     </div>
 
-    <!-- Conditioning mode (only used when goal=conditioning) -->
     <div class="control-group">
       <div class="label">Conditioning Mode</div>
       <div class="button-row" data-group="condMode">
@@ -75,9 +70,8 @@
 
     <div class="actions">
       <button id="generate" class="btn primary">Generate</button>
-      <button id="start" class="btn" disabled>Start</button>
+      <button id="start" class="btn" disabled>Start Workout</button>
     </div>
-
   </section>
 
   <section class="preview">
@@ -86,11 +80,9 @@
   </section>
 </main>
 
-<!-- Workout screen -->
 <section id="workoutScreen" class="workout hidden">
   <div id="workoutCard"></div>
 
-  <!-- Post-workout feedback -->
   <div id="feedback" class="feedback hidden">
     <p>How did that feel?</p>
     <button data-feedback="easy">Too easy</button>
@@ -101,6 +93,6 @@
   <button id="exit" class="btn ghost">Exit</button>
 </section>
 
-<script src="./app.js"></script>
+./app.jsscript>
 </body>
 </html>
