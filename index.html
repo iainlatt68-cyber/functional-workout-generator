@@ -8,15 +8,15 @@
 </head>
 <body>
 
-<main class="app" id="app">
+<main class="app">
   <header class="header">
     <h1>Workout Generator</h1>
-    <p class="subtitle">Train with intent • Move with purpose</p>
+    <p class="subtitle">Train with intent • Finish strong</p>
   </header>
 
-  <section class="controls" id="controls">
+  <section class="controls">
     <div class="control-group">
-      <div class="label">Training focus</div>
+      <div class="label">Goal</div>
       <div class="button-row" data-group="goal">
         <button data-value="strength">Strength</button>
         <button data-value="hypertrophy" class="active">Hypertrophy</button>
@@ -41,6 +41,14 @@
       </div>
     </div>
 
+    <div class="control-group">
+      <div class="label">Cardio timing</div>
+      <div class="button-row" data-group="cardioPlacement">
+        <button data-value="start">Start</button>
+        <button data-value="end" class="active">End</button>
+      </div>
+    </div>
+
     <div class="actions">
       <button id="generate" class="btn primary">Build my session</button>
       <button id="start" class="big-action" disabled>Start training</button>
@@ -48,12 +56,11 @@
   </section>
 
   <section class="preview">
-    <h2>Today’s flow</h2>
+    <h2>Today’s session flow</h2>
     <div id="preview" class="flow-preview"></div>
   </section>
 </main>
 
-<!-- WORKOUT MODE -->
 <div id="workoutRoot" class="workout hidden">
   <div id="workoutCard"></div>
 </div>
