@@ -17,13 +17,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const workoutCard = document.getElementById("workoutCard");
   const exitBtn = document.getElementById("exit");
 
-  /* ---------- OPTIONAL HAPTICS ---------- */
-  function haptic(type = "light") {
-    if (!("vibrate" in navigator)) return;
-    const map = { light: 10, medium: 25 };
-    navigator.vibrate(map[type] || 10);
-  }
-
   document.querySelectorAll(".button-row").forEach(row => {
     const group = row.dataset.group;
     row.querySelectorAll("button").forEach(btn => {
@@ -36,17 +29,44 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   const EXERCISES = {
-    fullgym: ["Back Squat", "Deadlift", "Bench Press", "Row"],
-    dumbbells: ["DB Goblet Squat", "DB RDL", "DB Press", "DB Row"],
-    kettlebell: ["KB Goblet Squat", "KB Swing", "KB Press", "KB Row"],
-    sandbag: ["Sandbag Squat", "Sandbag Deadlift", "Sandbag Press", "Sandbag Row"]
+    fullgym: {
+      squat: ["Back Squat","Front Squat","Goblet Squat"],
+      hinge: ["Deadlift","RDL"],
+      push: ["Bench Press","Overhead Press","Push‑ups"],
+      pull: ["Row","Pull‑ups","Lat Pulldown"]
+    },
+    dumbbells: {
+      squat: ["DB Goblet Squat"],
+      hinge: ["DB RDL"],
+      push: ["DB Press"],
+      pull: ["DB Row"]
+    },
+    kettlebell: {
+      squat: ["KB Goblet Squat"],
+      hinge: ["KB Swing"],
+      push: ["KB Press"],
+      pull: ["KB Row"]
+    },
+    sandbag: {
+      squat: ["Sandbag Squat"],
+      hinge: ["Sandbag Deadlift"],
+      push: ["Sandbag Push Press"],
+      pull: ["Sandbag Row"]
+    }
   };
 
-  function loadProgression() {
+  const COACHING = {
+    strength: ["Quality reps over load","Full recovery between sets"],
+    hypertrophy: ["Chase tension","Stop 0–2 reps before breakdown"],
+    cardio: ["Conversational pace","Supports recovery"],
+    conditioning: ["Repeatable pace","Finish strong"]
+  };
+
+  function loadProg() {
     return JSON.parse(localStorage.getItem("progression")) || { rounds: 3 };
   }
 
-  function saveProgression(p) {
+  function saveProg(p) {
     localStorage.setItem("progression", JSON.stringify(p));
   }
 
@@ -69,39 +89,32 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   function renderStep() {
-    workoutCard.className = "workout-card";
-    workoutCard.classList.add(
-      state.goal === "conditioning" ? "mode-conditioning" : "mode-strength"
-    );
+    workoutCard.className = "workout-card " + (state.goal === "conditioning" ? "mode-conditioning" : "");
 
     if (stepIndex >= workout.length) {
       workoutCard.innerHTML = `
         <div class="session-complete">
           <h1>SESSION COMPLETE</h1>
-          <p>Nice work. Breathe. Recover.</p>
+          <p>Nice work. Recover well.</p>
         </div>
       `;
-      haptic("medium");
       return;
     }
 
     const step = workout[stepIndex];
-    const totalRounds = workout.filter(s => s.type === "round").length;
+    const rounds = workout.filter(s => s.type === "round").length;
     const currentRound = Math.ceil((stepIndex + 1) / 1);
 
     if (step.type === "round") {
-      const exercise = step.exercises[exerciseIndex];
+      const ex = step.exercises[exerciseIndex];
       workoutCard.innerHTML = `
-        <div class="round-indicator">ROUND ${currentRound} / ${totalRounds}</div>
-
-        <div class="current-exercise">${exercise}</div>
-
+        <div class="round-indicator">ROUND ${currentRound} / ${rounds}</div>
+        <div class="current-exercise">${ex}</div>
         <p>${step.prescription}</p>
-
-        <button class="big-action" id="complete">Done</button>
+        <ul>${step.cues.map(c => `<li>${c}</li>`).join("")}</ul>
+        <button class="big-action" id="done">Done</button>
       `;
-      document.getElementById("complete").onclick = () => {
-        haptic("light");
+      document.getElementById("done").onclick = () => {
         exerciseIndex++;
         if (exerciseIndex >= step.exercises.length) {
           exerciseIndex = 0;
@@ -115,6 +128,7 @@ document.addEventListener("DOMContentLoaded", () => {
     workoutCard.innerHTML = `
       <h2>${step.title}</h2>
       <p>${step.detail}</p>
+      ${step.cues ? `<ul>${step.cues.map(c => `<li>${c}</li>`).join("")}</ul>` : ""}
       <button class="big-action" id="next">Continue</button>
     `;
     document.getElementById("next").onclick = () => {
@@ -123,42 +137,61 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   }
 
-  function handleFeedback(feedback) {
-    const p = loadProgression();
-    if (feedback === "easy") p.rounds++;
-    if (feedback === "hard") p.rounds = Math.max(2, p.rounds - 1);
-    saveProgression(p);
-    workoutScreen.classList.add("hidden");
-  }
-
   function buildWorkout() {
     const out = [];
     const pool = EXERCISES[state.equipment];
-    const prog = loadProgression();
+    const prog = loadProg();
+    const patterns = ["squat","hinge","push","pull"];
 
-    out.push({ label: "Warm‑up", title: "Warm‑up", detail: "Dynamic mobility" });
+    out.push({
+      label: "Warm‑up",
+      title: "Warm‑up",
+      detail: `
+• 2–3 mins pulse raise
+• Shoulder & hip mobility
+• Cat–cow
+• World’s greatest stretch
+• 90–90 hips
+• Ankle rocks
+• Ramp‑up sets of first lift
+`.trim()
+    });
 
     if (state.goal !== "conditioning") {
       for (let r = 1; r <= prog.rounds; r++) {
         out.push({
           label: `Round ${r}`,
           type: "round",
-          exercises: pool,
+          exercises: patterns.map(p =>
+            pool[p][Math.floor(Math.random() * pool[p].length)]
+          ),
           prescription:
             state.goal === "strength"
               ? "3–5 reps each • RPE 7–9"
-              : "8–12 reps each • RPE 7–8"
+              : "8–12 reps each • RPE 7–8",
+          cues: COACHING[state.goal]
         });
       }
+
+      const cardioMins =
+        state.time <= 30 ? "8–12 mins" :
+        state.time <= 45 ? "10–15 mins" :
+        "12–20 mins";
 
       out.push({
         label: "Cardio",
         title: "Cardio Finish",
-        detail: "10–15 minutes • RPE 5–7 • conversational"
+        detail: `${cardioMins} • RPE 5–7 • conversational`,
+        cues: COACHING.cardio
       });
     }
 
-    out.push({ label: "Cool‑down", title: "Cool‑down", detail: "Walk + stretch" });
+    out.push({
+      label: "Cool‑down",
+      title: "Cool‑down",
+      detail: "Easy walk + breathing"
+    });
+
     return out;
   }
 });
