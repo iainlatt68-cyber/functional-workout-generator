@@ -126,12 +126,20 @@ document.addEventListener("DOMContentLoaded", () => {
     if (step.type === "round") {
       const exercise = step.exercises[exerciseIndex];
       workoutCard.innerHTML = `
-        <h2>${step.title}</h2>
-        <p><strong>${exercise}</strong></p>
-        <p>${step.prescription}</p>
-        <ul>${step.cues.map(c => `<li>${c}</li>`).join("")}</ul>
-        <button id="complete">Complete</button>
-      `;
+  <div class="workout-card">
+    <h2>${step.title}</h2>
+
+    <div class="current-exercise">
+      ${exercise}
+    </div>
+
+    <p>${step.prescription}</p>
+
+    <button id="complete" class="big-action">
+      Complete Exercise
+    </button>
+  </div>
+`;
       document.getElementById("complete").onclick = () => {
         exerciseIndex++;
         if (exerciseIndex >= step.exercises.length) {
@@ -148,7 +156,7 @@ document.addEventListener("DOMContentLoaded", () => {
       <h2>${step.title}</h2>
       <p>${step.detail}</p>
       ${step.cues ? `<ul>${step.cues.map(c => `<li>${c}</li>`).join("")}</ul>` : ""}
-      <button id="next">Next</button>
+      <button id="next" class="big-action">Continue</button>
     `;
     document.getElementById("next").onclick = () => {
       stepIndex++;
