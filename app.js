@@ -3,8 +3,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const state = {
     goal: "hypertrophy",
     equipment: "fullgym",
-    time: 30,
-    cardioPlacement: "end"
+    difficulty: "moderate",
+    rounds: 3,
+    condMode: "zone2"
   };
 
   let workout = [];
@@ -21,22 +22,57 @@ document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll(".button-row").forEach(row => {
     const group = row.dataset.group;
     row.querySelectorAll("button").forEach(btn => {
-      btn.addEventListener("click", () => {
+      btn.onclick = () => {
         row.querySelectorAll("button").forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
-        state[group] = group === "time" ? Number(btn.dataset.value) : btn.dataset.value;
-      });
+        state[group] = group === "rounds"
+          ? Number(btn.dataset.value)
+          : btn.dataset.value;
+      };
     });
   });
 
-  /* GENERATE */
+  /* EXERCISE POOLS */
+  const EXERCISES = {
+    fullgym: {
+      squat: ["Back Squat", "Front Squat"],
+      hinge: ["Deadlift", "Romanian Deadlift"],
+      push: ["Bench Press", "Overhead Press"],
+      pull: ["Barbell Row", "Pull-ups"]
+    },
+    dumbbells: {
+      squat: ["Goblet Squat"],
+      hinge: ["Dumbbell Romanian Deadlift"],
+      push: ["Dumbbell Press"],
+      pull: ["Dumbbell Row"]
+    },
+    kettlebell: {
+      squat: ["Kettlebell Goblet Squat"],
+      hinge: ["Kettlebell Swing"],
+      push: ["Kettlebell Push Press"],
+      pull: ["Kettlebell Row"]
+    },
+    sandbag: {
+      squat: ["Sandbag Squat"],
+      hinge: ["Sandbag Deadlift"],
+      push: ["Sandbag Push Press"],
+      pull: ["Sandbag Row"]
+    }
+  };
+
+  const ZONE2 = [
+    "Bike – steady conversational pace",
+    "Row – 18–22 spm, relaxed",
+    "Treadmill – incline walk",
+    "Cross‑trainer – smooth continuous pace"
+  ];
+
   generateBtn.onclick = () => {
     workout = buildWorkout();
     preview.innerHTML = workout.map(w => `<div>${w.label}</div>`).join("");
     startBtn.disabled = false;
   };
 
-  /* START */
   startBtn.onclick = () => {
     workoutScreen.classList.remove("hidden");
     stepIndex = 0;
@@ -59,9 +95,8 @@ document.addEventListener("DOMContentLoaded", () => {
     workoutCard.innerHTML = `
       <h2>${step.label}</h2>
       <p>${step.detail}</p>
-      <button class="big-action" id="next">Continue</button>
+      <button class="big-action" id="next">Next</button>
     `;
-
     document.getElementById("next").onclick = () => {
       stepIndex++;
       renderStep();
@@ -69,26 +104,44 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function buildWorkout() {
-    const kit = {
-      fullgym: "barbell and machines",
-      dumbbells: "dumbbells",
-      kettlebell: "kettlebells",
-      sandbag: "sandbags"
-    };
+    const pool = EXERCISES[state.equipment];
+    const patterns = ["squat","hinge","push","pull"];
 
-    return [
-      { label: "Warm‑up", detail: "Mobility and pulse raise" },
-      { label: "Strength", detail: `Squat, hinge, push and pull using ${kit[state.equipment]}` },
-      { label: "Zone 2 Conditioning", detail: "20–30 mins conversational pace" }
+    const strengthExercises = patterns.map(p =>
+      pool[p][Math.floor(Math.random() * pool[p].length)]
+    );
+
+    const out = [
+      { label: "Warm‑up", detail: "Pulse raise and mobility" }
     ];
+
+    for (let r = 1; r <= state.rounds; r++) {
+      out.push({
+        label: `Round ${r}`,
+        detail: strengthExercises.join(" • ")
+      });
+    }
+
+    if (state.condMode === "zone2") {
+      out.push({
+        label: "Zone 2 Conditioning",
+        detail: ZONE2[Math.floor(Math.random() * ZONE2.length)]
+      });
+    } else {
+      out.push({
+        label: state.condMode.toUpperCase(),
+        detail: "Conditioning block"
+      });
+    }
+
+    return out;
   }
 
-  /* ONBOARDING */
+  /* ONBOARDING – SAFE */
   const onboardingSteps = [
     { title: "How workouts are built", text: "Prepare → Train → Build engine → Recover." },
-    { title: "Strength first", text: "Strength is trained while fresh for quality." },
-    { title: "Conditioning", text: "Zone 2 builds aerobic base safely." },
-    { title: "Progress", text: "Finish worked, not wrecked." }
+    { title: "Strength first", text: "Train strength while fresh for quality." },
+    { title: "Conditioning", text: "Conditioning supports fitness without burnout." }
   ];
 
   function showOnboarding() {
