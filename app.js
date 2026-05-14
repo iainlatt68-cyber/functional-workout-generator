@@ -1,5 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
 
+  /* =========================
+     STATE
+  ========================= */
   const state = {
     goal: "hypertrophy",
     time: 30,
@@ -16,7 +19,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const workoutCard = document.getElementById("workoutCard");
   const exitBtn = document.getElementById("exit");
 
-  /* Button groups */
+  /* =========================
+     BUTTON GROUPS
+  ========================= */
   document.querySelectorAll(".button-row").forEach(row => {
     const group = row.dataset.group;
     row.querySelectorAll("button").forEach(btn => {
@@ -28,31 +33,28 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  /* Generate */
+  /* =========================
+     GENERATE / START
+  ========================= */
   generateBtn.onclick = () => {
     workout = buildWorkout();
     preview.innerHTML = workout.map(w => `<div>${w.label}</div>`).join("");
-
-    const context = getWeeklyContext();
-    if (context) {
-      preview.innerHTML += `<div style="opacity:.7;font-size:13px">${context}</div>`;
-    }
-
     startBtn.disabled = false;
   };
 
-  /* Start */
   startBtn.onclick = () => {
     workoutScreen.classList.remove("hidden");
     stepIndex = 0;
     renderStep();
-    saveWeeklyHistory();
   };
 
   exitBtn.onclick = () => {
     workoutScreen.classList.add("hidden");
   };
 
+  /* =========================
+     RENDER
+  ========================= */
   function renderStep() {
     if (stepIndex >= workout.length) {
       workoutCard.innerHTML = `
@@ -115,25 +117,9 @@ document.addEventListener("DOMContentLoaded", () => {
     ];
   }
 
-  /* WEEKLY CONTEXT */
-  function saveWeeklyHistory() {
-    const history = JSON.parse(localStorage.getItem("weeklyHistory")) || [];
-    history.push({ date: new Date().toISOString() });
-    localStorage.setItem("weeklyHistory", JSON.stringify(history));
-  }
-
-  function getWeeklyContext() {
-    const history = JSON.parse(localStorage.getItem("weeklyHistory")) || [];
-    const weekAgo = new Date();
-    weekAgo.setDate(weekAgo.getDate() - 7);
-    const recent = history.filter(h => new Date(h.date) > weekAgo);
-    if (recent.length >= 2) {
-      return `This is your ${recent.length + 1}ᵗʰ session this week.`;
-    }
-    return "";
-  }
-
-  /* ONBOARDING (FIXED) */
+  /* =========================
+     ONBOARDING (FINAL, FIXED)
+  ========================= */
   const onboardingSteps = [
     {
       title: "How workouts are built",
