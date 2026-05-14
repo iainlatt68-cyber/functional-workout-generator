@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
+
   const state = {
     goal: "hypertrophy",
     equipment: "fullgym",
@@ -30,25 +31,25 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  /* ---------------- FUNCTIONAL POOLS ---------------- */
+  /* ---------------- FUNCTIONAL EXERCISES (FULL NAMES) ---------------- */
   const EXERCISES = {
     fullgym: {
-      squat: ["Back Squat", "Goblet Squat"],
-      hinge: ["Deadlift", "RDL"],
-      push: ["Push‑ups", "Bench Press"],
-      pull: ["Row", "Pull‑ups"]
+      squat: ["Back Squat", "Front Squat", "Goblet Squat"],
+      hinge: ["Deadlift", "Romanian Deadlift", "Hip Thrust"],
+      push: ["Bench Press", "Overhead Press", "Push‑ups"],
+      pull: ["Barbell Row", "Pull‑ups", "Lat Pulldown"]
     },
     dumbbells: {
-      squat: ["DB Goblet Squat"],
-      hinge: ["DB RDL"],
-      push: ["DB Push‑ups"],
-      pull: ["DB Row"]
+      squat: ["Dumbbell Goblet Squat"],
+      hinge: ["Dumbbell Romanian Deadlift"],
+      push: ["Dumbbell Bench Press", "Dumbbell Shoulder Press"],
+      pull: ["Dumbbell Row"]
     },
     kettlebell: {
-      squat: ["KB Goblet Squat"],
-      hinge: ["KB Swing"],
-      push: ["KB Push Press"],
-      pull: ["KB Row"]
+      squat: ["Kettlebell Goblet Squat"],
+      hinge: ["Kettlebell Swing", "Kettlebell Deadlift"],
+      push: ["Kettlebell Press"],
+      pull: ["Kettlebell Row"]
     },
     sandbag: {
       squat: ["Sandbag Squat"],
@@ -58,24 +59,40 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  const CARDIO = {
-    fullgym: ["Assault Bike", "Row Erg", "Sled Push / Drag", "Incline Walk"],
-    dumbbells: ["Farmer Carry March", "DB Step‑ups"],
-    kettlebell: ["KB Carry March", "KB Swing"],
-    sandbag: ["Sandbag Carry", "Sandbag March"]
-  };
+  /* ---------------- ZONE 2 CARDIO (REAL OPTIONS) ---------------- */
+  const ZONE2 = [
+    {
+      name: "Exercise Bike",
+      cue: "Steady cadence, nasal breathing if possible. You should be able to speak in full sentences."
+    },
+    {
+      name: "Rower",
+      cue: "Long, relaxed strokes. Rating ~18–22 spm. Breathing controlled."
+    },
+    {
+      name: "Crosstrainer",
+      cue: "Smooth continuous effort. No surging. Keep posture tall."
+    },
+    {
+      name: "Treadmill (Incline Walk)",
+      cue: "Incline 5–10%. Brisk walk, not a jog. Conversational pace."
+    }
+  ];
 
   const COACHING = {
-    conditioning: [
-      "Pace should be repeatable",
-      "Breathe early, don’t panic",
-      "Finish feeling worked, not wrecked"
+    strength: [
+      "Quality reps beat load",
+      "Full control on every rep"
+    ],
+    hypertrophy: [
+      "Chase tension, not fatigue",
+      "Stop 0–2 reps before form breaks"
+    ],
+    zone2: [
+      "This should feel almost too easy",
+      "You could repeat this tomorrow"
     ]
   };
-
-  function loadProg() {
-    return JSON.parse(localStorage.getItem("progression")) || { rounds: 3 };
-  }
 
   /* ---------------- GENERATE ---------------- */
   generateBtn.onclick = () => {
@@ -120,7 +137,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <ul class="warmup-list">
           ${step.items.map(i => `<li>${i}</li>`).join("")}
         </ul>
-        <button class="big-action" id="next">Begin</button>
+        <button class="big-action" id="next">Begin Session</button>
       `;
       workoutCard.querySelectorAll("li").forEach(li =>
         li.onclick = () => li.classList.toggle("done")
@@ -132,24 +149,53 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    /* Conditioning block with exercises */
-    if (step.type === "conditioning") {
+    /* Strength / Hypertrophy Round */
+    if (step.type === "round") {
       const ex = step.exercises[exerciseIndex];
+      const pattern = step.patterns[exerciseIndex];
 
       workoutCard.innerHTML = `
-        <h2>${step.title}</h2>
+        <div class="round-indicator">
+          ROUND ${step.roundNumber} / ${step.totalRounds}
+        </div>
+
+        <div class="pattern-wrapper">
+          <span class="pattern-tag pattern-${pattern}">${pattern}</span>
+        </div>
+
         <div class="current-exercise">${ex}</div>
-        <p>${step.detail}</p>
+
+        <p>${step.prescription}</p>
         <ul>${step.cues.map(c => `<li>${c}</li>`).join("")}</ul>
+
         <button class="big-action" id="done">Done</button>
       `;
 
       document.getElementById("done").onclick = () => {
         exerciseIndex++;
         if (exerciseIndex >= step.exercises.length) {
-          stepIndex++;
           exerciseIndex = 0;
+          stepIndex++;
         }
+        renderStep();
+      };
+      return;
+    }
+
+    /* Zone 2 Cardio */
+    if (step.type === "zone2") {
+      workoutCard.innerHTML = `
+        <h2>Zone 2 Conditioning</h2>
+        <div class="current-exercise">${step.activity}</div>
+        <p>${step.detail}</p>
+        <ul>
+          <li>${step.cue}</li>
+          ${COACHING.zone2.map(c => `<li>${c}</li>`).join("")}
+        </ul>
+        <button class="big-action" id="next">Finish</button>
+      `;
+      document.getElementById("next").onclick = () => {
+        stepIndex++;
         renderStep();
       };
       return;
@@ -171,16 +217,14 @@ document.addEventListener("DOMContentLoaded", () => {
   function buildWorkout() {
     const out = [];
     const pool = EXERCISES[state.equipment];
-    const cardioPool = CARDIO[state.equipment] || CARDIO.fullgym;
     const patterns = ["squat", "hinge", "push", "pull"];
-    const prog = loadProg();
 
     /* Warm‑up */
     out.push({
       label: "Warm‑up",
       type: "warmup",
       items: [
-        "2–3 mins pulse raise",
+        "2–3 mins easy pulse raise",
         "Shoulder & hip mobility",
         "Cat–cow",
         "World’s greatest stretch",
@@ -190,25 +234,41 @@ document.addEventListener("DOMContentLoaded", () => {
       ]
     });
 
-    /* Conditioning day */
-    if (state.goal === "conditioning") {
-      let exercises;
+    /* Strength / Hypertrophy */
+    if (state.goal !== "conditioning") {
+      const rounds = 3;
 
-      if (["zone2", "auto"].includes(state.condMode)) {
-        exercises = [cardioPool[Math.floor(Math.random() * cardioPool.length)]];
-      } else {
-        exercises = patterns
-          .slice(0, 2)
-          .map(p => pool[p][Math.floor(Math.random() * pool[p].length)]);
+      for (let r = 1; r <= rounds; r++) {
+        out.push({
+          label: `Round ${r}`,
+          type: "round",
+          roundNumber: r,
+          totalRounds: rounds,
+          patterns,
+          exercises: patterns.map(p =>
+            pool[p][Math.floor(Math.random() * pool[p].length)]
+          ),
+          prescription:
+            state.goal === "strength"
+              ? "3–5 reps each • RPE 7–9"
+              : "8–12 reps each • RPE 7–8",
+          cues: COACHING[state.goal]
+        });
       }
 
+      /* Zone 2 card */
+      const zone2 = ZONE2[Math.floor(Math.random() * ZONE2.length)];
+      const mins =
+        state.time <= 30 ? "15–20 minutes" :
+        state.time <= 45 ? "20–30 minutes" :
+        "30–45 minutes";
+
       out.push({
-        label: "Conditioning",
-        type: "conditioning",
-        title: state.condMode.toUpperCase(),
-        exercises,
-        detail: `${state.condMode.toUpperCase()} • ${state.time} minutes`,
-        cues: COACHING.conditioning
+        label: "Zone 2",
+        type: "zone2",
+        activity: zone2.name,
+        cue: zone2.cue,
+        detail: `${mins} • RPE 4–5 • full sentences`
       });
     }
 
@@ -216,10 +276,9 @@ document.addEventListener("DOMContentLoaded", () => {
     out.push({
       label: "Cool‑down",
       title: "Cool‑down",
-      detail: "Easy walk + breathing"
+      detail: "Easy walk and relaxed breathing"
     });
 
     return out;
   }
 });
-``
