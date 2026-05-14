@@ -1,62 +1,71 @@
-<section class="controls" id="controls">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Workout Generator</title>
 
-  <div class="control-card primary">
-    <h3>What’s the focus today?</h3>
-    <div class="option-row" data-key="goal">
-      <button class="active" data-value="strength">Get stronger</button>
-      <button data-value="muscle">Build muscle</button>
-      <button data-value="fitness">Improve fitness</button>
-    </div>
-  </div>
+  <!-- ✅ MUST BE EXACT -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
-  <div class="control-card">
-    <h3>Equipment available</h3>
-    <div class="option-row" data-key="equipment">
-      <button class="active" data-value="gym">Gym</button>
-      <button data-value="minimal">Minimal</button>
-    </div>
+<main class="app">
+  <header class="header">
+    <h1>Workout Generator</h1>
+    <p class="subtitle">Train with intent • Finish strong</p>
+  </header>
 
-    <div class="option-row subtle hidden" id="addons" data-key="addons">
-      <button data-value="db">Dumbbells</button>
-      <button data-value="kb">Kettlebell</button>
-      <button data-value="sb">Sandbag</button>
-    </div>
-  </div>
+  <section class="controls">
 
-  <div class="control-card">
-    <h3>How long have you got?</h3>
-    <div class="option-row" data-key="duration">
-      <button data-value="30">30 min</button>
-      <button class="active" data-value="45">45 min</button>
-      <button data-value="60">60 min</button>
-    </div>
-  </div>
-
-  <div class="control-card">
-    <h3>How should it feel?</h3>
-    <div class="option-row" data-key="effort">
-      <button data-value="light">Light</button>
-      <button class="active" data-value="moderate">Challenging</button>
-      <button data-value="hard">Push</button>
-    </div>
-  </div>
-
-  <div class="control-card">
-    <h3>Conditioning</h3>
-    <div class="option-row" data-key="conditioning">
-      <button class="active" data-value="easy">Easy aerobic</button>
-      <button data-value="structured">Structured</button>
-      <button data-value="hard">Hard finisher</button>
+    <div class="control-card">
+      <h3>Focus</h3>
+      <div class="option-row" data-key="goal">
+        <button class="active" data-value="strength">Get stronger</button>
+        <button data-value="muscle">Build muscle</button>
+        <button data-value="fitness">Improve fitness</button>
+      </div>
     </div>
 
-    <div class="option-row subtle" data-key="placement">
-      <button data-value="before">Before lifting</button>
-      <button class="active" data-value="after">After lifting</button>
+    <div class="control-card">
+      <h3>Session length</h3>
+      <div class="option-row" data-key="duration">
+        <button data-value="30">30 min</button>
+        <button class="active" data-value="45">45 min</button>
+        <button data-value="60">60 min</button>
+      </div>
     </div>
-  </div>
 
-  <button id="generate" class="big-action primary">
-    Build my session
-  </button>
+    <div class="control-card">
+      <h3>Effort today</h3>
+      <div class="option-row" data-key="effort">
+        <button data-value="light">Light</button>
+        <button class="active" data-value="moderate">Challenging</button>
+        <button data-value="hard">Push</button>
+      </div>
+    </div>
 
+    <button id="generate" class="big-action">
+      Build session
+    </button>
+
+    <button id="start" class="big-action secondary" disabled>
+      Start workout
+    </button>
+
+  </section>
+
+  <section class="preview">
+    <h2>Session flow</h2>
+    <div id="preview"></div>
+  </section>
+</main>
+
+<section id="workout" class="workout hidden">
+  <div id="card"></div>
 </section>
+
+<!-- ✅ MUST BE EXACT -->
+<script src="app.js"></script>
+</body>
+</html>
