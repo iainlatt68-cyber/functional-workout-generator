@@ -1,34 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Workout Generator</title>
 
-  <!-- ✅ DO NOT CHANGE THESE -->
+  <!-- ✅ Correct wiring -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <main class="app">
-  <h1>Workout Generator</h1>
+  <header class="header">
+    <h1>Workout Generator</h1>
+    <p class="subtitle">Train with intent • Finish strong</p>
+  </header>
 
   <section class="controls">
-    <button id="generate">Generate workout</button>
-    <button id="start" disabled>Start workout</button>
+    <button id="generate" class="btn primary">Generate session</button>
+    <button id="start" class="btn start" disabled>Start workout</button>
   </section>
 
-  <section>
+  <section class="preview">
     <h2>Session flow</h2>
-    <div id="preview"></div>
+    <div id="preview" class="flow"></div>
   </section>
 </main>
 
-<section id="workout" style="display:none;">
+<section id="workout" class="workout hidden">
   <div id="card"></div>
 </section>
 
-<!-- ✅ DO NOT CHANGE THIS -->
+<!-- ✅ Correct wiring -->
 <script src="app.js"></script>
 </body>
 </html>
