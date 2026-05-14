@@ -2,117 +2,76 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const state = {
     goal: "hypertrophy",
-    equipment: "fullgym",
     time: 30,
-    condMode: "zone2",
     cardioPlacement: "end"
   };
 
   let workout = [];
   let stepIndex = 0;
-  let exerciseIndex = 0;
 
   const preview = document.getElementById("preview");
   const generateBtn = document.getElementById("generate");
   const startBtn = document.getElementById("start");
+  const workoutScreen = document.getElementById("workoutScreen");
   const workoutCard = document.getElementById("workoutCard");
+  const exitBtn = document.getElementById("exit");
 
-  /* ---------------- BUTTON GROUPS (✅ FIXED) ---------------- */
+  /* Button groups */
   document.querySelectorAll(".button-row").forEach(row => {
     const group = row.dataset.group;
     row.querySelectorAll("button").forEach(btn => {
       btn.onclick = () => {
-        row.querySelectorAll("button").forEach(x =>
-          x.classList.remove("active")
-        );
+        row.querySelectorAll("button").forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
-        state[group] =
-          group === "time" ? Number(btn.dataset.value) : btn.dataset.value;
+        state[group] = group === "time" ? Number(btn.dataset.value) : btn.dataset.value;
       };
     });
   });
 
-  /* ---------------- FUNCTIONAL EXERCISES ---------------- */
-  const EXERCISES = {
-    fullgym: {
-      squat: ["Back Squat", "Front Squat", "Goblet Squat"],
-      hinge: ["Deadlift", "Romanian Deadlift"],
-      push: ["Bench Press", "Overhead Press", "Push-ups"],
-      pull: ["Barbell Row", "Pull-ups", "Lat Pulldown"]
-    }
-  };
-
-  /* ---------------- ZONE 2 OPTIONS ---------------- */
-  const ZONE2 = [
-    {
-      name: "Exercise Bike",
-      cue: "Steady cadence. Full sentences possible."
-    },
-    {
-      name: "Rower",
-      cue: "18–22 spm. Long relaxed strokes."
-    },
-    {
-      name: "Crosstrainer",
-      cue: "Smooth continuous pace. No surging."
-    },
-    {
-      name: "Treadmill Incline Walk",
-      cue: "5–10% incline. Brisk walk, not a jog."
-    }
-  ];
-
-  const COACHING = {
-    strength: [
-      "Quality reps over load",
-      "Rest fully between sets"
-    ],
-    hypertrophy: [
-      "Chase tension",
-      "Stop 0–2 reps before form breaks"
-    ],
-    zone2: [
-      "If breathing strains, slow down",
-      "This should feel sustainable"
-    ]
-  };
-
-  /* ---------------- GENERATE ---------------- */
+  /* Generate workout */
   generateBtn.onclick = () => {
     workout = buildWorkout();
     preview.innerHTML = workout.map(w => `<div>${w.label}</div>`).join("");
+
+    const context = getWeeklyContext();
+    if (context) {
+      preview.innerHTML += `<div style="opacity:.7;font-size:13px">${context}</div>`;
+    }
+
     startBtn.disabled = false;
   };
 
+  /* Start workout ✅ FIXED */
   startBtn.onclick = () => {
+    workoutScreen.classList.remove("hidden");
     stepIndex = 0;
-    exerciseIndex = 0;
     renderStep();
+    saveWeeklyHistory();
   };
 
-  /* ---------------- RENDER ---------------- */
+  exitBtn.onclick = () => {
+    workoutScreen.classList.add("hidden");
+  };
+
   function renderStep() {
     if (stepIndex >= workout.length) {
       workoutCard.innerHTML = `
         <div class="session-complete">
           <h1>SESSION COMPLETE</h1>
           <p>Nice work. Recover well.</p>
-        </div>
-      `;
+        </div>`;
       return;
     }
 
     const step = workout[stepIndex];
 
-    /* Warm-up */
     if (step.type === "warmup") {
       workoutCard.innerHTML = `
         <h2>Warm‑up</h2>
         <ul class="warmup-list">
           ${step.items.map(i => `<li>${i}</li>`).join("")}
         </ul>
-        <button class="big-action" id="next">Begin</button>
-      `;
+        <button class="big-action" id="next">Begin</button>`;
       workoutCard.querySelectorAll("li").forEach(li =>
         li.onclick = () => li.classList.toggle("done")
       );
@@ -123,56 +82,18 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    /* Strength / Hypertrophy Round */
-    if (step.type === "round") {
-      const exercise = step.exercises[exerciseIndex];
-      const pattern = step.patterns[exerciseIndex];
-
-      workoutCard.innerHTML = `
-        <span class="pattern-tag pattern-${pattern}">${pattern}</span>
-        <div class="current-exercise">${exercise}</div>
-        <p>${step.prescription}</p>
-        <ul>
-          ${(step.cues || []).map(c => `<li>${c}</li>`).join("")}
-        </ul>
-        <button class="big-action" id="done">Done</button>
-      `;
-
-      document.getElementById("done").onclick = () => {
-        exerciseIndex++;
-        if (exerciseIndex >= step.exercises.length) {
-          exerciseIndex = 0;
-          stepIndex++;
-        }
-        renderStep();
-      };
-      return;
-    }
-
-    /* Zone 2 */
-    if (step.type === "zone2") {
-      workoutCard.innerHTML = `
-        <h2>Zone 2 Conditioning</h2>
-        <div class="current-exercise">${step.activity}</div>
-        <p>${step.detail}</p>
-        <ul>
-          <li>${step.cue}</li>
-          ${COACHING.zone2.map(c => `<li>${c}</li>`).join("")}
-        </ul>
-        <button class="big-action" id="next">Finish</button>
-      `;
-      document.getElementById("next").onclick = () => {
-        stepIndex++;
-        renderStep();
-      };
-      return;
-    }
+    workoutCard.innerHTML = `
+      <h2>${step.label}</h2>
+      <p>${step.detail}</p>
+      <button class="big-action" id="next">Continue</button>`;
+    document.getElementById("next").onclick = () => {
+      stepIndex++;
+      renderStep();
+    };
   }
 
-  /* ---------------- BUILD WORKOUT ---------------- */
   function buildWorkout() {
     const out = [];
-    const patterns = ["squat", "hinge", "push", "pull"];
 
     out.push({
       label: "Warm‑up",
@@ -181,37 +102,79 @@ document.addEventListener("DOMContentLoaded", () => {
         "Pulse raise 2–3 mins",
         "Hip & shoulder mobility",
         "Cat–cow",
-        "World’s greatest stretch",
-        "Ramp‑up sets of first lift"
+        "World’s greatest stretch"
       ]
     });
 
-    const rounds = 3;
-    for (let r = 1; r <= rounds; r++) {
-      out.push({
-        label: `Round ${r}`,
-        type: "round",
-        patterns,
-        exercises: patterns.map(p =>
-          EXERCISES.fullgym[p][0]
-        ),
-        prescription:
-          state.goal === "strength"
-            ? "3–5 reps each • RPE 7–9"
-            : "8–12 reps each • RPE 7–8",
-        cues: COACHING[state.goal]
-      });
-    }
-
-    const z = ZONE2[Math.floor(Math.random() * ZONE2.length)];
     out.push({
-      label: "Zone 2",
-      type: "zone2",
-      activity: z.name,
-      detail: "20–30 minutes • RPE 4–5",
-      cue: z.cue
+      label: "Strength",
+      detail: "Balanced squat, hinge, push and pull work."
+    });
+
+    out.push({
+      label: "Zone 2 Conditioning",
+      detail: "20–30 mins • conversational pace"
     });
 
     return out;
   }
+
+  /* Onboarding */
+  const onboardingSteps = [
+    { title: "How workouts are built", text: "Prepare → Train → Build engine → Recover." },
+    { title: "Strength first", text: "Train strength while fresh to keep quality high." },
+    { title: "Conditioning has purpose", text: "Zone 2 builds aerobic base without burnout." },
+    { title: "Progress over time", text: "You should finish feeling worked, not wrecked." }
+  ];
+
+  let onboardIndex = 0;
+
+  function showOnboarding() {
+    if (localStorage.getItem("onboardingSeen")) return;
+
+    const modal = document.getElementById("onboarding");
+    const title = document.getElementById("onboard-title");
+    const text = document.getElementById("onboard-text");
+
+    modal.classList.remove("hidden");
+
+    document.getElementById("onboard-next").onclick = () => {
+      onboardIndex++;
+      if (onboardIndex >= onboardingSteps.length) {
+        modal.classList.add("hidden");
+        localStorage.setItem("onboardingSeen", "true");
+      } else {
+        title.textContent = onboardingSteps[onboardIndex].title;
+        text.textContent = onboardingSteps[onboardIndex].text;
+      }
+    };
+
+    document.getElementById("onboard-skip").onclick = () => {
+      modal.classList.add("hidden");
+      localStorage.setItem("onboardingSeen", "true");
+    };
+
+    title.textContent = onboardingSteps[0].title;
+    text.textContent = onboardingSteps[0].text;
+  }
+
+  function saveWeeklyHistory() {
+    const history = JSON.parse(localStorage.getItem("weeklyHistory")) || [];
+    history.push({ date: new Date().toISOString(), type: state.goal });
+    localStorage.setItem("weeklyHistory", JSON.stringify(history));
+  }
+
+  function getWeeklyContext() {
+    const history = JSON.parse(localStorage.getItem("weeklyHistory")) || [];
+    const weekAgo = new Date();
+    weekAgo.setDate(weekAgo.getDate() - 7);
+
+    const recent = history.filter(h => new Date(h.date) > weekAgo);
+    if (recent.length >= 2) {
+      return `This is your ${recent.length + 1}ᵗʰ session this week.`;
+    }
+    return "";
+  }
+
+  showOnboarding();
 });
