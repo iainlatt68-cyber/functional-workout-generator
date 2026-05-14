@@ -4,8 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Workout Generator</title>
-
-  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
 
@@ -17,6 +16,7 @@
 
   <section class="controls">
 
+    <!-- GOAL -->
     <div class="control-group">
       <div class="label">Goal</div>
       <div class="button-row" data-group="goal">
@@ -26,15 +26,29 @@
       </div>
     </div>
 
+    <!-- EQUIPMENT -->
+    <div class="control-group">
+      <div class="label">Equipment</div>
+      <div class="button-row" data-group="equipment">
+        <button type="button" data-value="fullgym" class="active">Full gym</button>
+        <button type="button" data-value="dumbbells">Dumbbells</button>
+        <button type="button" data-value="kettlebell">Kettlebell</button>
+        <button type="button" data-value="sandbag">Sandbag</button>
+      </div>
+    </div>
+
+    <!-- TIME -->
     <div class="control-group">
       <div class="label">Time (mins)</div>
       <div class="button-row" data-group="time">
         <button type="button" data-value="15">15</button>
         <button type="button" data-value="30" class="active">30</button>
         <button type="button" data-value="45">45</button>
+        <button type="button" data-value="60">60</button>
       </div>
     </div>
 
+    <!-- CONDITIONING MODE -->
     <div class="control-group">
       <div class="label">Conditioning Mode</div>
       <div class="button-row" data-group="condMode">
