@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   let steps = [];
-  let idx = 0;
+  let i = 0;
   let timer = null;
   let timeRemaining = 0;
   let emomMinute = 1;
@@ -71,9 +71,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   generateBtn.onclick = () => {
     steps = buildSteps();
-    preview.innerHTML = steps.map((s,i) => `
+    preview.innerHTML = steps.map((s,idx) => `
       <div class="preview-card">
-        <span class="preview-index">${i+1}</span>
+        <span class="preview-index">${idx+1}</span>
         <div>
           <strong>${s.type.toUpperCase()}</strong>
           <div class="preview-text">${s.exercise || s.cardio || ""}</div>
@@ -85,7 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   startBtn.onclick = () => {
     workoutScreen.classList.remove("hidden");
-    idx = 0;
+    i = 0;
     render();
   };
 
@@ -97,16 +97,17 @@ document.addEventListener("DOMContentLoaded", () => {
   function render() {
     clearInterval(timer);
 
-    if (idx >= steps.length) {
+    if (i >= steps.length) {
       showSummary();
       return;
     }
 
-    const s = steps[idx];
+    const s = steps[i];
 
     if (s.type === "strength") {
       workoutCard.innerHTML = `
         <div class="card">
+          <div class="round-indicator">Round ${s.round} of ${state.rounds}</div>
           <span class="badge ${s.pattern}">${s.pattern}</span>
           <h2>${s.exercise}</h2>
           <p>${s.prescription}</p>
@@ -115,16 +116,19 @@ document.addEventListener("DOMContentLoaded", () => {
           <label style="display:block;margin-top:14px;font-size:13px;">
             Weight used (kg)
             <input id="weightInput" type="number"
+              inputmode="decimal"
               style="width:100%;padding:14px;margin-top:6px;border-radius:14px;
                      border:none;background:#020617;color:#e5e7eb;
                      font-size:20px;text-align:center;" />
           </label>
 
+          <p class="coach-note">${getProgressionAdvice(s.pattern)}</p>
+
           <button class="big-action" id="saveNext">Save & Next</button>
         </div>`;
       document.getElementById("saveNext").onclick = () => {
         logExercise(s.exercise, Number(document.getElementById("weightInput").value)||0, s.reps);
-        idx++; render();
+        i++; render();
       };
       return;
     }
@@ -137,7 +141,7 @@ document.addEventListener("DOMContentLoaded", () => {
           <p class="coach-note">${s.coach}</p>
           <button class="big-action" id="next">Finish</button>
         </div>`;
-      document.getElementById("next").onclick = () => { idx++; render(); };
+      document.getElementById("next").onclick = () => { i++; render(); };
       return;
     }
 
@@ -159,7 +163,7 @@ document.addEventListener("DOMContentLoaded", () => {
       timeRemaining--;
       if (timeRemaining < 0) {
         emomMinute++; timeRemaining = 60;
-        if (emomMinute > s.minutes) { clearInterval(timer); idx++; render(); }
+        if (emomMinute > s.minutes) { clearInterval(timer); i++; render(); }
       }
     },1000);
   }
@@ -175,9 +179,9 @@ document.addEventListener("DOMContentLoaded", () => {
           <p class="coach-note">${s.coach}</p>
           <button class="big-action" id="finish">Finish</button>
         </div>`;
-      document.getElementById("finish").onclick = () => { clearInterval(timer); idx++; render(); };
+      document.getElementById("finish").onclick = () => { clearInterval(timer); i++; render(); };
       timeRemaining--;
-      if (timeRemaining < 0) { clearInterval(timer); idx++; render(); }
+      if (timeRemaining < 0) { clearInterval(timer); i++; render(); }
     },1000);
   }
 
@@ -186,21 +190,21 @@ document.addEventListener("DOMContentLoaded", () => {
     const pool = EXERCISES[state.equipment];
     const patterns = ["squat","hinge","push","pull"];
 
-    const strength = [];
-    for (let r=1;r<=state.rounds;r++) {
+    for (let r = 1; r <= state.rounds; r++) {
       patterns.forEach(p => {
         const ex = pool[p][Math.floor(Math.random()*pool[p].length)];
-        strength.push({
+        out.push({
           type:"strength",
+          round:r,
           pattern:p,
           exercise:ex,
           reps: state.goal==="strength"?5:10,
           prescription: state.goal==="strength"?"3–5 reps":"8–12 reps",
           coach:
-            p==="squat"?"Brace first, then sit between hips.":
-            p==="hinge"?"Push the floor away, keep lats tight.":
-            p==="push"?"Ribs down, smooth lockout.":
-            "Pull elbows to ribs."
+            p==="squat"?"Brace first, then sit smoothly between the hips.":
+            p==="hinge"?"Push the floor away, keep the bar close.":
+            p==="push"?"Ribs down, control the lockout.":
+            "Pull elbows to ribs, pause briefly."
         });
       });
     }
@@ -208,10 +212,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const cardio = CARDIO[Math.floor(Math.random()*CARDIO.length)];
     const conditioning = buildConditioning(cardio);
 
-    if (state.cardioPlacement==="start") out.push(conditioning,...strength);
-    else out.push(...strength,conditioning);
-
-    return out;
+    if (state.cardioPlacement==="start") return [conditioning, ...out];
+    return [...out, conditioning];
   }
 
   function buildConditioning(cardio) {
@@ -224,7 +226,6 @@ document.addEventListener("DOMContentLoaded", () => {
     return { type:"amrap", minutes:12, exercises:["10 KB Swings","10 Push‑ups","10 Air Squats"], coach:"Smooth pace, no redlining." };
   }
 
-  /* Logging & weekly load */
   function logExercise(name, weight, reps) {
     const logs = JSON.parse(localStorage.getItem("workoutLogs"))||[];
     let today = logs.find(l=>l.date===new Date().toISOString().slice(0,10));
@@ -255,13 +256,19 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function getRecommendation(load) {
-    if (load<5000) return "Good start. Build gradually.";
-    if (load<8000) return "✅ Sensible progression range.";
-    if (load<10000) return "⚠️ Monitor fatigue.";
+    if (load < 5000) return "Good start. Build gradually.";
+    if (load < 8000) return "✅ Sensible progression range.";
+    if (load < 10000) return "⚠️ Monitor fatigue closely.";
     return "🔴 Consider holding load steady next week.";
   }
 
-  /* Onboarding — expert panel */
+  function getProgressionAdvice(pattern) {
+    if (pattern==="squat" || pattern==="hinge")
+      return "If this felt strong and controlled, consider +2.5kg next time.";
+    return "Progress cautiously — small jumps go a long way.";
+  }
+
+  /* Onboarding */
   if (!localStorage.getItem("onboardingSeen")) {
     const modal=document.getElementById("onboarding");
     const steps=[
@@ -270,16 +277,16 @@ document.addEventListener("DOMContentLoaded", () => {
       ["Zone 2 matters","Build your aerobic base."],
       ["Repeatability","Finish worked, not wrecked."]
     ];
-    let i=0;
+    let x=0;
     modal.classList.remove("hidden");
     document.getElementById("onboard-next").onclick=()=>{
-      i++;
-      if(i>=steps.length){
+      x++;
+      if(x>=steps.length){
         modal.classList.add("hidden");
         localStorage.setItem("onboardingSeen","true");
       } else {
-        document.getElementById("onboard-title").textContent=steps[i][0];
-        document.getElementById("onboard-text").textContent=steps[i][1];
+        document.getElementById("onboard-title").textContent=steps[x][0];
+        document.getElementById("onboard-text").textContent=steps[x][1];
       }
     };
     document.getElementById("onboard-skip").onclick=
