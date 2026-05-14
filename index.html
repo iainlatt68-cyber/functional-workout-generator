@@ -1,76 +1,180 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Workout Generator</title>
-  <link rel="stylesheet" href="./style.css" />
-</head>
-<body>
+document.addEventListener("DOMContentLoaded", () => {
 
-<main class="app">
-  <header class="header">
-    <h1>Workout Generator</h1>
-    <p class="subtitle">Strength • Conditioning • Aerobic Base</p>
-  </header>
+  const state = {
+    goal: "hypertrophy",
+    time: 30,
+    cardioPlacement: "end"
+  };
 
-  <section class="controls">
+  let workout = [];
+  let stepIndex = 0;
 
-    <div class="control-group">
-      <div class="label">Goal</div>
-      <div class="button-row" data-group="goal">
-        <button data-value="strength">Strength</button>
-        <button data-value="hypertrophy" class="active">Hypertrophy</button>
-        <button data-value="conditioning">Conditioning</button>
-      </div>
-    </div>
+  const preview = document.getElementById("preview");
+  const generateBtn = document.getElementById("generate");
+  const startBtn = document.getElementById("start");
+  const workoutScreen = document.getElementById("workoutScreen");
+  const workoutCard = document.getElementById("workoutCard");
+  const exitBtn = document.getElementById("exit");
 
-    <div class="control-group">
-      <div class="label">Time (mins)</div>
-      <div class="button-row" data-group="time">
-        <button data-value="15">15</button>
-        <button data-value="30" class="active">30</button>
-        <button data-value="45">45</button>
-        <button data-value="60">60</button>
-      </div>
-    </div>
+  /* Button groups */
+  document.querySelectorAll(".button-row").forEach(row => {
+    const group = row.dataset.group;
+    row.querySelectorAll("button").forEach(btn => {
+      btn.onclick = () => {
+        row.querySelectorAll("button").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        state[group] = group === "time" ? Number(btn.dataset.value) : btn.dataset.value;
+      };
+    });
+  });
 
-    <div class="control-group">
-      <div class="label">Cardio Placement</div>
-      <div class="button-row" data-group="cardioPlacement">
-        <button data-value="end" class="active">End</button>
-        <button data-value="start">Start</button>
-      </div>
-    </div>
+  /* Generate workout */
+  generateBtn.onclick = () => {
+    workout = buildWorkout();
+    preview.innerHTML = workout.map(w => `<div>${w.label}</div>`).join("");
 
-    <div class="actions">
-      <button id="generate" class="btn primary">Generate Workout</button>
-      <button id="start" class="big-action" disabled>Start Workout</button>
-    </div>
+    const context = getWeeklyContext();
+    if (context) {
+      preview.innerHTML += `<div style="opacity:.7;font-size:13px">${context}</div>`;
+    }
 
-  </section>
+    startBtn.disabled = false;
+  };
 
-  <section class="preview">
-    <h2>Session Preview</h2>
-    <div id="preview"></div>
-  </section>
-</main>
+  /* Start workout ✅ FIXED */
+  startBtn.onclick = () => {
+    workoutScreen.classList.remove("hidden");
+    stepIndex = 0;
+    renderStep();
+    saveWeeklyHistory();
+  };
 
-<section id="workoutScreen" class="workout hidden">
-  <div id="workoutCard"></div>
-  <button id="exit" class="btn ghost">Exit</button>
-</section>
+  exitBtn.onclick = () => {
+    workoutScreen.classList.add("hidden");
+  };
 
-<!-- Onboarding -->
-<div id="onboarding" class="onboarding hidden">
-  <div class="onboarding-card">
-    <h2 id="onboard-title"></h2>
-    <p id="onboard-text"></p>
-    <button id="onboard-next" class="big-action">Next</button>
-    <button id="onboard-skip" class="btn ghost">Skip</button>
-  </div>
-</div>
+  function renderStep() {
+    if (stepIndex >= workout.length) {
+      workoutCard.innerHTML = `
+        <div class="session-complete">
+          <h1>SESSION COMPLETE</h1>
+          <p>Nice work. Recover well.</p>
+        </div>`;
+      return;
+    }
 
-<script src="./app.js"></script>
-</body>
-</html>
+    const step = workout[stepIndex];
+
+    if (step.type === "warmup") {
+      workoutCard.innerHTML = `
+        <h2>Warm‑up</h2>
+        <ul class="warmup-list">
+          ${step.items.map(i => `<li>${i}</li>`).join("")}
+        </ul>
+        <button class="big-action" id="next">Begin</button>`;
+      workoutCard.querySelectorAll("li").forEach(li =>
+        li.onclick = () => li.classList.toggle("done")
+      );
+      document.getElementById("next").onclick = () => {
+        stepIndex++;
+        renderStep();
+      };
+      return;
+    }
+
+    workoutCard.innerHTML = `
+      <h2>${step.label}</h2>
+      <p>${step.detail}</p>
+      <button class="big-action" id="next">Continue</button>`;
+    document.getElementById("next").onclick = () => {
+      stepIndex++;
+      renderStep();
+    };
+  }
+
+  function buildWorkout() {
+    const out = [];
+
+    out.push({
+      label: "Warm‑up",
+      type: "warmup",
+      items: [
+        "Pulse raise 2–3 mins",
+        "Hip & shoulder mobility",
+        "Cat–cow",
+        "World’s greatest stretch"
+      ]
+    });
+
+    out.push({
+      label: "Strength",
+      detail: "Balanced squat, hinge, push and pull work."
+    });
+
+    out.push({
+      label: "Zone 2 Conditioning",
+      detail: "20–30 mins • conversational pace"
+    });
+
+    return out;
+  }
+
+  /* Onboarding */
+  const onboardingSteps = [
+    { title: "How workouts are built", text: "Prepare → Train → Build engine → Recover." },
+    { title: "Strength first", text: "Train strength while fresh to keep quality high." },
+    { title: "Conditioning has purpose", text: "Zone 2 builds aerobic base without burnout." },
+    { title: "Progress over time", text: "You should finish feeling worked, not wrecked." }
+  ];
+
+  let onboardIndex = 0;
+
+  function showOnboarding() {
+    if (localStorage.getItem("onboardingSeen")) return;
+
+    const modal = document.getElementById("onboarding");
+    const title = document.getElementById("onboard-title");
+    const text = document.getElementById("onboard-text");
+
+    modal.classList.remove("hidden");
+
+    document.getElementById("onboard-next").onclick = () => {
+      onboardIndex++;
+      if (onboardIndex >= onboardingSteps.length) {
+        modal.classList.add("hidden");
+        localStorage.setItem("onboardingSeen", "true");
+      } else {
+        title.textContent = onboardingSteps[onboardIndex].title;
+        text.textContent = onboardingSteps[onboardIndex].text;
+      }
+    };
+
+    document.getElementById("onboard-skip").onclick = () => {
+      modal.classList.add("hidden");
+      localStorage.setItem("onboardingSeen", "true");
+    };
+
+    title.textContent = onboardingSteps[0].title;
+    text.textContent = onboardingSteps[0].text;
+  }
+
+  function saveWeeklyHistory() {
+    const history = JSON.parse(localStorage.getItem("weeklyHistory")) || [];
+    history.push({ date: new Date().toISOString(), type: state.goal });
+    localStorage.setItem("weeklyHistory", JSON.stringify(history));
+  }
+
+  function getWeeklyContext() {
+    const history = JSON.parse(localStorage.getItem("weeklyHistory")) || [];
+    const weekAgo = new Date();
+    weekAgo.setDate(weekAgo.getDate() - 7);
+
+    const recent = history.filter(h => new Date(h.date) > weekAgo);
+    if (recent.length >= 2) {
+      return `This is your ${recent.length + 1}ᵗʰ session this week.`;
+    }
+    return "";
+  }
+
+  showOnboarding();
+});
