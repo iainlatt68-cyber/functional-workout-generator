@@ -17,9 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const workoutCard = document.getElementById("workoutCard");
   const feedbackBox = document.getElementById("feedback");
 
-  /* ---------------------------
-     UI STATE HANDLING
-  --------------------------- */
+  /* ---------- UI STATE ---------- */
   document.querySelectorAll(".button-row").forEach(row => {
     const group = row.dataset.group;
     row.querySelectorAll("button").forEach(btn => {
@@ -31,9 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  /* ---------------------------
-     GENERATE
-  --------------------------- */
+  /* ---------- GENERATE ---------- */
   document.getElementById("generate").onclick = () => {
     workout = buildWorkout();
     preview.innerHTML = workout.map(w => `<div>${w.label}</div>`).join("");
@@ -51,9 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
     feedbackBox.classList.add("hidden");
   };
 
-  /* ---------------------------
-     STEP FLOW
-  --------------------------- */
+  /* ---------- FLOW ---------- */
   function showStep() {
     if (step >= workout.length) {
       workoutCard.innerHTML = `<h2>Session complete</h2>`;
@@ -74,35 +68,15 @@ document.addEventListener("DOMContentLoaded", () => {
     showStep();
   };
 
-  /* ---------------------------
-     FEEDBACK → AUTO PROGRESSION
-  --------------------------- */
+  /* ---------- FEEDBACK ---------- */
   document.querySelectorAll("#feedback button").forEach(btn => {
-    btn.onclick = () => {
-      const fb = btn.dataset.feedback;
-      autoProgress(fb);
-      feedbackBox.classList.add("hidden");
-    };
+    btn.onclick = () => feedbackBox.classList.add("hidden");
   });
 
-  function autoProgress(feedback) {
-    const key = `progress_${state.goal}_${state.condMode}`;
-    let p = JSON.parse(localStorage.getItem(key)) || { time: state.time };
-
-    if (feedback === "easy") p.time += 5;
-    if (feedback === "hard") p.time = Math.max(10, p.time - 5);
-
-    localStorage.setItem(key, JSON.stringify(p));
-  }
-
-  /* ---------------------------
-     WORKOUT LOGIC
-  --------------------------- */
+  /* ---------- WORKOUT LOGIC ---------- */
   function buildWorkout() {
-
     const out = [];
 
-    // Warm-up (single page)
     out.push({
       title: "Warm‑up",
       detail: "Joint circles, cat‑cow, lunges, arm swings",
@@ -122,7 +96,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       out.push({
         title: "Cardio Finish",
-        detail: cardioForStrength(),
+        detail: "10–15 mins • RPE 5–7 • conversational to short sentences",
         label: "Cardio (time + effort)"
       });
     }
@@ -136,27 +110,14 @@ document.addEventListener("DOMContentLoaded", () => {
     return out;
   }
 
-  /* ---------------------------
-     CARDIO FOR STRENGTH DAYS
-  --------------------------- */
-  function cardioForStrength() {
-    return `10–15 mins • RPE 5–7 • conversational to short sentences`;
-  }
-
-  /* ---------------------------
-     CONDITIONING MODES
-  --------------------------- */
   function buildConditioning() {
-
-    const mode = state.condMode === "auto"
-      ? autoCondMode()
-      : state.condMode;
+    const mode = state.condMode === "auto" ? autoCondMode() : state.condMode;
 
     if (mode === "zone2") {
       return [{
         title: "Zone 2 Conditioning",
         detail: `${state.time} mins • RPE 5 • full sentences`,
-        label: "Zone 2"
+        label: "Conditioning – Zone 2"
       }];
     }
 
@@ -164,7 +125,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return [{
         title: "HIIT",
         detail: "30–60s work / 30–60s rest • RPE 8–9",
-        label: "HIIT intervals"
+        label: "Conditioning – HIIT"
       }];
     }
 
@@ -172,14 +133,14 @@ document.addEventListener("DOMContentLoaded", () => {
       return [{
         title: "Tempo",
         detail: "4–6 min efforts / 1–2 min rest • RPE 7–8",
-        label: "Tempo intervals"
+        label: "Conditioning – Tempo"
       }];
     }
 
     return [{
       title: "Mixed Conditioning",
       detail: "Multiple movements • repeatable pace",
-      label: "Mixed modal"
+      label: "Conditioning – Mixed"
     }];
   }
 
