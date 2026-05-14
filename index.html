@@ -4,8 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Workout Generator</title>
-
-  <!-- ✅ CORRECT CSS LINK -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -39,23 +37,36 @@
       </div>
     </div>
 
-    <!-- TIME -->
+    <!-- DIFFICULTY -->
     <div class="control-group">
-      <div class="label">Time (mins)</div>
-      <div class="button-row" data-group="time">
-        <button data-value="15">15</button>
-        <button data-value="30" class="active">30</button>
-        <button data-value="45">45</button>
-        <button data-value="60">60</button>
+      <div class="label">Difficulty</div>
+      <div class="button-row" data-group="difficulty">
+        <button data-value="easy">Easy</button>
+        <button data-value="moderate" class="active">Moderate</button>
+        <button data-value="hard">Hard</button>
       </div>
     </div>
 
-    <!-- CARDIO PLACEMENT -->
+    <!-- ROUNDS -->
     <div class="control-group">
-      <div class="label">Cardio Placement</div>
-      <div class="button-row" data-group="cardioPlacement">
-        <button data-value="end" class="active">End</button>
-        <button data-value="start">Start</button>
+      <div class="label">Rounds</div>
+      <div class="button-row" data-group="rounds">
+        <button data-value="1">1</button>
+        <button data-value="2">2</button>
+        <button data-value="3" class="active">3</button>
+        <button data-value="4">4</button>
+        <button data-value="5">5</button>
+      </div>
+    </div>
+
+    <!-- CONDITIONING MODE -->
+    <div class="control-group">
+      <div class="label">Conditioning Mode</div>
+      <div class="button-row" data-group="condMode">
+        <button data-value="zone2" class="active">Zone 2</button>
+        <button data-value="emom">EMOM</button>
+        <button data-value="amrap">AMRAP</button>
+        <button data-value="hiit">HIIT</button>
       </div>
     </div>
 
@@ -90,7 +101,6 @@
   </div>
 </div>
 
-<!-- ✅ CORRECT JS SCRIPT -->
 <script src="app.js"></script>
 </body>
 </html>
