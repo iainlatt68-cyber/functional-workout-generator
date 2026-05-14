@@ -158,3 +158,29 @@ body {
   font-size: 30px;
   letter-spacing: .15em;
 }
+
+/* =========================
+   MOVEMENT PATTERN TAGS
+========================= */
+.pattern-tag {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  color: #e5e7eb;
+}
+
+.pattern-squat { background: #2563eb; }
+.pattern-hinge { background: #7c3aed; }
+.pattern-push  { background: #059669; }
+.pattern-pull  { background: #d97706; }
+
+/* Slight separation */
+.pattern-wrapper {
+  text-align: center;
+  margin-bottom: 6px;
+}
